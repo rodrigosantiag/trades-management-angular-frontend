@@ -41,6 +41,11 @@ export class SignUpFormComponent implements OnInit {
       });
   }
 
+  public sigUpUser() {
+    this.submitted = true;
+
+  }
+
   ngOnInit() {
   }
 
