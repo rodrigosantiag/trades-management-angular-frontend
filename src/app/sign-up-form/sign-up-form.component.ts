@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {FormUtils} from '../shared/form.utils';
+import {UserModel} from '../shared/user.model';
+import {AuthService} from '../shared/auth.service';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -13,8 +15,9 @@ export class SignUpFormComponent implements OnInit {
   public formUtils: FormUtils;
   public submitted: boolean;
   public formErrors: Array<string>;
+  public successMessage: string;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.submitted = false;
@@ -31,19 +34,38 @@ export class SignUpFormComponent implements OnInit {
 
   private setUpForm() {
     this.form = this.formBuilder.group({
-      email: [null, [Validators.required, Validators.email]],
-      name: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(255)]],
-      password: [null, [Validators.required, Validators.minLength(8)]],
-      passwordConfirmation: [null, Validators.required]
-    },
+        login: [null, [Validators.required, Validators.email]],
+        name: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(255)]],
+        password: [null, [Validators.required, Validators.minLength(8)]],
+        passwordConfirmation: [null, [Validators.required]],
+        risk: [null]
+      },
       {
         validators: this.passwordConfimationValidation
       });
   }
 
   public sigUpUser() {
-    this.submitted = true;
 
+    this.submitted = true;
+    console.log(this.form.value)
+    this.authService.signUp(this.form.value as UserModel)
+      .subscribe(
+        () => {
+          this.successMessage = 'Check your email to confirm your account';
+          this.formErrors = null;
+          this.form.reset();
+          this.submitted = false;
+        },
+        (error) => {
+          if (error.status === 422) {
+            this.formErrors = error.error.errors.full_messages;
+          } else {
+            this.formErrors = ['An error ocurred. Please try again later.'];
+          }
+          this.submitted = false;
+        }
+      );
   }
 
   ngOnInit() {

@@ -1,15 +1,15 @@
-import { BrowserModule } from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 
 import {AngularTokenModule} from 'angular-token';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { SignUpFormComponent } from './sign-up-form/sign-up-form.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {NavbarComponent} from './navbar/navbar.component';
+import {SidebarComponent} from './sidebar/sidebar.component';
+import {SignUpFormComponent} from './sign-up-form/sign-up-form.component';
 import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
@@ -20,7 +20,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     SignUpFormComponent
   ],
   imports: [
-    AngularTokenModule.forRoot({apiBase: 'http://api.binaryoptionsmanagement.local:3000'}),
+    AngularTokenModule.forRoot({
+      apiBase: 'http://api.binaryoptionsmanagement.local:3000'
+    }),
     AppRoutingModule,
     BrowserModule,
     HttpClientModule,
@@ -30,4 +32,5 @@ import {ReactiveFormsModule} from '@angular/forms';
   providers: [AngularTokenModule],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
