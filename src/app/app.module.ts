@@ -11,13 +11,15 @@ import {NavbarComponent} from './navbar/navbar.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {SignUpFormComponent} from './sign-up-form/sign-up-form.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import { SignInComponent } from './sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     SidebarComponent,
-    SignUpFormComponent
+    SignUpFormComponent,
+    SignInComponent
   ],
   imports: [
     AngularTokenModule.forRoot({

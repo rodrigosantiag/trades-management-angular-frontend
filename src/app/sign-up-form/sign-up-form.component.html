@@ -11,6 +11,7 @@
 <form [formGroup]="form" (ngSubmit)="sigUpUser()" class="form-signin">
   <div class="text-center mb-4">
     <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+    <small>Have an account? <a routerLink="/sign-in">Sign in here</a></small>
   </div>
 
   <div class="form-label-group">
@@ -65,5 +66,5 @@
     <input type="number" id="inputRisk" class="form-control" formControlName="risk" placeholder="Risk" min="1" max="100" oninput="validity.valid||(value='');">
     <label for="inputRisk">Risk (%)</label>
   </div>
-  <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">Confirm</button>
+  <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">Register</button>
 </form>
