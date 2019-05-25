@@ -1,27 +1,36 @@
 <h1>Brokers</h1>
 
+<ngb-alert *ngIf="formErrors" type="danger" [dismissible]="true" (close)="formErrors = null">
+  <ul>
+    <li *ngFor="let error of formErrors">{{error}}</li>
+  </ul>
+</ngb-alert>
+
+<div class="card">
+  <div class="card-header">
+    <form [formGroup]="form" (ngSubmit)="createBroker()">
+      <div class="form-row">
+        <div class="col-10">
+          <input type="text" class="form-control"
+                 placeholder="Broker name" id="name" formControlName="name">
+        </div>
+        <div class="col">
+          <button [disabled]="form.invalid || submitted" class="btn btn-success btn-block" type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="table-responsive">
   <table class="table table-striped table-sm">
     <thead>
-      <th>Name</th>
+    <th>Name</th>
     </thead>
     <tbody>
-      <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-
+    <tr *ngFor="let broker of brokers">
+      <td>{{broker.name}}</td>
+    </tr>
     </tbody>
   </table>
 </div>

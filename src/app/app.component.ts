@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {AuthService} from './shared/auth.service';
+import {AngularTokenService} from 'angular-token';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,6 @@ export class AppComponent {
   public signedIn?: boolean;
 
   public constructor(private authService: AuthService) {
-
   }
 
   public userSignedIn(): boolean {
