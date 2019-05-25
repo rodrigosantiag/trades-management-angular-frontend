@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -15,7 +16,7 @@ export class SignInComponent implements OnInit {
   public formUtils: FormUtils;
   public formErrors: Array<string>;
 
-  constructor(private auth: AuthService, private formBuilder: FormBuilder) {
+  constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) {
     this.setUpForm();
     this.submitted = false;
     this.formUtils = new FormUtils(this.form);
@@ -35,7 +36,7 @@ export class SignInComponent implements OnInit {
     this.auth.signIn(this.form.get('login').value, this.form.get('password').value)
       .subscribe(
         () => {
-          alert('Logou!');
+          this.router.navigate(['/brokers']);
           this.formErrors = null;
         },
         (error) => {

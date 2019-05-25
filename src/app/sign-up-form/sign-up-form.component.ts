@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
+import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
 import {UserModel} from '../shared/user.model';
-import {AuthService} from '../shared/auth.service';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -48,6 +47,7 @@ export class SignUpFormComponent implements OnInit {
 
   public sigUpUser() {
 
+    this.successMessage = null;
     this.submitted = true;
     this.authService.signUp(this.form.value as UserModel)
       .subscribe(
@@ -63,6 +63,7 @@ export class SignUpFormComponent implements OnInit {
           } else {
             this.formErrors = ['An error ocurred. Please try again later.'];
           }
+          this.successMessage = null;
           this.submitted = false;
         }
       );
