@@ -1,0 +1,70 @@
+<ngb-alert *ngIf="formErrors" type="danger" [dismissible]="false">
+  <ul>
+    <li *ngFor="let error of formErrors">{{error}}</li>
+  </ul>
+</ngb-alert>
+
+<ngb-alert *ngIf="successMessage" type="success" [dismissible]="false">
+  {{successMessage}}
+</ngb-alert>
+
+<form [formGroup]="form" (ngSubmit)="sigUpUser()" class="form-signin">
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+    <small>Have an account? <a routerLink="/sign-in">Sign in here</a></small>
+  </div>
+
+  <div class="form-label-group">
+    <input type="email" formControlName="login" id="inputEmail" class="form-control" placeholder="Email address"
+           autofocus [ngClass]="formUtils.showSuccessOrError('login')">
+    <label for="inputEmail">Email address</label>
+    <div *ngIf="formUtils.showFieldError('login')" class="invalid-feedback">
+      <span *ngIf="form.get('login').errors.required">Email required!</span>
+      <span *ngIf="form.get('login').errors.email">Invalid email!</span>
+    </div>
+  </div>
+
+  <div class="form-label-group">
+    <input type="text" formControlName="name" id="inputName" class="form-control" placeholder="Name"
+           [ngClass]="formUtils.showSuccessOrError('name')">
+    <label for="inputName">Your name</label>
+    <div *ngIf="formUtils.showFieldError('name')" class="invalid-feedback">
+      <span *ngIf="form.get('name').errors.required">Name required!</span>
+      <span
+        *ngIf="form.get('name').errors.minlength">Name must have at least {{form.get('name').errors.minlength.requiredLength}}
+        characters!</span>
+      <span
+        *ngIf="form.get('name').errors.maxlength">Name can't have more than {{form.get('name').errors.maxlength.requiredLength}}
+        characters!</span>
+    </div>
+  </div>
+
+  <div class="form-label-group">
+    <input type="password" id="inputPassword" formControlName="password" class="form-control" placeholder="Password"
+           [ngClass]="formUtils.showSuccessOrError('password')">
+    <label for="inputPassword">Password</label>
+    <div *ngIf="formUtils.showFieldError('password')" class="invalid-feedback">
+      <span *ngIf="form.get('password').errors.required">Password required!</span>
+      <span
+        *ngIf="form.get('password').errors.minlength">Password must have at least {{form.get('password').errors.minlength.requiredLength}}
+        characters!</span>
+    </div>
+  </div>
+
+  <div class="form-label-group">
+    <input type="password" id="inputPasswordConfirmation" formControlName="passwordConfirmation" class="form-control"
+           placeholder="Password Confirmation" [ngClass]="formUtils.showSuccessOrError('passwordConfirmation')">
+    <label for="inputPasswordConfirmation">Password Confirmation</label>
+    <div *ngIf="formUtils.showFieldError('passwordConfirmation')" class="invalid-feedback">
+      <span *ngIf="form.get('passwordConfirmation').errors.required">Password confirmation required!</span>
+      <span
+        *ngIf="form.get('passwordConfirmation').errors.mismatch">Password confimation does not match!</span>
+    </div>
+  </div>
+
+  <div class="form-label-group">
+    <input type="number" id="inputRisk" class="form-control" formControlName="risk" placeholder="Risk" min="1" max="100" oninput="validity.valid||(value='');">
+    <label for="inputRisk">Risk (%)</label>
+  </div>
+  <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">Register</button>
+</form>
