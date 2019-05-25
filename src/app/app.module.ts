@@ -23,7 +23,8 @@ import { SignInComponent } from './sign-in/sign-in.component';
   ],
   imports: [
     AngularTokenModule.forRoot({
-      apiBase: 'http://api.binaryoptionsmanagement.local:3000'
+      apiBase: 'http://api.binaryoptionsmanagement.local:3000',
+      registerAccountCallback: window.location.origin + '/sign-in'
     }),
     AppRoutingModule,
     BrowserModule,

@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {UserModel} from '../shared/user.model';
 import {AuthService} from '../shared/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-sign-up-form',
