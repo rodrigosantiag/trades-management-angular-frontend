@@ -19,6 +19,10 @@ export class NavbarComponent implements OnInit {
       );
   }
 
+  public userSignedIn(): boolean {
+    return this.authService.userSignedIn();
+  }
+
   ngOnInit() {
   }
 
