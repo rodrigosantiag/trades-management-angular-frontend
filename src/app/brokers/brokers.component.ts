@@ -16,6 +16,9 @@ export class BrokersComponent implements OnInit {
   public newBroker: Broker;
   public formErrors: Array<string>;
   public submitted: boolean;
+  public editing: boolean;
+  public editingBroker: Broker;
+  public formEdit: FormGroup;
 
   public constructor(
     private brokerService: BrokerService,
@@ -25,6 +28,11 @@ export class BrokersComponent implements OnInit {
     this.newBroker = new Broker(null, '');
     this.formErrors = null;
     this.submitted = false;
+    this.editing = false;
+    this.editingBroker = new Broker(null, null);
+    this.formEdit = this.formBuilder.group({
+      name: [null, [Validators.required]]
+    });
   }
 
   ngOnInit() {
@@ -78,6 +86,38 @@ export class BrokersComponent implements OnInit {
           () => alert('An error ocurred. Please try again.')
         );
     }
+  }
+
+  public beginEdit(editingBroker: Broker) {
+    this.editing = true;
+    this.editingBroker = editingBroker;
+    this.formEdit.patchValue(editingBroker);
+  }
+
+  public cancelEdit() {
+    this.editing = false;
+    this.editingBroker = new Broker(null, null);
+  }
+
+  public updateBroker(broker: Broker) {
+    broker.name = this.formEdit.get('name').value;
+
+    return this.brokerService.update(broker)
+      .subscribe(
+        (response) => {
+          const itemIndex = this.brokers.findIndex(item => item.id === response.id);
+          this.brokers[itemIndex] = response;
+          this.brokers.sort((a, b) => a.name.localeCompare(b.name));
+          this.editingBroker = new Broker(null, null);
+          this.editing = false;
+          this.formErrors = null;
+        },
+        () => this.formErrors = ['Broker not updated! Please try again.']
+      );
+  }
+
+  public isEditingThisBroker?(broker: Broker) {
+    return this.editingBroker === broker;
   }
 
 }

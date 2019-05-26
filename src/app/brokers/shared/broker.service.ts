@@ -40,6 +40,18 @@ export class BrokerService {
       );
   }
 
+  public update(broker: Broker): Observable<Broker> {
+    const url = `${this.brokersUrl}/${broker.id}`;
+
+    return this.httpClient.put(url, broker)
+      .pipe(
+        catchError(this.handleErrors),
+        map(
+          updatedBroker => this.responseToBroker(updatedBroker)
+        )
+      );
+  }
+
   public responseToBrokers(response: any): Array<Broker> {
     const brokersArray = response.data;
     const brokers: Broker[] = [];
