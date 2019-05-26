@@ -21,6 +21,11 @@ import {library} from '@fortawesome/fontawesome-svg-core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far} from '@fortawesome/free-regular-svg-icons';
 import {fab} from '@fortawesome/free-brands-svg-icons';
+import {AuthGuard} from './guard/auth.guard';
+import {BrokerService} from './brokers/shared/broker.service';
+import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
+import {AuthService} from './shared/auth.service';
+import { BrokerDetailComponent } from './brokers/broker-detail/broker-detail.component';
 
 library.add(fas, far, fab);
 
@@ -31,7 +36,8 @@ library.add(fas, far, fab);
     SidebarComponent,
     SignUpFormComponent,
     SignInComponent,
-    BrokersComponent
+    BrokersComponent,
+    BrokerDetailComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
@@ -45,7 +51,13 @@ library.add(fas, far, fab);
     NgbModule,
     ReactiveFormsModule
   ],
-  providers: [AngularTokenModule],
+  providers: [
+    AuthGuard,
+    AuthService,
+    BrokerService,
+    AngularTokenModule,
+    NotAuthenticatedGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
