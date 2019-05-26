@@ -1,27 +1,53 @@
 <h1>Brokers</h1>
 
+<ngb-alert *ngIf="formErrors" type="danger" [dismissible]="true" (close)="formErrors = null">
+  <ul>
+    <li *ngFor="let error of formErrors">{{error}}</li>
+  </ul>
+</ngb-alert>
+
+<div class="card">
+  <div class="card-header">
+    <form [formGroup]="form" (ngSubmit)="createBroker()">
+      <div class="form-row">
+        <div class="col-10">
+          <input type="text" class="form-control"
+                 placeholder="Broker name" id="name" formControlName="name">
+        </div>
+        <div class="col">
+          <button [disabled]="form.invalid || submitted" class="btn btn-success btn-block" type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="table-responsive">
   <table class="table table-striped table-sm">
     <thead>
-      <th>Name</th>
+    <th colspan="3">Name</th>
     </thead>
     <tbody>
-      <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-    <tr>
-        <td>Broker 1</td>
-      </tr>
-
+    <tr *ngFor="let broker of brokers">
+      <td width="92%">
+        <span *ngIf="!isEditingThisBroker(broker)">
+          {{broker.name}}
+        </span>
+        <form class="form-inline" *ngIf="isEditingThisBroker(broker)" [formGroup]="formEdit" (ngSubmit)="updateBroker(broker)">
+          <input type="text" class="form-control mr-2" formControlName="name">
+          <button class="btn btn-success" type="submit"><fa-icon [icon]="['fas', 'check']"></fa-icon></button>
+        </form>
+      </td>
+      <td width="7%" class="text-right">
+        <button *ngIf="!isEditingThisBroker(broker)" (click)="beginEdit(broker)" class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></button>
+        <div *ngIf="isEditingThisBroker(broker)">
+          <button class="btn btn-danger" (click)="cancelEdit()"><fa-icon [icon]="['fas', 'window-close']"></fa-icon></button>
+        </div>
+      </td>
+      <td width="1%">
+        <button (click)="deleteBroker(broker)" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>

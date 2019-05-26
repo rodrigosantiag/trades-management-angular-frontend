@@ -1,0 +1,13 @@
+input, button{
+  border-radius: 0;
+  box-shadow: none !important;
+}
+
+ul{
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.table td, .table th{
+  vertical-align: middle;
+}
