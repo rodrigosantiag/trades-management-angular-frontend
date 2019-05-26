@@ -25,11 +25,13 @@
 <div class="table-responsive">
   <table class="table table-striped table-sm">
     <thead>
-    <th>Name</th>
+    <th colspan="3">Name</th>
     </thead>
     <tbody>
     <tr *ngFor="let broker of brokers">
-      <td>{{broker.name}}</td>
+      <td width="98%">{{broker.name}}</td>
+      <td width="1%"><a class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></a></td>
+      <td width="1%"><button (click)="deleteBroker(broker)" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button></td>
     </tr>
     </tbody>
   </table>

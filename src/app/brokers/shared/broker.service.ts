@@ -10,25 +10,33 @@ import {parse} from '@fortawesome/fontawesome-svg-core';
   providedIn: 'root'
 })
 export class BrokerService {
-  public brokersUrl = '/brokers';
+  public brokersUrl = this.tokenService.apiBase + '/brokers';
 
   constructor(private httpClient: HttpClient, private tokenService: AngularTokenService) {
   }
 
   public getAll(): Observable<Broker[]> {
-    return this.httpClient.get(this.tokenService.apiBase + this.brokersUrl)
+    return this.httpClient.get(this.brokersUrl)
       .pipe(
         catchError(this.handleErrors),
         map((response: HttpResponse<any>) => this.responseToBrokers(response)));
   }
 
   public create(broker: Broker): Observable<Broker> {
-    const url = this.tokenService.apiBase + '/brokers';
-
-    return this.httpClient.post(url, broker)
+    return this.httpClient.post(this.brokersUrl, broker)
       .pipe(
         catchError(this.handleErrors),
         map((response: HttpResponse<any>) => this.responseToBroker(response))
+      );
+  }
+
+  public delete(id: number): Observable<null> {
+    const url = `${this.brokersUrl}/${id}`;
+
+    return this.httpClient.delete(url)
+      .pipe(
+        catchError(this.handleErrors),
+        map(() => null)
       );
   }
 

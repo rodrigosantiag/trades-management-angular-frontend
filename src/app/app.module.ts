@@ -25,7 +25,6 @@ import {AuthGuard} from './guard/auth.guard';
 import {BrokerService} from './brokers/shared/broker.service';
 import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
 import {AuthService} from './shared/auth.service';
-import { BrokerDetailComponent } from './brokers/broker-detail/broker-detail.component';
 
 library.add(fas, far, fab);
 
@@ -36,8 +35,7 @@ library.add(fas, far, fab);
     SidebarComponent,
     SignUpFormComponent,
     SignInComponent,
-    BrokersComponent,
-    BrokerDetailComponent
+    BrokersComponent
   ],
   imports: [
     AngularTokenModule.forRoot({

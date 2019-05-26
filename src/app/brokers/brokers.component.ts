@@ -31,11 +31,9 @@ export class BrokersComponent implements OnInit {
     this.brokerService.getAll()
       .subscribe(
         brokers => {
-          console.log(brokers);
           this.brokers = brokers;
         },
         error => {
-          console.log(error);
           alert('An error ocurred. Please try again');
         }
       );
@@ -62,7 +60,6 @@ export class BrokersComponent implements OnInit {
           this.submitted = false;
         },
         error => {
-          console.log(error);
           if (error.status === 422) {
             this.formErrors = ['Broker name can\'t be blank'];
           } else {
@@ -71,6 +68,16 @@ export class BrokersComponent implements OnInit {
           this.submitted = false;
         }
       );
+  }
+
+  public deleteBroker(broker: Broker) {
+    if (confirm(`Confirm ${broker.name} broker remove?`)) {
+      this.brokerService.delete(broker.id)
+        .subscribe(
+          () => this.brokers = this.brokers.filter(t => t !== broker),
+          () => alert('An error ocurred. Please try again.')
+        );
+    }
   }
 
 }
