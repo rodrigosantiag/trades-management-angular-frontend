@@ -1,0 +1,32 @@
+<ng-flash-message></ng-flash-message>
+
+<form [formGroup]="form" (ngSubmit)="signInUser()" class="form-signin">
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+    <small>Don't have an account? <a routerLink="/sign-up">Sign up here</a></small>
+  </div>
+
+  <div class="form-label-group">
+    <input type="email" formControlName="login" id="inputEmail" class="form-control" placeholder="Email address"
+           autofocus [ngClass]="formUtils.showSuccessOrError('login')">
+    <label for="inputEmail">Email address</label>
+    <div *ngIf="formUtils.showFieldError('login')" class="invalid-feedback">
+      <span *ngIf="form.get('login').errors.required">Email required!</span>
+      <span *ngIf="form.get('login').errors.email">Invalid email!</span>
+    </div>
+  </div>
+
+  <div class="form-label-group">
+    <input type="password" id="inputPassword" formControlName="password" class="form-control" placeholder="Password"
+           [ngClass]="formUtils.showSuccessOrError('password')">
+    <label for="inputPassword">Password</label>
+    <div *ngIf="formUtils.showFieldError('password')" class="invalid-feedback">
+      <span *ngIf="form.get('password').errors.required">Password required!</span>
+      <span
+        *ngIf="form.get('password').errors.minlength">Password must have at least {{form.get('password').errors.minlength.requiredLength}}
+        characters!</span>
+    </div>
+  </div>
+
+  <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">Login</button>
+</form>

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {AuthService} from './shared/auth.service';
+import {AngularTokenService} from 'angular-token';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'binary-financial-system-frontend';
+  title = 'Binary Financial Management System';
+  public signedIn?: boolean;
+
+  public constructor(private authService: AuthService) {
+  }
+
+  public userSignedIn(): boolean {
+    return this.authService.userSignedIn();
+  }
+
 }
