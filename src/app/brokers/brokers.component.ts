@@ -3,6 +3,7 @@ import {Broker} from './shared/broker.model';
 import {BrokerService} from './shared/broker.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
+import {FlashMessagesService} from '../shared/flashMessages.service';
 
 @Component({
   selector: 'app-brokers',
@@ -14,7 +15,7 @@ export class BrokersComponent implements OnInit {
   public form: FormGroup;
   public formUtils: FormUtils;
   public newBroker: Broker;
-  public formErrors: Array<string>;
+  public messages: Array<string>;
   public submitted: boolean;
   public editing: boolean;
   public editingBroker: Broker;
@@ -22,11 +23,12 @@ export class BrokersComponent implements OnInit {
 
   public constructor(
     private brokerService: BrokerService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private flashMessageService: FlashMessagesService) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.newBroker = new Broker(null, '');
-    this.formErrors = null;
+    this.messages = null;
     this.submitted = false;
     this.editing = false;
     this.editingBroker = new Broker(null, null);
@@ -60,29 +62,33 @@ export class BrokersComponent implements OnInit {
     this.brokerService.create(this.newBroker)
       .subscribe(
         broker => {
-          this.formErrors = null;
           this.brokers.unshift(broker);
           this.brokers.sort((a, b) => a.name.localeCompare(b.name));
           this.newBroker = new Broker(null, '');
           this.form.reset();
           this.submitted = false;
+          this.flashMessageService.buildFlashMessage([`Broker ${broker.name} added!`], 5000, true, 'success');
         },
         error => {
           if (error.status === 422) {
-            this.formErrors = ['Broker name can\'t be blank'];
+            this.messages = ['Broker name can\'t be blank'];
           } else {
-            this.formErrors = ['An error ocurred. Try again later.'];
+            this.messages = ['An error ocurred. Try again later.'];
           }
           this.submitted = false;
+          this.flashMessageService.buildFlashMessage(this.messages, false, true, 'danger');
         }
       );
   }
 
   public deleteBroker(broker: Broker) {
-    if (confirm(`Confirm ${broker.name} broker remove?`)) {
+    if (confirm(`Confirm ${broker.name} broker remove? This action is irreversible.`)) {
       this.brokerService.delete(broker.id)
         .subscribe(
-          () => this.brokers = this.brokers.filter(t => t !== broker),
+          () => {
+            this.brokers = this.brokers.filter(t => t !== broker);
+            this.flashMessageService.buildFlashMessage([`Broker ${broker.name} removed!`], 5000, true, 'danger');
+          },
           () => alert('An error ocurred. Please try again.')
         );
     }
@@ -110,14 +116,17 @@ export class BrokersComponent implements OnInit {
           this.brokers.sort((a, b) => a.name.localeCompare(b.name));
           this.editingBroker = new Broker(null, null);
           this.editing = false;
-          this.formErrors = null;
+          this.messages = [`Broker ${broker.name} updated!`];
+          this.flashMessageService.buildFlashMessage(this.messages, 5000, true, 'success');
         },
-        () => this.formErrors = ['Broker not updated! Please try again.']
+        () => {
+          this.messages = ['Broker not updated! Please try again.'];
+          this.flashMessageService.buildFlashMessage(this.messages, 5000, true, 'danger');
+        }
       );
   }
 
   public isEditingThisBroker?(broker: Broker) {
     return this.editingBroker === broker;
   }
-
 }

@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
 import {UserModel} from '../shared/user.model';
+import {FlashMessagesService} from '../shared/flashMessages.service';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -14,14 +15,13 @@ export class SignUpFormComponent implements OnInit {
   public form: FormGroup;
   public formUtils: FormUtils;
   public submitted: boolean;
-  public formErrors: Array<string>;
-  public successMessage: string;
+  public messages: Array<string>;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private flashMessage: FlashMessagesService) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.submitted = false;
-    this.formErrors = null;
+    this.messages = null;
   }
 
   public passwordConfimationValidation(form: FormGroup) {
@@ -46,27 +46,27 @@ export class SignUpFormComponent implements OnInit {
   }
 
   public sigUpUser() {
-
-    this.successMessage = null;
     this.submitted = true;
     this.authService.signUp(this.form.value as UserModel)
       .subscribe(
         () => {
-          this.successMessage = 'Check your email to confirm your account';
-          this.formErrors = null;
+          this.messages = ['Check your email to confirm your account'];
           this.form.reset();
           this.submitted = false;
+          this.flashMessage.buildFlashMessage(this.messages, false, false, 'success');
         },
         (error) => {
           if (error.status === 422) {
-            this.formErrors = error.error.errors.full_messages;
+            this.messages = error.error.errors.full_messages;
           } else {
-            this.formErrors = ['An error ocurred. Please try again later.'];
+            this.messages = ['An error ocurred. Please try again later.'];
           }
-          this.successMessage = null;
           this.submitted = false;
+          this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
         }
-      );
+      )
+    ;
+    window.scrollTo(0, 0);
   }
 
   ngOnInit() {

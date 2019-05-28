@@ -4,6 +4,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
 import {Router} from '@angular/router';
+import {NgFlashMessageService} from 'ng-flash-messages';
+import {FlashMessagesService} from '../shared/flashMessages.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -14,14 +16,17 @@ export class SignInComponent implements OnInit {
   public form: FormGroup;
   public submitted: boolean;
   public formUtils: FormUtils;
-  public formErrors: Array<string>;
+  public messages: Array<string>;
 
-  constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) {
+  public constructor(private auth: AuthService,
+                     private formBuilder: FormBuilder,
+                     private router: Router,
+                     private flashMessage: FlashMessagesService) {
     this.setUpForm();
     this.submitted = false;
     this.formUtils = new FormUtils(this.form);
     this.submitted = false;
-    this.formErrors = null;
+    this.messages = null;
   }
 
   private setUpForm() {
@@ -37,15 +42,16 @@ export class SignInComponent implements OnInit {
       .subscribe(
         () => {
           this.router.navigate(['/brokers']);
-          this.formErrors = null;
+          this.messages = null;
         },
         (error) => {
           if (error.status === 401) {
-            this.formErrors = error.error.errors;
+            this.messages = error.error.errors;
           } else {
-            this.formErrors = ['An error ocurred. Please try again later.'];
+            this.messages = ['An error ocurred. Please try again later.'];
           }
           this.submitted = false;
+          this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
         }
       );
   }

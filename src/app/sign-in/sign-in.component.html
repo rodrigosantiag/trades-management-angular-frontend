@@ -1,8 +1,4 @@
-<ngb-alert *ngIf="formErrors" type="danger" [dismissible]="false">
-  <ul>
-    <li *ngFor="let error of formErrors">{{error}}</li>
-  </ul>
-</ngb-alert>
+<ng-flash-message></ng-flash-message>
 
 <form [formGroup]="form" (ngSubmit)="signInUser()" class="form-signin">
   <div class="text-center mb-4">

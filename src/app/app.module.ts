@@ -25,6 +25,7 @@ import {AuthGuard} from './guard/auth.guard';
 import {BrokerService} from './brokers/shared/broker.service';
 import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
 import {AuthService} from './shared/auth.service';
+import {NgFlashMessagesModule} from 'ng-flash-messages';
 
 library.add(fas, far, fab);
 
@@ -46,6 +47,7 @@ library.add(fas, far, fab);
     BrowserModule,
     FontAwesomeModule,
     HttpClientModule,
+    NgFlashMessagesModule.forRoot(),
     NgbModule,
     ReactiveFormsModule
   ],
