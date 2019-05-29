@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, QueryList, Renderer2, ViewChild, ViewChildren} from '@angular/core';
 import {Broker} from './shared/broker.model';
 import {BrokerService} from './shared/broker.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -24,7 +24,8 @@ export class BrokersComponent implements OnInit {
   public constructor(
     private brokerService: BrokerService,
     private formBuilder: FormBuilder,
-    private flashMessageService: FlashMessagesService) {
+    private flashMessageService: FlashMessagesService,
+    private renderer: Renderer2) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.newBroker = new Broker(null, '');
@@ -98,6 +99,10 @@ export class BrokersComponent implements OnInit {
     this.editing = true;
     this.editingBroker = editingBroker;
     this.formEdit.patchValue(editingBroker);
+    setTimeout(() => {
+      const inputName = this.renderer.selectRootElement('.input-edit');
+      inputName.focus();
+    }, 300);
   }
 
   public cancelEdit() {
