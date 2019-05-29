@@ -30,12 +30,12 @@
           {{broker.name}}
         </span>
         <form class="form-inline" *ngIf="isEditingThisBroker(broker)" [formGroup]="formEdit" (ngSubmit)="updateBroker(broker)">
-          <input type="text" class="form-control mr-2" formControlName="name">
+          <input type="text" class="form-control mr-2 input-edit" formControlName="name">
           <button class="btn btn-success" type="submit"><fa-icon [icon]="['fas', 'check']"></fa-icon></button>
         </form>
       </td>
       <td width="7%" class="text-right">
-        <button *ngIf="!isEditingThisBroker(broker)" (click)="beginEdit(broker)" class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></button>
+        <button *ngIf="!isEditingThisBroker(broker)" (click)="beginEdit(broker);" class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></button>
         <div *ngIf="isEditingThisBroker(broker)">
           <button class="btn btn-danger" (click)="cancelEdit()"><fa-icon [icon]="['fas', 'window-close']"></fa-icon></button>
         </div>
