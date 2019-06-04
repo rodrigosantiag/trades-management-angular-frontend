@@ -26,6 +26,7 @@ import {BrokerService} from './brokers/shared/broker.service';
 import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
 import {AuthService} from './shared/auth.service';
 import {NgFlashMessagesModule} from 'ng-flash-messages';
+import { AccountsComponent } from './accounts/accounts.component';
 
 library.add(fas, far, fab);
 
@@ -36,7 +37,8 @@ library.add(fas, far, fab);
     SidebarComponent,
     SignUpFormComponent,
     SignInComponent,
-    BrokersComponent
+    BrokersComponent,
+    AccountsComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
