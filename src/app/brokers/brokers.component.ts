@@ -43,6 +43,7 @@ export class BrokersComponent implements OnInit {
       .subscribe(
         brokers => {
           this.brokers = brokers;
+          console.log(this.brokers);
         },
         error => {
           alert('An error ocurred. Please try again');

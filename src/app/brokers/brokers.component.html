@@ -26,9 +26,14 @@
     <tbody>
     <tr *ngFor="let broker of brokers">
       <td width="92%">
-        <span *ngIf="!isEditingThisBroker(broker)">
+        <div *ngIf="!isEditingThisBroker(broker)">
           {{broker.name}}
-        </span>
+          <ul *ngIf="broker.accounts.length" class="pl-3">
+            <li *ngFor="let accountBroker of broker.accounts">
+              <a href="#">{{accountBroker.typeAccount == 'D' ? 'Demo Account' : 'Real Account'}} - {{accountBroker.currentBalance | currency:accountBroker.currency}}</a>
+            </li>
+          </ul>
+        </div>
         <form class="form-inline" *ngIf="isEditingThisBroker(broker)" [formGroup]="formEdit" (ngSubmit)="updateBroker(broker)">
           <input type="text" class="form-control mr-2 input-edit" formControlName="name">
           <button class="btn btn-success" type="submit"><fa-icon [icon]="['fas', 'check']"></fa-icon></button>

@@ -5,6 +5,7 @@ import {Broker} from './broker.model';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {parse} from '@fortawesome/fontawesome-svg-core';
+import {AccountModel} from '../../accounts/shared/account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +59,16 @@ export class BrokerService {
     brokersArray.forEach(item => {
       const broker = new Broker(
         item.id,
-        item.attributes.name
+        item.attributes.name,
+        item.relationships.accounts.data.map(account => {
+          return new AccountModel(
+            account.id,
+            account['type-account'],
+            account.currency,
+            account['initial-balance'],
+            account['current-balance'],
+            account['broker-id']);
+        })
       );
       brokers.push(broker);
     });

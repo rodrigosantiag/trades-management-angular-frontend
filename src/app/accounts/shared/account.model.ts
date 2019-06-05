@@ -3,7 +3,8 @@ export class AccountModel {
     public id: number,
     public typeAccount: string,
     public currency: string,
-    public initialBalance: number,
-    public currentBalance: number
+    public initialBalance: number = 0,
+    public currentBalance: number = 0,
+    public brokerId: number,
   ) {}
 }
