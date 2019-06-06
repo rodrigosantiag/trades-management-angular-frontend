@@ -78,7 +78,16 @@ export class BrokerService {
   public responseToBroker(response: any): Broker {
     return new Broker(
       response.data.id,
-      response.data.attributes.name
+      response.data.attributes.name,
+      response.data.relationships.accounts.data.map(account => {
+        return new AccountModel(
+          account.id,
+          account['type-account'],
+          account.currency,
+          account['initial-balance'],
+          account['current-balance'],
+          account['broker-id']);
+      })
     );
   }
 
