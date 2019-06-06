@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {AngularTokenModule, AngularTokenService} from 'angular-token';
-import {Observable, throwError} from 'rxjs';
+import { AngularTokenService} from 'angular-token';
+import {Observable} from 'rxjs';
 import {Broker} from './broker.model';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
-import {parse} from '@fortawesome/fontawesome-svg-core';
-import {AccountModel} from '../../accounts/shared/account.model';
+import {Account} from '../../accounts/shared/account.model';
+import {ErrorUtils} from '../../shared/error.utils';
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +13,20 @@ import {AccountModel} from '../../accounts/shared/account.model';
 export class BrokerService {
   public brokersUrl = this.tokenService.apiBase + '/brokers';
 
-  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService) {
+  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
   }
 
   public getAll(): Observable<Broker[]> {
     return this.httpClient.get(this.brokersUrl)
       .pipe(
-        catchError(this.handleErrors),
+        catchError(this.errorUtils.handleErrors),
         map((response: HttpResponse<any>) => this.responseToBrokers(response)));
   }
 
   public create(broker: Broker): Observable<Broker> {
     return this.httpClient.post(this.brokersUrl, broker)
       .pipe(
-        catchError(this.handleErrors),
+        catchError(this.errorUtils.handleErrors),
         map((response: HttpResponse<any>) => this.responseToBroker(response))
       );
   }
@@ -36,7 +36,7 @@ export class BrokerService {
 
     return this.httpClient.delete(url)
       .pipe(
-        catchError(this.handleErrors),
+        catchError(this.errorUtils.handleErrors),
         map(() => null)
       );
   }
@@ -46,7 +46,7 @@ export class BrokerService {
 
     return this.httpClient.put(url, broker)
       .pipe(
-        catchError(this.handleErrors),
+        catchError(this.errorUtils.handleErrors),
         map(
           updatedBroker => this.responseToBroker(updatedBroker)
         )
@@ -61,7 +61,7 @@ export class BrokerService {
         item.id,
         item.attributes.name,
         item.relationships.accounts.data.map(account => {
-          return new AccountModel(
+          return new Account(
             account.id,
             account['type-account'],
             account.currency,
@@ -80,7 +80,7 @@ export class BrokerService {
       response.data.id,
       response.data.attributes.name,
       response.data.relationships.accounts.data.map(account => {
-        return new AccountModel(
+        return new Account(
           account.id,
           account['type-account'],
           account.currency,
@@ -89,9 +89,5 @@ export class BrokerService {
           account['broker-id']);
       })
     );
-  }
-
-  public handleErrors(response: HttpResponse<any>) {
-    return throwError(response);
   }
 }
