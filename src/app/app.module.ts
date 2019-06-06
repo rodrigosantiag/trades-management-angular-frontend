@@ -27,6 +27,7 @@ import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
 import {AuthService} from './shared/auth.service';
 import {NgFlashMessagesModule} from 'ng-flash-messages';
 import { AccountsComponent } from './accounts/accounts.component';
+import {ErrorUtils} from './shared/error.utils';
 
 library.add(fas, far, fab);
 
@@ -58,6 +59,7 @@ library.add(fas, far, fab);
     AuthService,
     BrokerService,
     AngularTokenModule,
+    ErrorUtils,
     NotAuthenticatedGuard
   ],
   bootstrap: [AppComponent]
