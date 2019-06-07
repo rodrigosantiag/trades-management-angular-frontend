@@ -1,4 +1,5 @@
 <h1>Brokers</h1>
+<hr>
 
 <ng-flash-message></ng-flash-message>
 
@@ -25,7 +26,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let broker of brokers">
-      <td width="88%">
+      <td width="98%">
         <div *ngIf="!isEditingThisBroker(broker)">
           {{broker.name}}
           <ul *ngIf="broker.accounts.length" class="pl-3">
@@ -38,9 +39,6 @@
           <input type="text" class="form-control mr-2 input-edit" formControlName="name">
           <button class="btn btn-success" type="submit"><fa-icon [icon]="['fas', 'check']"></fa-icon></button>
         </form>
-      </td>
-      <td width="10%">
-        <button class="btn btn-success"><fa-icon [icon]="['fas', 'plus']"></fa-icon> Add account </button>
       </td>
       <td width="1%" class="text-right">
         <button *ngIf="!isEditingThisBroker(broker)" (click)="beginEdit(broker);" class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></button>

@@ -28,6 +28,7 @@ import {AuthService} from './shared/auth.service';
 import {NgFlashMessagesModule} from 'ng-flash-messages';
 import { AccountsComponent } from './accounts/accounts.component';
 import {ErrorUtils} from './shared/error.utils';
+import { AccountDetailComponent } from './accounts/account-detail/account-detail.component';
 
 library.add(fas, far, fab);
 
@@ -39,7 +40,8 @@ library.add(fas, far, fab);
     SignUpFormComponent,
     SignInComponent,
     BrokersComponent,
-    AccountsComponent
+    AccountsComponent,
+    AccountDetailComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
