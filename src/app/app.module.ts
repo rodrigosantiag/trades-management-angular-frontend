@@ -33,17 +33,18 @@ import {AccountDetailComponent} from './accounts/account-detail/account-detail.c
 library.add(fas, far, fab);
 
 import {NgSelectModule} from '@ng-select/ng-select';
+import {NgxMaskModule} from 'ngx-mask';
 
 @NgModule({
   declarations: [
+    AccountsComponent,
+    AccountDetailComponent,
     AppComponent,
+    BrokersComponent,
     NavbarComponent,
     SidebarComponent,
     SignUpFormComponent,
-    SignInComponent,
-    BrokersComponent,
-    AccountsComponent,
-    AccountDetailComponent
+    SignInComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
@@ -57,6 +58,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
     NgFlashMessagesModule.forRoot(),
     NgbModule,
     NgSelectModule,
+    NgxMaskModule.forRoot(),
     ReactiveFormsModule
   ],
   providers: [

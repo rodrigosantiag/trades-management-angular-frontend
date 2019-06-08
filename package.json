@@ -32,6 +32,7 @@
     "currency-codes": "^1.5.0",
     "jquery": "^3.4.1",
     "ng-flash-messages": "^0.3.0",
+    "ngx-mask": "^7.9.9",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
