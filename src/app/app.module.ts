@@ -26,11 +26,13 @@ import {BrokerService} from './brokers/shared/broker.service';
 import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
 import {AuthService} from './shared/auth.service';
 import {NgFlashMessagesModule} from 'ng-flash-messages';
-import { AccountsComponent } from './accounts/accounts.component';
+import {AccountsComponent} from './accounts/accounts.component';
 import {ErrorUtils} from './shared/error.utils';
-import { AccountDetailComponent } from './accounts/account-detail/account-detail.component';
+import {AccountDetailComponent} from './accounts/account-detail/account-detail.component';
 
 library.add(fas, far, fab);
+
+import {NgSelectModule} from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ library.add(fas, far, fab);
     HttpClientModule,
     NgFlashMessagesModule.forRoot(),
     NgbModule,
+    NgSelectModule,
     ReactiveFormsModule
   ],
   providers: [
