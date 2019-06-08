@@ -1,10 +1,10 @@
 export class Account {
   public constructor(
     public id: number,
-    public typeAccount: string,
+    public type_account: string,
     public currency: string,
-    public initialBalance: number = 0,
-    public currentBalance: number = 0,
-    public brokerId: number,
+    public initial_balance: number,
+    public current_balance: number,
+    public broker_id: number,
   ) {}
 }

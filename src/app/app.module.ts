@@ -32,7 +32,6 @@ import {AccountDetailComponent} from './accounts/account-detail/account-detail.c
 
 library.add(fas, far, fab);
 
-import {NgSelectModule} from '@ng-select/ng-select';
 import {NgxMaskModule} from 'ngx-mask';
 
 @NgModule({
@@ -57,7 +56,6 @@ import {NgxMaskModule} from 'ngx-mask';
     HttpClientModule,
     NgFlashMessagesModule.forRoot(),
     NgbModule,
-    NgSelectModule,
     NgxMaskModule.forRoot(),
     ReactiveFormsModule
   ],
