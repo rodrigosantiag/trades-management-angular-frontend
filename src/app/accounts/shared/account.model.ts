@@ -1,3 +1,5 @@
+import {Broker} from '../../brokers/shared/broker.model';
+
 export class Account {
   public constructor(
     public id: number,
@@ -6,5 +8,7 @@ export class Account {
     public initial_balance: number,
     public current_balance: number,
     public broker_id: number,
-  ) {}
+    public broker?: Broker
+  ) {
+  }
 }

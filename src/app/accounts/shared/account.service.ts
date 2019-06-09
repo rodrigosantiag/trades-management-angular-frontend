@@ -15,6 +15,16 @@ export class AccountService {
   constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
   }
 
+  public gerAll(): Observable<Account[]> {
+    const url = this.accountsUrl;
+
+    return this.httpClient.get(url)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map((response: HttpResponse<any>) => this.responseToAccounts(response))
+      );
+  }
+
   public create(account: Account): Observable<Account> {
     return this.httpClient.post(this.accountsUrl, account)
       .pipe(
@@ -32,5 +42,24 @@ export class AccountService {
       response.data.attributes['current-currency'],
       response.data.attributes['broker-id']
     );
+  }
+
+  private responseToAccounts(response: any): Array<Account> {
+    const accounts: Array<Account> = [];
+
+    response.data.forEach(item => {
+      const account = new Account(
+        item.id,
+        item.attributes['type-account'],
+        item.attributes.currency,
+        item.attributes['initial-balance'],
+        item.attributes['current-balance'],
+        item.attributes['broker-id'],
+        item.attributes.broker
+      );
+      accounts.push(account);
+    });
+
+    return accounts;
   }
 }

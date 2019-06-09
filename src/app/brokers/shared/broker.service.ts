@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import { AngularTokenService} from 'angular-token';
+import {AngularTokenService} from 'angular-token';
 import {Observable} from 'rxjs';
 import {Broker} from './broker.model';
 import {HttpClient, HttpResponse} from '@angular/common/http';
@@ -21,6 +21,14 @@ export class BrokerService {
       .pipe(
         catchError(this.errorUtils.handleErrors),
         map((response: HttpResponse<any>) => this.responseToBrokers(response)));
+  }
+
+  public getBroker(id: number): Observable<Broker> {
+    return this.httpClient.get(`${this.brokersUrl}/${id}`)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map(broker => this.responseToBroker(broker))
+      );
   }
 
   public create(broker: Broker): Observable<Broker> {
