@@ -33,6 +33,16 @@ export class AccountService {
       );
   }
 
+  public update(account: Account): Observable<Account> {
+    const url = `${this.accountsUrl}/${account.id}`;
+
+    return this.httpClient.put(url, account)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map(updatedAccount => this.responseToAccount(updatedAccount))
+      );
+  }
+
   private responseToAccount(response: any): Account {
     return new Account(
       response.data.id,

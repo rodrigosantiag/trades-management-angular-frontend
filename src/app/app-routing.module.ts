@@ -15,6 +15,7 @@ const routes: Routes = [
   {path: 'brokers/:id', component: BrokersComponent, canActivate: [AuthGuard]},
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard]},
   {path: 'new-account', component: AccountDetailComponent, canActivate: [AuthGuard]},
+  {path: 'edit-account/:id', component: AccountDetailComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: '/brokers', pathMatch: 'full'}
 ];
 

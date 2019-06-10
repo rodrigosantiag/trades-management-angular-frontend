@@ -30,7 +30,8 @@ export class AccountDetailComponent implements OnInit {
     private brokerService: BrokerService,
     private flashMessages: FlashMessagesService,
     private formBuilder: FormBuilder,
-    private location: Location) {
+    private location: Location,
+    private router: ActivatedRoute) {
     this.brokerService.getAll()
       .subscribe(
         brokers => this.brokers = brokers
@@ -52,6 +53,10 @@ export class AccountDetailComponent implements OnInit {
     this.setUpForm();
 
     this.formUtils = new FormUtils(this.form);
+
+    if (this.router.snapshot.paramMap.get('id')) {
+      // TODO: implement getById (Account)
+    }
 
   }
 

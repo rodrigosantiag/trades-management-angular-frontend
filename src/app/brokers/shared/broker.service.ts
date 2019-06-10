@@ -23,14 +23,6 @@ export class BrokerService {
         map((response: HttpResponse<any>) => this.responseToBrokers(response)));
   }
 
-  public getBroker(id: number): Observable<Broker> {
-    return this.httpClient.get(`${this.brokersUrl}/${id}`)
-      .pipe(
-        catchError(this.errorUtils.handleErrors),
-        map(broker => this.responseToBroker(broker))
-      );
-  }
-
   public create(broker: Broker): Observable<Broker> {
     return this.httpClient.post(this.brokersUrl, broker)
       .pipe(

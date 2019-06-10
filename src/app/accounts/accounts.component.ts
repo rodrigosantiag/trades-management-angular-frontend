@@ -3,8 +3,6 @@ import {Account} from './shared/account.model';
 import {AccountService} from './shared/account.service';
 import {FlashMessagesService} from '../shared/flashMessages.service';
 import {BrokerService} from '../brokers/shared/broker.service';
-import {Broker} from '../brokers/shared/broker.model';
-import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-accounts',
