@@ -55,6 +55,11 @@
     </div>
   </div>
 
-  <button class="btn btn-success mr-2" [disabled]="form.invalid || submitted">Save</button>
+  <button class="btn btn-success mr-2" [disabled]="form.invalid || submitted">
+    <span *ngIf="!submitted">Save</span>
+    <div *ngIf="submitted">
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+    </div>
+  </button>
   <button class="btn btn-outline-secondary" type="button" (click)="goBack()">Cancel</button>
 </form>
