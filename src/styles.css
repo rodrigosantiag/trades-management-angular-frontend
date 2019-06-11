@@ -8,6 +8,13 @@
   user-select: none;
 }
 
+
+input, button, select{
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;

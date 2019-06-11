@@ -1,4 +1,5 @@
 <h1>Brokers</h1>
+<hr>
 
 <ng-flash-message></ng-flash-message>
 
@@ -25,23 +26,28 @@
     </thead>
     <tbody>
     <tr *ngFor="let broker of brokers">
-      <td width="92%">
-        <span *ngIf="!isEditingThisBroker(broker)">
+      <td width="98%">
+        <div *ngIf="!isEditingThisBroker(broker)">
           {{broker.name}}
-        </span>
+          <ul *ngIf="broker.accounts.length" class="pl-3">
+            <li *ngFor="let accountBroker of broker.accounts">
+              <a [routerLink]="['/edit-account', accountBroker.id]">{{accountBroker.type_account == 'D' ? 'Demo Account' : 'Real Account'}} - {{accountBroker.current_balance | currency:accountBroker.currency}}</a>
+            </li>
+          </ul>
+        </div>
         <form class="form-inline" *ngIf="isEditingThisBroker(broker)" [formGroup]="formEdit" (ngSubmit)="updateBroker(broker)">
           <input type="text" class="form-control mr-2 input-edit" formControlName="name">
           <button class="btn btn-success" type="submit"><fa-icon [icon]="['fas', 'check']"></fa-icon></button>
         </form>
       </td>
-      <td width="7%" class="text-right">
-        <button *ngIf="!isEditingThisBroker(broker)" (click)="beginEdit(broker);" class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></button>
+      <td width="1%" class="text-right">
+        <button type="button" *ngIf="!isEditingThisBroker(broker)" (click)="beginEdit(broker);" class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></button>
         <div *ngIf="isEditingThisBroker(broker)">
-          <button class="btn btn-danger" (click)="cancelEdit()"><fa-icon [icon]="['fas', 'window-close']"></fa-icon></button>
+          <button type="button" class="btn btn-danger" (click)="cancelEdit()"><fa-icon [icon]="['fas', 'window-close']"></fa-icon></button>
         </div>
       </td>
       <td width="1%">
-        <button (click)="deleteBroker(broker)" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button>
+        <button type="button" (click)="deleteBroker(broker)" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button>
       </td>
     </tr>
     </tbody>

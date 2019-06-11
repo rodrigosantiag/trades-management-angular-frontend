@@ -26,17 +26,24 @@ import {BrokerService} from './brokers/shared/broker.service';
 import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
 import {AuthService} from './shared/auth.service';
 import {NgFlashMessagesModule} from 'ng-flash-messages';
+import {AccountsComponent} from './accounts/accounts.component';
+import {ErrorUtils} from './shared/error.utils';
+import {AccountDetailComponent} from './accounts/account-detail/account-detail.component';
 
 library.add(fas, far, fab);
 
+import {NgxMaskModule} from 'ngx-mask';
+
 @NgModule({
   declarations: [
+    AccountsComponent,
+    AccountDetailComponent,
     AppComponent,
+    BrokersComponent,
     NavbarComponent,
     SidebarComponent,
     SignUpFormComponent,
-    SignInComponent,
-    BrokersComponent
+    SignInComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
@@ -49,6 +56,7 @@ library.add(fas, far, fab);
     HttpClientModule,
     NgFlashMessagesModule.forRoot(),
     NgbModule,
+    NgxMaskModule.forRoot(),
     ReactiveFormsModule
   ],
   providers: [
@@ -56,6 +64,7 @@ library.add(fas, far, fab);
     AuthService,
     BrokerService,
     AngularTokenModule,
+    ErrorUtils,
     NotAuthenticatedGuard
   ],
   bootstrap: [AppComponent]
