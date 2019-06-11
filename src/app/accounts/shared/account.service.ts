@@ -15,8 +15,8 @@ export class AccountService {
   constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
   }
 
-  public gerAll(): Observable<Account[]> {
-    const url = this.accountsUrl;
+  public gerAll(terms: string = ''): Observable<Account[]> {
+    const url = `${this.accountsUrl}?${terms}`;
 
     return this.httpClient.get(url)
       .pipe(
