@@ -19,7 +19,7 @@
         <td>{{account.current_balance | currency:account.currency}}</td>
         <td>{{account.initial_balance | currency:account.currency}}</td>
         <td width="1%"><button [routerLink]="['/edit-account', account.id]" type="button" class="btn btn-light"><fa-icon [icon]="['far', 'edit']"></fa-icon></button></td>
-        <td width="1%"><button type="button" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button></td>
+        <td width="1%"><button (click)="deleteAccount(account)" type="button" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button></td>
       </tr>
     </tbody>
   </table>

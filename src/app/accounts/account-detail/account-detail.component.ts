@@ -167,10 +167,6 @@ export class AccountDetailComponent implements OnInit {
     this.location.back();
   }
 
-  public getAccountType(account: Account): string {
-    return account.type_account === 'D' ? 'Demo Account' : 'Real Account';
-  }
-
   private setUpForm() {
     this.form = this.formBuilder.group({
       type_account: [null, [Validators.required]],

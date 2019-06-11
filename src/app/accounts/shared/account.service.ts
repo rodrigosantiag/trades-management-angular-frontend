@@ -53,6 +53,16 @@ export class AccountService {
       );
   }
 
+  public delete(id: number): Observable<null> {
+    const url = `${this.accountsUrl}/${id}`;
+
+    return this.httpClient.delete(url)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map(() => null)
+      );
+  }
+
   private responseToAccount(response: any): Account {
     return new Account(
       response.data.id,

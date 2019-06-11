@@ -11,4 +11,8 @@ export class Account {
     public broker?: Broker
   ) {
   }
+
+  public getAccountType(): string {
+    return this.type_account === 'D' ? 'Demo Account' : 'Real Account';
+  }
 }
