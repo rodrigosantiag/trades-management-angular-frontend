@@ -31,7 +31,7 @@
           {{broker.name}}
           <ul *ngIf="broker.accounts.length" class="pl-3">
             <li *ngFor="let accountBroker of broker.accounts">
-              <a href="#">{{accountBroker.type_account == 'D' ? 'Demo Account' : 'Real Account'}} - {{accountBroker.current_balance | currency:accountBroker.currency}}</a>
+              <a [routerLink]="['/edit-account', accountBroker.id]">{{accountBroker.type_account == 'D' ? 'Demo Account' : 'Real Account'}} - {{accountBroker.current_balance | currency:accountBroker.currency}}</a>
             </li>
           </ul>
         </div>
