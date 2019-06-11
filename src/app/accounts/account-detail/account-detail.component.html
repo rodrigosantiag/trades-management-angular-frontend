@@ -1,9 +1,10 @@
-<h1>New broker account</h1>
+<h1 *ngIf="!account">New broker account</h1>
+<h1 *ngIf="account">Edit {{account.broker.name}}'s {{getAccountType(account)}}</h1>
 <hr>
 
 <ng-flash-message></ng-flash-message>
 
-<form [formGroup]="form" (ngSubmit)="createAccount()">
+<form [formGroup]="form" (ngSubmit)="account ? updateAccount() :createAccount()">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="broker">Broker</label>

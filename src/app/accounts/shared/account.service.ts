@@ -25,6 +25,16 @@ export class AccountService {
       );
   }
 
+  public getById(id: number): Observable<Account> {
+    const url = `${this.accountsUrl}/${id}`;
+
+    return this.httpClient.get(url)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map(account => this.responseToAccount(account))
+      );
+  }
+
   public create(account: Account): Observable<Account> {
     return this.httpClient.post(this.accountsUrl, account)
       .pipe(
@@ -48,9 +58,10 @@ export class AccountService {
       response.data.id,
       response.data.attributes['type-account'],
       response.data.attributes.currency,
-      response.data.attributes['initial-currency'],
-      response.data.attributes['current-currency'],
-      response.data.attributes['broker-id']
+      response.data.attributes['initial-balance'],
+      response.data.attributes['current-balance'],
+      response.data.attributes['broker-id'],
+      response.data.attributes.broker
     );
   }
 
