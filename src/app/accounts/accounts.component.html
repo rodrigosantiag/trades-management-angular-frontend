@@ -3,6 +3,25 @@
 
 <ng-flash-message></ng-flash-message>
 
+<form [formGroup]="formFilter" class="form-inline">
+  <label for="broker-filter" class="my-1 mr-2">Broker</label>
+  <select (change)="filterAccounts()" id="broker-filter" formControlName="broker_id" class="custom-select my-1 mr-4">
+    <option value="">All</option>
+    <option *ngFor="let broker of brokers" value="{{broker.id}}">{{broker.name}}</option>
+  </select>
+
+  <label for="account-filter" class="my-1 mr-2">Account type</label>
+  <select (change)="filterAccounts()" id="account-filter" class="custom-select my-1 mr-4" formControlName="type_account">
+    <option value="">Any</option>
+    <option value="D">Demo account</option>
+    <option value="R">Real acocunt</option>
+  </select>
+
+  <button class="btn btn-primary" (click)="clearFilter()" type="button">Clear filters</button>
+</form>
+
+<hr>
+
 <div class="table-responsive">
   <table class="table table-striped table-sm">
     <thead>
