@@ -28,5 +28,11 @@
     </div>
   </div>
 
-  <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">Login</button>
+  <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">
+    <span *ngIf="!submitted">Login</span>
+    <div *ngIf="submitted">
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      Loading...
+    </div>
+  </button>
 </form>
