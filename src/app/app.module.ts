@@ -33,6 +33,7 @@ import {AccountDetailComponent} from './accounts/account-detail/account-detail.c
 library.add(fas, far, fab);
 
 import {NgxMaskModule} from 'ngx-mask';
+import { TradesComponent } from './trades/trades.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {NgxMaskModule} from 'ngx-mask';
     NavbarComponent,
     SidebarComponent,
     SignUpFormComponent,
-    SignInComponent
+    SignInComponent,
+    TradesComponent
   ],
   imports: [
     AngularTokenModule.forRoot({

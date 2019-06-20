@@ -7,6 +7,7 @@ import {BrokersComponent} from './brokers/brokers.component';
 import {AuthGuard} from './guard/auth.guard';
 import {AccountsComponent} from './accounts/accounts.component';
 import {AccountDetailComponent} from './accounts/account-detail/account-detail.component';
+import {TradesComponent} from './trades/trades.component';
 
 const routes: Routes = [
   {path: 'sign-up', component: SignUpFormComponent, canActivate: [NotAuthenticatedGuard]},
@@ -16,6 +17,7 @@ const routes: Routes = [
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard]},
   {path: 'new-account', component: AccountDetailComponent, canActivate: [AuthGuard]},
   {path: 'edit-account/:id', component: AccountDetailComponent, canActivate: [AuthGuard]},
+  {path: 'trades', component: TradesComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: '/brokers', pathMatch: 'full'}
 ];
 
