@@ -34,6 +34,7 @@ library.add(fas, far, fab);
 
 import {NgxMaskModule} from 'ngx-mask';
 import { TradesComponent } from './trades/trades.component';
+import {CountUpModule} from 'countup.js-angular2';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { TradesComponent } from './trades/trades.component';
     }),
     AppRoutingModule,
     BrowserModule,
+    CountUpModule,
     FontAwesomeModule,
     HttpClientModule,
     NgFlashMessagesModule.forRoot(),
