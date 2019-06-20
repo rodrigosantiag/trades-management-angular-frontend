@@ -7,7 +7,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../../shared/form.utils';
 import {FlashMessagesService} from '../../shared/flashMessages.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {ErrorUtils} from '../../shared/error.utils';
 import {AccountService} from '../shared/account.service';
 import {Location} from '@angular/common';
 import {switchMap} from 'rxjs/operators';

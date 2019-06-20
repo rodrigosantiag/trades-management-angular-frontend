@@ -38,10 +38,7 @@ export class AccountsComponent implements OnInit {
 
     this.accountService.gerAll()
       .subscribe(
-        accounts => {
-          this.accounts = accounts;
-          console.log(accounts);
-        },
+        accounts => this.accounts = accounts,
         (response) => {
           if (response.errors) {
             this.flashMessages.buildFlashMessage(
