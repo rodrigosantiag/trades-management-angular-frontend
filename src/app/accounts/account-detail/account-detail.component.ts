@@ -71,9 +71,6 @@ export class AccountDetailComponent implements OnInit {
             this.router.navigate(['/accounts']);
           }
         );
-    } else {
-      console.log('else');
-      this.router.navigate(['/accounts']);
     }
   }
 

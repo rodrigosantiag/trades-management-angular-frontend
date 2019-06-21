@@ -10,7 +10,7 @@ export class Account {
     public currentBalance: number,
     public brokerId: number,
     public broker?: Broker,
-    public trades?: Trade
+    public trades?: Array<Trade>
   ) {
   }
 

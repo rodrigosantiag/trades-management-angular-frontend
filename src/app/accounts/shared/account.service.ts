@@ -15,7 +15,7 @@ export class AccountService {
   constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
   }
 
-  public gerAll(terms: string = ''): Observable<Account[]> {
+  public getAll(terms: string = ''): Observable<Account[]> {
     const url = `${this.accountsUrl}?${terms}`;
 
     return this.httpClient.get(url)
@@ -71,7 +71,8 @@ export class AccountService {
       response.data.attributes['initial-balance'],
       response.data.attributes['current-balance'],
       response.data.attributes['broker-id'],
-      response.data.attributes.broker
+      response.data.attributes.broker,
+      response.data.attributes.trades
     );
   }
 

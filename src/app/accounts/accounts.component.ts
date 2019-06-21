@@ -36,7 +36,7 @@ export class AccountsComponent implements OnInit {
         brokers => this.brokers = brokers
       );
 
-    this.accountService.gerAll()
+    this.accountService.getAll()
       .subscribe(
         accounts => this.accounts = accounts,
         (response) => {
@@ -56,7 +56,7 @@ export class AccountsComponent implements OnInit {
     const terms =
       `q[broker_id_eq]=${this.formFilter.get('broker_id').value}&q[type_account_eq]=${this.formFilter.get('type_account').value}`;
 
-    this.accountService.gerAll(terms)
+    this.accountService.getAll(terms)
       .subscribe(
         accounts => this.accounts = accounts,
         () => {
