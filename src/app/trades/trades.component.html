@@ -11,33 +11,37 @@
     <option *ngFor="let account of accounts" value="{{account.id}}">{{account.broker.name}}
       - {{account.getAccountType()}}</option>
   </select>
-
-  <div *ngIf="accountSelected" class="account-balance" [ngClass]="demoRealClass()">{{accountSelected.broker.name}} - {{accountSelected.getAccountType()}} - <span [countUp]="accountSelected.currentBalance"
-                                                                                             [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
-  </div>
 </div>
 
 <div *ngIf="accountSelected">
+  <div class="account-balance" [ngClass]="demoRealClass()">{{accountSelected.broker.name}}
+    - {{accountSelected.getAccountType()}} - <span [countUp]="accountSelected.currentBalance"
+                                                   [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
+  </div>
 
   <div class="card-header mt-3 mb-3">
-    <div class="form-inline">
-      <input type="text" placeholder="Investment" class="form-control mr-4" mask="0*.00" value="3.50"
+    <form [formGroup]="form" class="form-inline">
+      <input type="text" formControlName="value" placeholder="Investment" class="form-control mr-4" mask="0*.00"
+             value="3.50"
              [dropSpecialCharacters]="false">
-      <input type="text" placeholder="Profit" sufix="%" class="form-control mr-4" mask="0*.00"
+      <input type="text" formControlName="profit" placeholder="Profit" sufix="%" class="form-control mr-4" mask="0*.00"
              [dropSpecialCharacters]="false">
-      <select class="form-control mr-4">
-        <option value="">ITM or OTM?</option>
+      <select formControlName="result" class="form-control mr-4">
+        <option value="" disabled>ITM or OTM?</option>
         <option value="1">ITM</option>
         <option value="0">OTM</option>
       </select>
 
-      <button class="btn btn-success">
+      <input type="hidden" formControlName="accountId">
+      <input type="hidden" formControlName="typeTrade">
+
+      <button type="submit" class="btn btn-success">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-    </div>
+    </form>
   </div>
 
-<!--  <div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;" class="mb-5"></div>-->
+  <!--  <div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;" class="mb-5"></div>-->
 
 
   <div *ngIf="accountTrades.length" class="table-responsive">
@@ -58,7 +62,7 @@
         <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
         <td>{{trade.value | currency:accountSelected.currency}}</td>
         <td>{{trade.profit}}%</td>
-        <td>{{trade.result? 'ITM' : 'OTM'}}</td>
+        <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
         <td>{{trade['result-balance'] | currency:accountSelected.currency}}</td>
         <td width="1%">
           <button type="button" class="btn btn-light">

@@ -5,6 +5,9 @@ import {AccountService} from '../accounts/shared/account.service';
 import {FlashMessagesService} from '../shared/flashMessages.service';
 import {Account} from '../accounts/shared/account.model';
 import {Trade} from './shared/trade.model';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormUtils} from '../shared/form.utils';
+import {AngularTokenService} from 'angular-token';
 
 @Component({
   selector: 'app-trades',
@@ -12,12 +15,19 @@ import {Trade} from './shared/trade.model';
   styleUrls: ['./trades.component.css']
 })
 export class TradesComponent implements OnInit {
-  public accounts: Array<Account>;
   public accountSelected: Account;
-  public currencyCode: string;
   public accountTrades: Array<Trade>;
+  public accounts: Array<Account>;
+  public currencyCode: string;
+  public form: FormGroup;
+  public formUtils: FormUtils;
 
-  constructor(private accountService: AccountService, private flashMessageService: FlashMessagesService) {
+  constructor(
+    private accountService: AccountService,
+    private flashMessageService: FlashMessagesService,
+    private formBuilder: FormBuilder,
+    private tokenService: AngularTokenService
+  ) {
     this.accountSelected = null;
     this.currencyCode = '';
     this.accountTrades = [];
@@ -65,13 +75,28 @@ export class TradesComponent implements OnInit {
     chart.render(); */
   }
 
+  /*TODO: this is going to another component*/
+
   public selectAccount(event: any) {
+    if (this.form) {
+      this.form.controls = null;
+    }
     this.accountService.getById(event.target.value)
       .subscribe(
         account => {
           this.accountSelected = account;
           this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
           this.accountTrades = account.trades;
+          this.form = this.formBuilder.group({
+            value: [
+              account.currentBalance * account.risk / 100,
+              [Validators.required, Validators.max(account.currentBalance)]
+            ],
+            profit: [null, [Validators.required]],
+            result: [null, [Validators.required]],
+            accountId: [account.id],
+            typeTrade: ['T']
+          });
         }
       );
 

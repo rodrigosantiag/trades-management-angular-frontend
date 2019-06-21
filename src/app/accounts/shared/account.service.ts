@@ -72,7 +72,8 @@ export class AccountService {
       response.data.attributes['current-balance'],
       response.data.attributes['broker-id'],
       response.data.attributes.broker,
-      response.data.attributes.trades
+      response.data.attributes.trades,
+      response.data.relationships.user.data.risk
     );
   }
 
