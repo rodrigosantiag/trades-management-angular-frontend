@@ -61,15 +61,7 @@ export class AccountDetailComponent implements OnInit {
 
   ngOnInit() {
     if (this.activatedRoute.snapshot.paramMap.get('id')) {
-      const id: number = +this.activatedRoute.snapshot.paramMap.get('id');
-      this.account = new Account(
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      );
+      console.log('entrou');
 
       this.activatedRoute.paramMap.pipe(switchMap((params: ParamMap) => this.accountService.getById(+params.get('id'))))
         .subscribe(
@@ -79,6 +71,9 @@ export class AccountDetailComponent implements OnInit {
             this.router.navigate(['/accounts']);
           }
         );
+    } else {
+      console.log('else');
+      this.router.navigate(['/accounts']);
     }
   }
 
@@ -90,11 +85,11 @@ export class AccountDetailComponent implements OnInit {
   public createAccount() {
     this.newAccount = new Account(
       null,
-      this.form.get('type_account').value,
+      this.form.get('typeAccount').value,
       this.form.get('currency').value,
-      +this.form.get('initial_balance').value,
-      +this.form.get('initial_balance').value,
-      +this.form.get('broker_id').value
+      +this.form.get('initialBalance').value,
+      +this.form.get('initialBalance').value,
+      +this.form.get('brokerId').value
     );
     this.submitted = true;
 
@@ -136,10 +131,10 @@ export class AccountDetailComponent implements OnInit {
   }
 
   public updateAccount() {
-    this.account.type_account = this.form.get('type_account').value;
+    this.account.typeAccount = this.form.get('typeAccount').value;
     this.account.currency = this.form.get('currency').value;
-    this.account.initial_balance = this.form.get('initial_balance').value;
-    this.account.broker_id = +this.form.get('broker_id').value;
+    this.account.initialBalance = this.form.get('initialBalance').value;
+    this.account.brokerId = +this.form.get('brokerId').value;
 
     this.accountService.update(this.account)
       .subscribe(
@@ -168,10 +163,10 @@ export class AccountDetailComponent implements OnInit {
 
   private setUpForm() {
     this.form = this.formBuilder.group({
-      type_account: [null, [Validators.required]],
+      typeAccount: [null, [Validators.required]],
       currency: [null, [Validators.required]],
-      initial_balance: [10, [Validators.required, Validators.min(10)]],
-      broker_id: [null, [Validators.required]]
+      initialBalance: [10, [Validators.required, Validators.min(10)]],
+      brokerId: [null, [Validators.required]]
     });
   }
 

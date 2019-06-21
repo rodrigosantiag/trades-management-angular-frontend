@@ -8,25 +8,25 @@
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="broker">Broker</label>
-      <select id="broker" formControlName="broker_id" class="form-control" [ngClass]="formUtils.showSuccessOrError('broker_id')">
+      <select id="broker" formControlName="brokerId" class="form-control" [ngClass]="formUtils.showSuccessOrError('brokerId')">
         <option value="" disabled selected>-- Choose a broker --</option>
         <option *ngFor="let broker of brokers" value="{{broker.id}}">{{broker.name}}</option>
       </select>
-      <div *ngIf="formUtils.showFieldError('broker_id')" class="invalid-feedback">
-        <span *ngIf="form.get('broker_id').errors.required">Broker required!</span>
+      <div *ngIf="formUtils.showFieldError('brokerId')" class="invalid-feedback">
+        <span *ngIf="form.get('brokerId').errors.required">Broker required!</span>
       </div>
     </div>
 
     <div class="form-group col-md-6">
       <label for="type-account">Account type</label>
-      <select formControlName="type_account" id="type-account" class="form-control" [ngClass]="formUtils.showSuccessOrError('type_account')">
+      <select formControlName="typeAccount" id="type-account" class="form-control" [ngClass]="formUtils.showSuccessOrError('typeAccount')">
         <option value="" disabled selected>-- Choose an account type --</option>
         <option value="D">Demo account</option>
         <option value="R">Real account</option>
       </select>
 
-      <div *ngIf="formUtils.showFieldError('type_account')" class="invalid-feedback">
-        <span *ngIf="form.get('type_account').errors.required">Account type required!</span>
+      <div *ngIf="formUtils.showFieldError('typeAccount')" class="invalid-feedback">
+        <span *ngIf="form.get('typeAccount').errors.required">Account type required!</span>
       </div>
     </div>
   </div>
@@ -46,11 +46,11 @@
 
     <div class="form-group col-md-6">
       <label for="initial-balance">Initial balance (example: 1234.50)</label>
-      <input formControlName="initial_balance" id="initial-balance" type="text" class="form-control" mask="0*.00" [dropSpecialCharacters]="false" [ngClass]="formUtils.showSuccessOrError('initial_balance')">
+      <input formControlName="initialBalance" id="initial-balance" type="text" class="form-control" mask="0*.00" [dropSpecialCharacters]="false" [ngClass]="formUtils.showSuccessOrError('initialBalance')">
       
-      <div class="invalid-feedback" *ngIf="formUtils.showFieldError('initial_balance')">
-        <span *ngIf="form.get('initial_balance').errors.required">Initial balance required!</span>
-        <span *ngIf="form.get('initial_balance').errors.min">Minimum deposit value is {{form.get('initial_balance').errors.min.min}}</span>
+      <div class="invalid-feedback" *ngIf="formUtils.showFieldError('initialBalance')">
+        <span *ngIf="form.get('initialBalance').errors.required">Initial balance required!</span>
+        <span *ngIf="form.get('initialBalance').errors.min">Minimum deposit value is {{form.get('initialBalance').errors.min.min}}</span>
       </div>
     </div>
   </div>
