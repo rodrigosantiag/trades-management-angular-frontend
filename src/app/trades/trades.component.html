@@ -4,85 +4,15 @@
 <ng-flash-message></ng-flash-message>
 
 <div class="form-inline">
-
   <label for="account-filter" class="my-1 mr-2 sr-only">Choose an account</label>
-  <select (change)="selectAccount($event)" id="account-filter" class="custom-select my-1 mr-4">
+  <select (change)="goToTrades($event)" id="account-filter" class="custom-select my-1 mr-4">
     <option value="" disabled>Choose an acocunt</option>
-    <option *ngFor="let account of accounts" value="{{account.id}}">{{account.broker.name}}
+    <option *ngFor="let account of accounts" value="{{account.id}}" [selected]="router.url.endsWith(account.id.toString())">{{account.broker.name}}
       - {{account.getAccountType()}}</option>
   </select>
 </div>
 
-<div *ngIf="accountSelected">
-  <div class="account-balance" [ngClass]="demoRealClass()">{{accountSelected.broker.name}}
-    - {{accountSelected.getAccountType()}} - <span [countUp]="accountSelected.currentBalance"
-                                                   [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
-  </div>
-
-  <div class="card-header mt-3 mb-3">
-    <form [formGroup]="form" class="form-inline">
-      <input type="text" formControlName="value" placeholder="Investment" class="form-control mr-4" mask="0*.00"
-             value="3.50"
-             [dropSpecialCharacters]="false">
-      <input type="text" formControlName="profit" placeholder="Profit" sufix="%" class="form-control mr-4" mask="0*.00"
-             [dropSpecialCharacters]="false">
-      <select formControlName="result" class="form-control mr-4">
-        <option value="" disabled>ITM or OTM?</option>
-        <option value="1">ITM</option>
-        <option value="0">OTM</option>
-      </select>
-
-      <input type="hidden" formControlName="accountId">
-      <input type="hidden" formControlName="typeTrade">
-
-      <button type="submit" class="btn btn-success">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-      </button>
-    </form>
-  </div>
-
-  <!--  <div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;" class="mb-5"></div>-->
-
-
-  <div *ngIf="accountTrades.length" class="table-responsive">
-    <table class="table table-striped table-sm">
-      <thead>
-      <th>#</th>
-      <th>Broker/Account</th>
-      <th>Value</th>
-      <th>Profit</th>
-      <th>Result</th>
-      <th>Result Balance</th>
-      <th colspan="2"></th>
-      </thead>
-
-      <tbody>
-      <tr *ngFor="let trade of accountTrades">
-        <td>{{trade.id}}</td>
-        <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
-        <td>{{trade.value | currency:accountSelected.currency}}</td>
-        <td>{{trade.profit}}%</td>
-        <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
-        <td>{{trade['result-balance'] | currency:accountSelected.currency}}</td>
-        <td width="1%">
-          <button type="button" class="btn btn-light">
-            <fa-icon [icon]="['far', 'edit']"></fa-icon>
-          </button>
-        </td>
-        <td width="1%">
-          <button type="button" class="btn btn-danger">
-            <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="!accountTrades.length">
-    <p class="text-center">No trades yet!</p>
-  </div>
-</div>
+<router-outlet></router-outlet>
 
 
 

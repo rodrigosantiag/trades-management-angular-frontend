@@ -35,6 +35,7 @@ library.add(fas, far, fab);
 import {NgxMaskModule} from 'ngx-mask';
 import { TradesComponent } from './trades/trades.component';
 import {CountUpModule} from 'countup.js-angular2';
+import { TradesAccountComponent } from './trades/trades-account/trades-account.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {CountUpModule} from 'countup.js-angular2';
     SidebarComponent,
     SignUpFormComponent,
     SignInComponent,
-    TradesComponent
+    TradesComponent,
+    TradesAccountComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
