@@ -72,7 +72,7 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let trade of accountTrades">
+    <tr *ngFor="let trade of accountTrades.reverse()">
       <td>{{trade.id}}</td>
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
       <td>{{trade.value | currency:accountSelected.currency}}</td>

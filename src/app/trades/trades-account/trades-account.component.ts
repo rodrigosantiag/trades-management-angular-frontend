@@ -48,11 +48,7 @@ export class TradesAccountComponent implements OnInit {
               this.accountSelected = account;
               this.currentBalance = account.currentBalance;
               this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
-              this.accountTrades = account.trades.sort((a, b) => {
-                if (a.id < b.id) {
-                  return 1;
-                }
-              });
+              this.accountTrades = account.trades;
               this.form = this.formBuilder.group({
                 value: [
                   account.currentBalance * account.risk / 100,
@@ -67,7 +63,7 @@ export class TradesAccountComponent implements OnInit {
               // TODO: update chart when trade is added. Check points positioning
               let y = +this.accountSelected.initialBalance;
               const dataPoints = [{x: new Date(this.accountSelected.createdDateFormatted), y}];
-              this.accountSelected.trades.reverse().map(trade => {
+              account.trades.map(trade => {
                 y = y + +trade['result-balance'];
                 dataPoints.push({x: new Date(trade['created-date-formatted']), y});
               });
