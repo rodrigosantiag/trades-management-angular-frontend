@@ -1,27 +1,56 @@
 <div *ngIf="accountSelected">
   <div class="account-balance mt-3" [ngClass]="demoRealClass()">{{accountSelected.broker.name}}
-    - {{accountSelected.getAccountType()}} - <span [countUp]="accountSelected.currentBalance"
+    - {{accountSelected.getAccountType()}} - <span [countUp]="currentBalance"
                                                    [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
   </div>
 
   <div class="card-header mt-3 mb-3">
-    <form [formGroup]="form" class="form-inline">
-      <input type="text" [formControl]="form.controls['value']" placeholder="Investment" class="form-control mr-4" mask="0*.00"
-             [dropSpecialCharacters]="false">
-      <input type="text" [formControl]="form.controls['profit']" placeholder="Profit" sufix="%" class="form-control mr-4" mask="0*.00"
-             [dropSpecialCharacters]="false">
-      <select [formControl]="form.controls['result']" class="form-control mr-4">
-        <option value="" disabled selected>ITM or OTM?</option>
-        <option value="1">ITM</option>
-        <option value="0">OTM</option>
-      </select>
+    <form (ngSubmit)="createTrade()" [formGroup]="form">
+      <div class="form-row">
+        <div class="col-md-3">
+          <input type="text" [formControl]="form.controls['value']" placeholder="Investment" class="form-control"
+                 mask="0*.00"
+                 [dropSpecialCharacters]="false" [ngClass]="formUtils.showSuccessOrError('value')">
+          <div *ngIf="formUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="form.get('value').errors.required || form.get('value').errors.min">Investment must be at least 1!</span>
+            <span
+              *ngIf="form.get('value').errors.max">Investment can't be higher than {{form.get('value').errors.max.max}}</span>
+          </div>
+        </div>
 
-      <input type="hidden" [formControl]="form.controls['accountId']">
-      <input type="hidden" [formControl]="form.controls['typeTrade']">
+        <div class="col-md-3">
+          <input type="text" [formControl]="form.controls['profit']" placeholder="Profit" sufix="%"
+                 class="form-control" mask="0*.00"
+                 [dropSpecialCharacters]="false" [ngClass]="formUtils.showSuccessOrError('profit')">
+          <div *ngIf="formUtils.showFieldError('profit')" class="invalid-feedback">
+            <span *ngIf="form.get('profit').errors.required">Profit value is required</span>
+          </div>
+        </div>
 
-      <button type="submit" class="btn btn-success">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-      </button>
+
+        <div class="col-md-3">
+          <select [formControl]="form.controls['result']" class="form-control" [ngClass]="formUtils.showSuccessOrError('result')">
+            <option value="" disabled selected>ITM or OTM?</option>
+            <option value="1">ITM</option>
+            <option value="0">OTM</option>
+          </select>
+
+          <div *ngIf="formUtils.showFieldError('result')" class="invalid-feedback">
+            <span *ngIf="form.get('result').errors.required">You must inform if operation was ITM or OTM</span>
+          </div>
+
+
+          <input type="hidden" [formControl]="form.controls['accountId']">
+          <input type="hidden" [formControl]="form.controls['typeTrade']">
+        </div>
+
+        <div class="col-md-3">
+          <button [disabled]="form.invalid || submitted" type="submit" class="btn btn-success">
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+          </button>
+        </div>
+      </div>
     </form>
   </div>
 
@@ -47,7 +76,7 @@
         <td>{{trade.value | currency:accountSelected.currency}}</td>
         <td>{{trade.profit}}%</td>
         <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
-        <td>{{trade['result-balance'] | currency:accountSelected.currency}}</td>
+        <td [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
         <td width="1%">
           <button type="button" class="btn btn-light">
             <fa-icon [icon]="['far', 'edit']"></fa-icon>

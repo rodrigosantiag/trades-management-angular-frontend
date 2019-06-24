@@ -1,3 +1,5 @@
+import {Account} from '../../accounts/shared/account.model';
+
 export class Trade {
   public constructor(
     public id: number,
@@ -5,9 +7,9 @@ export class Trade {
     public profit: number,
     public result: boolean,
     public accountId: number,
-    public account: Account,
+    public typeTrade?: string,
     public resultBalance?: number,
-    public typeTrade?: string
+    public account?: Account
   ) {
   }
 }
