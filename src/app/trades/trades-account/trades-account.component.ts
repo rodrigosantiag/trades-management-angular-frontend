@@ -9,6 +9,8 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {TradeService} from '../shared/trade.service';
 import {FlashMessagesService} from '../../shared/flashMessages.service';
 
+import * as CanvasJS from '../../../assets/canvasjs.min.js';
+
 @Component({
   selector: 'app-trades-account',
   templateUrl: './trades-account.component.html',
@@ -39,7 +41,7 @@ export class TradesAccountComponent implements OnInit {
     this.submitted = false;
 
     this.router.events.subscribe((val) => {
-      if (val instanceof NavigationEnd) {
+      if (val instanceof NavigationEnd && val.url.startsWith('/trades/trades-account/')) {
         this.accountService.getById(+this.activatedRoute.snapshot.paramMap.get('id'))
           .subscribe(
             account => {
@@ -62,14 +64,38 @@ export class TradesAccountComponent implements OnInit {
                 typeTrade: ['T']
               });
               this.formUtils = new FormUtils(this.form);
+              // TODO: update chart when trade is added. Check points positioning
+              let y = +this.accountSelected.initialBalance;
+              const dataPoints = [{x: new Date(this.accountSelected.createdDateFormatted), y}];
+              this.accountSelected.trades.reverse().map(trade => {
+                y = y + +trade['result-balance'];
+                dataPoints.push({x: new Date(trade['created-date-formatted']), y});
+              });
+              const chart = new CanvasJS.Chart('chartContainer', {
+                zoomEnabled: true,
+                animationEnabled: true,
+                exportEnabled: true,
+                subtitles: [{
+                  text: 'Try Zooming and Panning'
+                }],
+                axisX: {
+                  valueFormatString: 'MM/DD/YYYY H:mm'
+                },
+                data: [
+                  {
+                    type: 'line',
+                    dataPoints
+                  }]
+              });
+
+              chart.render();
             }
           );
       }
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   public createTrade() {
     this.submitted = true;
@@ -87,7 +113,6 @@ export class TradesAccountComponent implements OnInit {
         newTrade => {
           this.accountTrades.unshift(newTrade);
           this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
-          console.log(this.currentBalance);
           this.newTrade = new Trade(
             null,
             null,

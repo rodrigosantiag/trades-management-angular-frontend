@@ -71,6 +71,7 @@ export class AccountService {
       response.data.attributes['initial-balance'],
       response.data.attributes['current-balance'],
       response.data.attributes['broker-id'],
+      response.data.attributes['created-date-formatted'],
       response.data.attributes.broker,
       response.data.attributes.trades,
       response.data.relationships.user.data.risk
@@ -88,6 +89,7 @@ export class AccountService {
         item.attributes['initial-balance'],
         item.attributes['current-balance'],
         item.attributes['broker-id'],
+        item.attributes['created-date-formatted'],
         item.attributes.broker
       );
       accounts.push(account);

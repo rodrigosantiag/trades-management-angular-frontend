@@ -32,6 +32,7 @@ export class TradeService {
       response.data.attributes.profit,
       response.data.attributes.result,
       response.data.attributes['account-id'],
+      response.data.attributes['created-date-formatted'],
       response.data.attributes['type-trade'],
       response.data.attributes['result-balance'],
       response.data.attributes.account

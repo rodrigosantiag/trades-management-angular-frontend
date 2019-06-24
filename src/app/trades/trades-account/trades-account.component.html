@@ -30,7 +30,8 @@
 
 
         <div class="col-md-3">
-          <select [formControl]="form.controls['result']" class="form-control" [ngClass]="formUtils.showSuccessOrError('result')">
+          <select [formControl]="form.controls['result']" class="form-control"
+                  [ngClass]="formUtils.showSuccessOrError('result')">
             <option value="" disabled selected>ITM or OTM?</option>
             <option value="1">ITM</option>
             <option value="0">OTM</option>
@@ -53,46 +54,47 @@
       </div>
     </form>
   </div>
+</div>
 
-  <!--  <div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;" class="mb-5"></div>-->
+<div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;" class="mb-5"></div>
 
 
-  <div *ngIf="accountTrades.length" class="table-responsive">
-    <table class="table table-striped table-sm">
-      <thead>
-      <th>#</th>
-      <th>Broker/Account</th>
-      <th>Value</th>
-      <th>Profit</th>
-      <th>Result</th>
-      <th>Result Balance</th>
-      <th colspan="2"></th>
-      </thead>
+<div *ngIf="accountTrades.length" class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+    <th>#</th>
+    <th>Broker/Account</th>
+    <th>Value</th>
+    <th>Profit</th>
+    <th>Result</th>
+    <th>Result Balance</th>
+    <th colspan="2"></th>
+    </thead>
 
-      <tbody>
-      <tr *ngFor="let trade of accountTrades">
-        <td>{{trade.id}}</td>
-        <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
-        <td>{{trade.value | currency:accountSelected.currency}}</td>
-        <td>{{trade.profit}}%</td>
-        <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
-        <td [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
-        <td width="1%">
-          <button type="button" class="btn btn-light">
-            <fa-icon [icon]="['far', 'edit']"></fa-icon>
-          </button>
-        </td>
-        <td width="1%">
-          <button type="button" class="btn btn-danger">
-            <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+    <tbody>
+    <tr *ngFor="let trade of accountTrades">
+      <td>{{trade.id}}</td>
+      <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
+      <td>{{trade.value | currency:accountSelected.currency}}</td>
+      <td>{{trade.profit}}%</td>
+      <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
+      <td
+        [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
+      <td width="1%">
+        <button type="button" class="btn btn-light">
+          <fa-icon [icon]="['far', 'edit']"></fa-icon>
+        </button>
+      </td>
+      <td width="1%">
+        <button type="button" class="btn btn-danger">
+          <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
-  <div *ngIf="!accountTrades.length">
-    <p class="text-center">No trades yet!</p>
-  </div>
+<div *ngIf="!accountTrades.length">
+  <p class="text-center">No trades yet!</p>
 </div>

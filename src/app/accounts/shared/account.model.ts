@@ -9,6 +9,7 @@ export class Account {
     public initialBalance: number,
     public currentBalance: number,
     public brokerId: number,
+    public createdDateFormatted?: string,
     public broker?: Broker,
     public trades?: Array<Trade>,
     public risk?: number
