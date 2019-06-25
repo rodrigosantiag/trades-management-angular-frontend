@@ -25,6 +25,9 @@ export class TradesAccountComponent implements OnInit {
   public newTrade: Trade;
   public submitted: boolean;
   public currentBalance: number;
+  public dataPoints: Array<any>;
+  public chart: CanvasJS;
+  public y: number;
 
   constructor(
     private accountService: AccountService,
@@ -60,14 +63,13 @@ export class TradesAccountComponent implements OnInit {
                 typeTrade: ['T']
               });
               this.formUtils = new FormUtils(this.form);
-              // TODO: update chart when trade is added. Check points positioning
-              let y = +this.accountSelected.initialBalance;
-              const dataPoints = [{x: new Date(this.accountSelected.createdDateFormatted), y}];
+              this.y = +this.accountSelected.initialBalance;
+              this.dataPoints = [{x: new Date(this.accountSelected.createdDateFormatted), y: this.y}];
               account.trades.map(trade => {
-                y = y + +trade['result-balance'];
-                dataPoints.push({x: new Date(trade['created-date-formatted']), y});
+                this.y = this.y + +trade['result-balance'];
+                this.dataPoints.push({x: new Date(trade['created-date-formatted']), y: this.y});
               });
-              const chart = new CanvasJS.Chart('chartContainer', {
+              this.chart = new CanvasJS.Chart('chartContainer', {
                 zoomEnabled: true,
                 animationEnabled: true,
                 exportEnabled: true,
@@ -75,23 +77,28 @@ export class TradesAccountComponent implements OnInit {
                   text: 'Try Zooming and Panning'
                 }],
                 axisX: {
-                  valueFormatString: 'MM/DD/YYYY H:mm'
+                  valueFormatString: 'MM/DD/YYYY H:mm:ss',
+                  crosshair: {
+                    enabled: true,
+                    snapToDataPoint: true
+                  }
                 },
                 data: [
                   {
                     type: 'line',
-                    dataPoints
+                    dataPoints: this.dataPoints
                   }]
               });
 
-              chart.render();
+              this.chart.render();
             }
           );
       }
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   public createTrade() {
     this.submitted = true;
@@ -107,8 +114,11 @@ export class TradesAccountComponent implements OnInit {
     this.tradeService.create(this.newTrade)
       .subscribe(
         newTrade => {
-          this.accountTrades.unshift(newTrade);
+          this.accountTrades.push(newTrade);
           this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
+          this.y = this.y + +newTrade.resultBalance;
+          this.dataPoints.push({x: new Date(newTrade.createdDateFormatted), y: this.y});
+          this.chart.render();
           this.newTrade = new Trade(
             null,
             null,
