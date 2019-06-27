@@ -8,8 +8,7 @@ import {AccountService} from '../../accounts/shared/account.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {TradeService} from '../shared/trade.service';
 import {FlashMessagesService} from '../../shared/flashMessages.service';
-
-import * as CanvasJS from '../../../assets/canvasjs.min.js';
+import {element} from 'protractor';
 
 @Component({
   selector: 'app-trades-account',
@@ -26,8 +25,23 @@ export class TradesAccountComponent implements OnInit {
   public submitted: boolean;
   public currentBalance: number;
   public dataPoints: Array<any>;
-  public chart: CanvasJS;
   public y: number;
+
+  /* Chart's variables */
+  public view: Array<any>;
+  public showXAxis: boolean;
+  public showYAxis: boolean;
+  public gradient: boolean;
+  public showLegend: boolean;
+  public showXAxisLabel: boolean;
+  public xAxisLabel: string;
+  public showYAxisLabel: boolean;
+  public yAxisLabel: string;
+  public colorScheme: object;
+  public multi: Array<any>;
+  public autoScale: boolean;
+
+
 
   constructor(
     private accountService: AccountService,
@@ -64,33 +78,32 @@ export class TradesAccountComponent implements OnInit {
               });
               this.formUtils = new FormUtils(this.form);
               this.y = +this.accountSelected.initialBalance;
-              this.dataPoints = [{x: new Date(this.accountSelected.createdDateFormatted), y: this.y}];
+              this.dataPoints = [{name: new Date(this.accountSelected.createdDateFormatted), value: this.y}];
               account.trades.map(trade => {
                 this.y = this.y + +trade['result-balance'];
-                this.dataPoints.push({x: new Date(trade['created-date-formatted']), y: this.y});
-              });
-              this.chart = new CanvasJS.Chart('chartContainer', {
-                zoomEnabled: true,
-                animationEnabled: true,
-                exportEnabled: true,
-                subtitles: [{
-                  text: 'Try Zooming and Panning'
-                }],
-                axisX: {
-                  valueFormatString: 'MM/DD/YYYY H:mm:ss',
-                  crosshair: {
-                    enabled: true,
-                    snapToDataPoint: true
-                  }
-                },
-                data: [
-                  {
-                    type: 'line',
-                    dataPoints: this.dataPoints
-                  }]
+                this.dataPoints.push({name: new Date(trade['created-date-formatted']), value: this.y});
               });
 
-              this.chart.render();
+              // options
+              this.showXAxis = true;
+              this.showYAxis = true;
+              this.gradient = false;
+              this.showLegend = true;
+              this.autoScale = true;
+              this.showXAxisLabel = true;
+              this.showYAxisLabel = true;
+              this.yAxisLabel = 'Account Balance';
+
+              this.colorScheme = {
+                domain: ['#5AA454']
+              };
+
+              this.multi = [
+                {
+                  name: 'Trades',
+                  series: this.dataPoints
+                }
+              ];
             }
           );
       }
@@ -117,8 +130,14 @@ export class TradesAccountComponent implements OnInit {
           this.accountTrades.push(newTrade);
           this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
           this.y = this.y + +newTrade.resultBalance;
-          this.dataPoints.push({x: new Date(newTrade.createdDateFormatted), y: this.y});
-          this.chart.render();
+          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y});
+          this.multi = [
+            {
+              name: 'Trades',
+              series: this.dataPoints
+            }
+          ];
+          console.log(this.dataPoints);
           this.newTrade = new Trade(
             null,
             null,

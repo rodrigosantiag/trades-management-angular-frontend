@@ -56,8 +56,18 @@
   </div>
 </div>
 
-<div id="chartContainer" style="height: 370px; width: 100%;" class="mb-5"></div>
-
+<div style="width: 100%; height: 400px">
+  <ngx-charts-line-chart *ngIf="dataPoints"
+    [scheme]="colorScheme"
+    [results]="multi"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [showYAxisLabel]="showYAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [autoScale]="autoScale">
+  </ngx-charts-line-chart>
+</div>
 
 <div *ngIf="accountTrades.length" class="table-responsive">
   <table class="table table-striped table-sm">
