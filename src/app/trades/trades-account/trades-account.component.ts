@@ -28,13 +28,11 @@ export class TradesAccountComponent implements OnInit {
   public y: number;
 
   /* Chart's variables */
-  public view: Array<any>;
   public showXAxis: boolean;
   public showYAxis: boolean;
   public gradient: boolean;
   public showLegend: boolean;
   public showXAxisLabel: boolean;
-  public xAxisLabel: string;
   public showYAxisLabel: boolean;
   public yAxisLabel: string;
   public colorScheme: object;
@@ -100,7 +98,7 @@ export class TradesAccountComponent implements OnInit {
 
               this.multi = [
                 {
-                  name: 'Trades',
+                  name: 'Balance',
                   series: this.dataPoints
                 }
               ];
@@ -133,7 +131,7 @@ export class TradesAccountComponent implements OnInit {
           this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y});
           this.multi = [
             {
-              name: 'Trades',
+              name: 'Balance',
               series: this.dataPoints
             }
           ];
