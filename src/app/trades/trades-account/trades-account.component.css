@@ -19,3 +19,7 @@
 .win{
   color: #28a745;
 }
+
+.page-link{
+  cursor: pointer;
+}

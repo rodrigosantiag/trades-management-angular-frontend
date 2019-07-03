@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Trade} from '../shared/trade.model';
 import {Account} from '../../accounts/shared/account.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -8,7 +8,7 @@ import {AccountService} from '../../accounts/shared/account.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {TradeService} from '../shared/trade.service';
 import {FlashMessagesService} from '../../shared/flashMessages.service';
-import {element} from 'protractor';
+import {PaginationInstance} from 'ngx-pagination';
 
 @Component({
   selector: 'app-trades-account',
@@ -38,7 +38,7 @@ export class TradesAccountComponent implements OnInit {
   public colorScheme: object;
   public multi: Array<any>;
   public autoScale: boolean;
-
+  public config: PaginationInstance;
 
 
   constructor(
@@ -60,10 +60,16 @@ export class TradesAccountComponent implements OnInit {
         this.accountService.getById(+this.activatedRoute.snapshot.paramMap.get('id'))
           .subscribe(
             account => {
+              this.config = {
+                id: 'custom',
+                itemsPerPage: 10,
+                currentPage: 1
+              };
               this.accountSelected = account;
               this.currentBalance = account.currentBalance;
               this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
-              this.accountTrades = account.trades;
+              this.accountTrades = account.trades.slice(0);
+              this.accountTrades.reverse();
               this.form = this.formBuilder.group({
                 value: [
                   account.currentBalance * account.risk / 100,
@@ -125,7 +131,7 @@ export class TradesAccountComponent implements OnInit {
     this.tradeService.create(this.newTrade)
       .subscribe(
         newTrade => {
-          this.accountTrades.push(newTrade);
+          this.accountTrades.unshift(newTrade);
           this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
           this.y = this.y + +newTrade.resultBalance;
           this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y});

@@ -37,6 +37,7 @@ import { TradesComponent } from './trades/trades.component';
 import {CountUpModule} from 'countup.js-angular2';
 import { TradesAccountComponent } from './trades/trades-account/trades-account.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
     NgbModule,
     NgxChartsModule,
     NgxMaskModule.forRoot(),
+    NgxPaginationModule,
     ReactiveFormsModule
   ],
   providers: [
