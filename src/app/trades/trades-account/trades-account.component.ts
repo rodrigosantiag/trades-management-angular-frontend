@@ -141,7 +141,6 @@ export class TradesAccountComponent implements OnInit {
               series: this.dataPoints
             }
           ];
-          console.log(this.dataPoints);
           this.newTrade = new Trade(
             null,
             null,

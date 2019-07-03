@@ -61,8 +61,6 @@ export class AccountDetailComponent implements OnInit {
 
   ngOnInit() {
     if (this.activatedRoute.snapshot.paramMap.get('id')) {
-      console.log('entrou');
-
       this.activatedRoute.paramMap.pipe(switchMap((params: ParamMap) => this.accountService.getById(+params.get('id'))))
         .subscribe(
           (account: Account) => this.setAccount(account),
