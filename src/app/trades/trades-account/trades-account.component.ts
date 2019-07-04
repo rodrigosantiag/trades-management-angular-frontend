@@ -9,6 +9,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {TradeService} from '../shared/trade.service';
 import {FlashMessagesService} from '../../shared/flashMessages.service';
 import {PaginationInstance} from 'ngx-pagination';
+import {HttpClient, HttpClientModule, HttpHeaderResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-trades-account',
@@ -38,7 +39,11 @@ export class TradesAccountComponent implements OnInit {
   public colorScheme: object;
   public multi: Array<any>;
   public autoScale: boolean;
+
+  // Pagination
   public config: PaginationInstance;
+  public p: number;
+  public total: number;
 
 
   constructor(
@@ -58,32 +63,24 @@ export class TradesAccountComponent implements OnInit {
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd && val.url.startsWith('/trades/trades-account/')) {
         this.accountService.getById(+this.activatedRoute.snapshot.paramMap.get('id'))
-          .subscribe(
-            account => {
-              this.config = {
-                id: 'custom',
-                itemsPerPage: 10,
-                currentPage: 1
-              };
+          .subscribe(account => {
               this.accountSelected = account;
-              this.currentBalance = account.currentBalance;
-              this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
-              this.accountTrades = account.trades.slice(0);
-              this.accountTrades.reverse();
               this.form = this.formBuilder.group({
                 value: [
-                  account.currentBalance * account.risk / 100,
-                  [Validators.required, Validators.min(1), Validators.max(account.currentBalance)]
+                  this.accountSelected.currentBalance * this.accountSelected.risk / 100,
+                  [Validators.required, Validators.min(1), Validators.max(this.accountSelected.currentBalance)]
                 ],
                 profit: [null, [Validators.required]],
                 result: [null, [Validators.required]],
-                accountId: [account.id],
+                accountId: [this.accountSelected.id],
                 typeTrade: ['T']
               });
               this.formUtils = new FormUtils(this.form);
+              this.currentBalance = this.accountSelected.currentBalance;
+              this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
               this.y = +this.accountSelected.initialBalance;
               this.dataPoints = [{name: new Date(this.accountSelected.createdDateFormatted), value: this.y}];
-              account.trades.map(trade => {
+              this.accountSelected.trades.map(trade => {
                 this.y = this.y + +trade['result-balance'];
                 this.dataPoints.push({name: new Date(trade['created-date-formatted']), value: this.y});
               });
@@ -108,13 +105,36 @@ export class TradesAccountComponent implements OnInit {
                   series: this.dataPoints
                 }
               ];
-            }
-          );
+            },
+            () => {
+              this.flashMessages.buildFlashMessage(
+                ['An error ocurred. Please try again'],
+                5000,
+                true,
+                'danger'
+              );
+            },
+            () => this.getPage(1));
       }
     });
   }
 
   ngOnInit() {
+  }
+
+  public getPage(page: number) {
+    this.tradeService.getTrades(this.accountSelected.id, page)
+      .subscribe(
+        response => {
+          this.config = {
+            id: 'custom',
+            currentPage: page,
+            itemsPerPage: 10,
+            totalItems: response.headers
+          };
+          this.accountTrades = response.trades;
+        }
+      );
   }
 
   public createTrade() {
@@ -151,6 +171,7 @@ export class TradesAccountComponent implements OnInit {
           );
           this.form.get('profit').reset();
           this.form.get('result').reset();
+          this.getPage(this.config.currentPage);
         },
         () => {
           this.flashMessages.buildFlashMessage(

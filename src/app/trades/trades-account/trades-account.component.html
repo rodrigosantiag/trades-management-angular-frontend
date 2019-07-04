@@ -103,7 +103,7 @@
     </tr>
     </tbody>
   </table>
-  <pagination-template #p="paginationApi" [id]="config.id" (pageChange)="config.currentPage = $event">
+  <pagination-template #p="paginationApi" [id]="config.id" (pageChange)="getPage($event)">
     <ul class="pagination">
       <li class="page-item" [class.disabled]="p.isFirstPage()">
         <a class="page-link" (click)="p.previous()">Previous</a>
