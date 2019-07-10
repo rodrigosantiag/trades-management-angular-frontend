@@ -85,13 +85,16 @@
     <tr *ngFor="let trade of accountTrades | paginate: config">
       <td>{{trade.id}}</td>
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
-      <td>{{trade.value | currency:accountSelected.currency}}</td>
+      <!-- TODO: make edit form -->
+      <td>
+        <span *ngIf="!isEditingTrade(trade)">{{trade.value | currency:accountSelected.currency}}</span>
+      </td>
       <td>{{trade.profit}}%</td>
       <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
       <td
         [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
       <td width="1%">
-        <button type="button" class="btn btn-light">
+        <button (click)="beginEdit(trade)" type="button" class="btn btn-light">
           <fa-icon [icon]="['far', 'edit']"></fa-icon>
         </button>
       </td>

@@ -17,7 +17,6 @@ export class BrokersComponent implements OnInit {
   public newBroker: Broker;
   public messages: Array<string>;
   public submitted: boolean;
-  public editing: boolean;
   public editingBroker: Broker;
   public formEdit: FormGroup;
 
@@ -31,7 +30,6 @@ export class BrokersComponent implements OnInit {
     this.newBroker = new Broker(null, '');
     this.messages = null;
     this.submitted = false;
-    this.editing = false;
     this.editingBroker = new Broker(null, null);
     this.formEdit = this.formBuilder.group({
       name: [null, [Validators.required]]
@@ -96,7 +94,6 @@ export class BrokersComponent implements OnInit {
   }
 
   public beginEdit(editingBroker: Broker) {
-    this.editing = true;
     this.editingBroker = editingBroker;
     this.formEdit.patchValue(editingBroker);
     setTimeout(() => {
@@ -106,7 +103,6 @@ export class BrokersComponent implements OnInit {
   }
 
   public cancelEdit() {
-    this.editing = false;
     this.editingBroker = new Broker(null, null);
   }
 
@@ -120,7 +116,6 @@ export class BrokersComponent implements OnInit {
           this.brokers[itemIndex] = response;
           this.brokers.sort((a, b) => a.name.localeCompare(b.name));
           this.editingBroker = new Broker(null, null);
-          this.editing = false;
           this.messages = [`Broker ${broker.name} updated!`];
           this.flashMessageService.buildFlashMessage(this.messages, 5000, true, 'success');
         },

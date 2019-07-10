@@ -9,7 +9,6 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {TradeService} from '../shared/trade.service';
 import {FlashMessagesService} from '../../shared/flashMessages.service';
 import {PaginationInstance} from 'ngx-pagination';
-import {HttpClient, HttpClientModule, HttpHeaderResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-trades-account',
@@ -25,10 +24,13 @@ export class TradesAccountComponent implements OnInit {
   public newTrade: Trade;
   public submitted: boolean;
   public currentBalance: number;
-  public dataPoints: Array<any>;
-  public y: number;
+  public editingTrade: Trade;
+  public formEdit: FormGroup;
+  public formEditUtils: FormUtils;
 
   /* Chart's variables */
+  public dataPoints: Array<any>;
+  public y: number;
   public showXAxis: boolean;
   public showYAxis: boolean;
   public gradient: boolean;
@@ -42,11 +44,10 @@ export class TradesAccountComponent implements OnInit {
 
   // Pagination
   public config: PaginationInstance;
-  public p: number;
   public total: number;
 
 
-  constructor(
+  public constructor(
     private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
     private flashMessages: FlashMessagesService,
@@ -59,22 +60,14 @@ export class TradesAccountComponent implements OnInit {
     this.accountTrades = [];
     this.form = null;
     this.submitted = false;
+    this.editingTrade = new Trade(null, null, null, null, null);
 
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd && val.url.startsWith('/trades/trades-account/')) {
         this.accountService.getById(+this.activatedRoute.snapshot.paramMap.get('id'))
           .subscribe(account => {
               this.accountSelected = account;
-              this.form = this.formBuilder.group({
-                value: [
-                  this.accountSelected.currentBalance * this.accountSelected.risk / 100,
-                  [Validators.required, Validators.min(1), Validators.max(this.accountSelected.currentBalance)]
-                ],
-                profit: [null, [Validators.required]],
-                result: [null, [Validators.required]],
-                accountId: [this.accountSelected.id],
-                typeTrade: ['T']
-              });
+              this.form = this.setUprForm();
               this.formUtils = new FormUtils(this.form);
               this.currentBalance = this.accountSelected.currentBalance;
               this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
@@ -185,6 +178,16 @@ export class TradesAccountComponent implements OnInit {
     this.submitted = false;
   }
 
+  public beginEdit(trade: Trade) {
+    this.editingTrade = trade;
+    this.formEdit = this.setUprForm();
+    this.formEdit.patchValue(trade);
+    this.formEditUtils = new FormUtils(this.formEdit);
+  }
+
+  public isEditingTrade(trade): boolean {
+    return trade === this.editingTrade;
+  }
 
   public demoRealClass(): string {
     return this.accountSelected.typeAccount === 'D' ? 'demo' : 'real';
@@ -192,6 +195,19 @@ export class TradesAccountComponent implements OnInit {
 
   public winLoseClass(trade: Trade): string {
     return trade.result ? 'win' : 'lose';
+  }
+
+  public setUprForm(): FormGroup {
+    return this.formBuilder.group({
+      value: [
+        this.accountSelected.currentBalance * this.accountSelected.risk / 100,
+        [Validators.required, Validators.min(1), Validators.max(this.accountSelected.currentBalance)]
+      ],
+      profit: [null, [Validators.required]],
+      result: [null, [Validators.required]],
+      accountId: [this.accountSelected.id],
+      typeTrade: ['T']
+    });
   }
 
 }
