@@ -15,7 +15,7 @@
           <span
             *ngIf="form.get('value').errors.required || form.get('value').errors.min">Investment must be at least 1!</span>
             <span
-              *ngIf="form.get('value').errors.max">Investment can't be higher than {{form.get('value').errors.max.max}}</span>
+              *ngIf="form.get('value').errors.max">Investment can't be higher than {{form.get('value').errors.max.max | currency:accountSelected.currency}}</span>
           </div>
         </div>
 
@@ -86,15 +86,14 @@
       <td>{{trade.id}}</td>
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
       <!-- TODO: make edit form -->
-      <td>
-        <span *ngIf="!isEditingTrade(trade)">{{trade.value | currency:accountSelected.currency}}</span>
-      </td>
+      <td>{{trade.value | currency:accountSelected.currency}}</td>
       <td>{{trade.profit}}%</td>
       <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
       <td
         [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
       <td width="1%">
-        <button (click)="beginEdit(trade)" type="button" class="btn btn-light">
+        <button (click)="beginEdit(trade)" type="button" class="btn btn-light" data-toggle="modal"
+                data-target="#editTradeModal">
           <fa-icon [icon]="['far', 'edit']"></fa-icon>
         </button>
       </td>
@@ -125,4 +124,69 @@
 
 <div *ngIf="!accountTrades.length">
   <p class="text-center">No trades yet!</p>
+</div>
+
+
+<!-- Modal -->
+<div *ngIf="isEditing" class="modal fade" id="editTradeModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editing trade #{{editingTrade.id}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="formEdit" (ngSubmit)="updateTrade(editingTrade)">
+        <div class="modal-body">
+          <p><strong>BrokerAccount</strong>: {{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</p>
+
+          <div class="form-group">
+            <label for="editTradeValue">Value</label>
+            <input type="text" [formControl]="formEdit.controls['value']" id="editTradeValue" placeholder="Investment" class="form-control"
+                   mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formEditUtils.showSuccessOrError('value')">
+            <div *ngIf="formEditUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="formEdit.get('value').errors.required || formEdit.get('value').errors.min">Investment must be at least 1!</span>
+              <span
+                *ngIf="formEdit.get('value').errors.max">Investment can't be higher than {{formEdit.get('value').errors.max.max | currency:accountSelected.currency}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editTradeProfit">Profit</label>
+            <input type="text" id="editTradeProfit" [formControl]="formEdit.controls['profit']" placeholder="Profit" sufix="%"
+                   class="form-control" mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formEditUtils.showSuccessOrError('profit')">
+            <div *ngIf="formEditUtils.showFieldError('profit')" class="invalid-feedback">
+              <span *ngIf="formEdit.get('profit').errors.required">Profit value is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+          <!-- TODO: check how to select load selected with the trade result -->
+            <label for="editTradeResult">Result</label>
+            <select id="editTradeResult" [formControl]="formEdit.controls['result']" class="form-control"
+                    [ngClass]="formEditUtils.showSuccessOrError('result')">
+              <option [value]="true">ITM</option>
+              <option [value]="false">OTM</option>
+            </select>
+
+            <div *ngIf="formEditUtils.showFieldError('result')" class="invalid-feedback">
+              <span *ngIf="formEdit.get('result').errors.required">You must inform if operation was ITM or OTM</span>
+            </div>
+
+
+            <input type="hidden" formControlName="accountId">
+            <input type="hidden" formControlName="typeTrade">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

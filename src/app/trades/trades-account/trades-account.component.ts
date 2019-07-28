@@ -27,6 +27,7 @@ export class TradesAccountComponent implements OnInit {
   public editingTrade: Trade;
   public formEdit: FormGroup;
   public formEditUtils: FormUtils;
+  public isEditing: boolean;
 
   /* Chart's variables */
   public dataPoints: Array<any>;
@@ -61,13 +62,14 @@ export class TradesAccountComponent implements OnInit {
     this.form = null;
     this.submitted = false;
     this.editingTrade = new Trade(null, null, null, null, null);
+    this.isEditing = false;
 
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd && val.url.startsWith('/trades/trades-account/')) {
         this.accountService.getById(+this.activatedRoute.snapshot.paramMap.get('id'))
           .subscribe(account => {
               this.accountSelected = account;
-              this.form = this.setUprForm();
+              this.form = this.setUpForm();
               this.formUtils = new FormUtils(this.form);
               this.currentBalance = this.accountSelected.currentBalance;
               this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
@@ -179,11 +181,15 @@ export class TradesAccountComponent implements OnInit {
   }
 
   public beginEdit(trade: Trade) {
+    this.formEdit = null;
+    this.isEditing = true;
     this.editingTrade = trade;
-    this.formEdit = this.setUprForm();
+    this.formEdit = this.setUpForm();
     this.formEdit.patchValue(trade);
     this.formEditUtils = new FormUtils(this.formEdit);
   }
+
+  public updateTrade(trade: Trade) {}
 
   public isEditingTrade(trade): boolean {
     return trade === this.editingTrade;
@@ -197,7 +203,7 @@ export class TradesAccountComponent implements OnInit {
     return trade.result ? 'win' : 'lose';
   }
 
-  public setUprForm(): FormGroup {
+  public setUpForm(): FormGroup {
     return this.formBuilder.group({
       value: [
         this.accountSelected.currentBalance * this.accountSelected.risk / 100,
