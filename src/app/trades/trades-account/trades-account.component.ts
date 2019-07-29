@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Trade} from '../shared/trade.model';
 import {Account} from '../../accounts/shared/account.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -28,6 +28,7 @@ export class TradesAccountComponent implements OnInit {
   public formEdit: FormGroup;
   public formEditUtils: FormUtils;
   public isEditing: boolean;
+  @ViewChild('closeBtn', {static: false}) public closeBtn: ElementRef;
 
   /* Chart's variables */
   public dataPoints: Array<any>;
@@ -189,7 +190,53 @@ export class TradesAccountComponent implements OnInit {
     this.formEditUtils = new FormUtils(this.formEdit);
   }
 
-  public updateTrade(trade: Trade) {}
+  public updateTrade(trade: Trade) {
+    // TODO: create a method to get current balance of an account
+    this.submitted = true;
+    trade.value = this.formEdit.value.value;
+    trade.profit = this.formEdit.value.profit;
+    trade.result = this.formEdit.value.result;
+
+    this.tradeService.update(trade)
+      .subscribe(
+        updatedTrade => {
+          const itemIndex = this.accountTrades.findIndex(item => item.id === updatedTrade.id);
+          const chartIndex = this.dataPoints.findIndex(item => item.id === updatedTrade.id);
+          this.accountTrades[itemIndex] = updatedTrade;
+          this.currentBalance = +this.currentBalance + +updatedTrade.resultBalance;
+          this.dataPoints[chartIndex] = {
+            name: new Date(updatedTrade['created-at-formatted']),
+            value: +updatedTrade['result-balance']
+          };
+          this.dataPoints[this.dataPoints.length - 1] = {
+            name: this.dataPoints[this.dataPoints.length - 1].name,
+            value: this.currentBalance
+          };
+          this.multi = [
+            {
+              name: 'Balance',
+              series: this.dataPoints
+            }
+          ];
+          this.flashMessages.buildFlashMessage(
+            [`Trade #${updatedTrade.id} successfuly updated!`],
+            5000,
+            true,
+            'success'
+          );
+        },
+        () => {
+          this.flashMessages.buildFlashMessage(
+            ['An error ocurred, please rty again'],
+            5000,
+            true,
+            'danger'
+          );
+        }
+      );
+    this.submitted = false;
+    this.closeBtn.nativeElement.click();
+  }
 
   public isEditingTrade(trade): boolean {
     return trade === this.editingTrade;

@@ -176,15 +176,14 @@
             <div *ngIf="formEditUtils.showFieldError('result')" class="invalid-feedback">
               <span *ngIf="formEdit.get('result').errors.required">You must inform if operation was ITM or OTM</span>
             </div>
-
-
-            <input type="hidden" formControlName="accountId">
-            <input type="hidden" formControlName="typeTrade">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="formEdit.invalid || submitted">
+            Save
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
         </div>
       </form>
     </div>

@@ -38,6 +38,16 @@ export class TradeService {
       );
   }
 
+  public update(trade: Trade): Observable<Trade> {
+    const url = `${this.tradesUrl}/${trade.id}`;
+
+    return this.httpClient.put(url, trade)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map((updatedTrade: HttpResponse<any>) => this.responseToTrade(updatedTrade))
+      );
+  }
+
   private responseToTrades(response: any): Array<Trade> {
     const trades: Array<Trade> = [];
 
