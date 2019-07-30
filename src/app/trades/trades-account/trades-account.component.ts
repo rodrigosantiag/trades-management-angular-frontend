@@ -191,7 +191,7 @@ export class TradesAccountComponent implements OnInit {
   }
 
   public updateTrade(trade: Trade) {
-    // TODO: create a method to get current balance of an account
+    // TODO: find the right index for dataPoints
     this.submitted = true;
     trade.value = this.formEdit.value.value;
     trade.profit = this.formEdit.value.profit;
@@ -201,12 +201,12 @@ export class TradesAccountComponent implements OnInit {
       .subscribe(
         updatedTrade => {
           const itemIndex = this.accountTrades.findIndex(item => item.id === updatedTrade.id);
-          const chartIndex = this.dataPoints.findIndex(item => item.id === updatedTrade.id);
+          const chartIndex = this.dataPoints.findIndex(item => item.name === new Date(updatedTrade.createdDateFormatted));
           this.accountTrades[itemIndex] = updatedTrade;
           this.currentBalance = +this.currentBalance + +updatedTrade.resultBalance;
-          this.dataPoints[chartIndex] = {
-            name: new Date(updatedTrade['created-at-formatted']),
-            value: +updatedTrade['result-balance']
+          this.dataPoints[itemIndex] = {
+            name: new Date(updatedTrade.createdDateFormatted),
+            value: +updatedTrade.resultBalance
           };
           this.dataPoints[this.dataPoints.length - 1] = {
             name: this.dataPoints[this.dataPoints.length - 1].name,
@@ -218,6 +218,10 @@ export class TradesAccountComponent implements OnInit {
               series: this.dataPoints
             }
           ];
+          console.log(itemIndex);
+          console.log(this.accountTrades);
+          console.log(chartIndex);
+          console.log(this.dataPoints);
           this.flashMessages.buildFlashMessage(
             [`Trade #${updatedTrade.id} successfuly updated!`],
             5000,
