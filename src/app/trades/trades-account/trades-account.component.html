@@ -85,7 +85,6 @@
     <tr *ngFor="let trade of accountTrades | paginate: config">
       <td>{{trade.id}}</td>
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
-      <!-- TODO: make edit form -->
       <td>{{trade.value | currency:accountSelected.currency}}</td>
       <td>{{trade.profit}}%</td>
       <td>{{trade.result ? 'ITM' : 'OTM'}}</td>

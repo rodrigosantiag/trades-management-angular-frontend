@@ -75,10 +75,10 @@ export class TradesAccountComponent implements OnInit {
               this.currentBalance = this.accountSelected.currentBalance;
               this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
               this.y = +this.accountSelected.initialBalance;
-              this.dataPoints = [{name: new Date(this.accountSelected.createdDateFormatted), value: this.y}];
+              this.dataPoints = [{name: new Date(this.accountSelected.createdDateFormatted), value: this.y, id: 0}];
               this.accountSelected.trades.map(trade => {
                 this.y = this.y + +trade['result-balance'];
-                this.dataPoints.push({name: new Date(trade['created-date-formatted']), value: this.y});
+                this.dataPoints.push({name: new Date(trade['created-date-formatted']), value: this.y, id: trade.id});
               });
 
               // options
@@ -150,7 +150,7 @@ export class TradesAccountComponent implements OnInit {
           this.accountTrades.unshift(newTrade);
           this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
           this.y = this.y + +newTrade.resultBalance;
-          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y});
+          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y, id: newTrade.id});
           this.multi = [
             {
               name: 'Balance',
@@ -191,8 +191,8 @@ export class TradesAccountComponent implements OnInit {
   }
 
   public updateTrade(trade: Trade) {
-    // TODO: find the right index for dataPoints
     this.submitted = true;
+    const beforeValue = +trade.resultBalance;
     trade.value = this.formEdit.value.value;
     trade.profit = this.formEdit.value.profit;
     trade.result = this.formEdit.value.result;
@@ -200,28 +200,31 @@ export class TradesAccountComponent implements OnInit {
     this.tradeService.update(trade)
       .subscribe(
         updatedTrade => {
+          // Find trade index in item and data points array
           const itemIndex = this.accountTrades.findIndex(item => item.id === updatedTrade.id);
-          const chartIndex = this.dataPoints.findIndex(item => item.name === new Date(updatedTrade.createdDateFormatted));
+          const chartIndex = this.dataPoints.findIndex(item => item.id === +updatedTrade.id);
+          // Calculate new result balance
+          let newResultBalance = this.dataPoints[chartIndex].value + (+updatedTrade.resultBalance - beforeValue);
           this.accountTrades[itemIndex] = updatedTrade;
-          this.currentBalance = +this.currentBalance + +updatedTrade.resultBalance;
-          this.dataPoints[itemIndex] = {
-            name: new Date(updatedTrade.createdDateFormatted),
-            value: +updatedTrade.resultBalance
-          };
-          this.dataPoints[this.dataPoints.length - 1] = {
-            name: this.dataPoints[this.dataPoints.length - 1].name,
-            value: this.currentBalance
-          };
+          // Update current balance
+          this.currentBalance = +this.currentBalance + (+updatedTrade.resultBalance - beforeValue);
+          // Update right and next data points values
+          this.dataPoints.map((item, index) => {
+            if (index >= chartIndex) {
+              newResultBalance = item.value + (+updatedTrade.resultBalance - beforeValue);
+              this.dataPoints[index] = {
+                name: item.name,
+                value: newResultBalance,
+                id: +item.id
+              };
+            }
+          });
           this.multi = [
             {
               name: 'Balance',
               series: this.dataPoints
             }
           ];
-          console.log(itemIndex);
-          console.log(this.accountTrades);
-          console.log(chartIndex);
-          console.log(this.dataPoints);
           this.flashMessages.buildFlashMessage(
             [`Trade #${updatedTrade.id} successfuly updated!`],
             5000,
