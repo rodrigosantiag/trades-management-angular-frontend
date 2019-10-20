@@ -48,6 +48,16 @@ export class TradeService {
       );
   }
 
+  public delete(id: number) {
+    const url = `${this.tradesUrl}/${id}`;
+
+    return this.httpClient.delete(url)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map(() => null)
+      );
+  }
+
   private responseToTrades(response: any): Array<Trade> {
     const trades: Array<Trade> = [];
 

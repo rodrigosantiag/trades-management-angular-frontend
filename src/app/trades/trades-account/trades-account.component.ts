@@ -245,8 +245,52 @@ export class TradesAccountComponent implements OnInit {
     this.closeBtn.nativeElement.click();
   }
 
-  public isEditingTrade(trade): boolean {
-    return trade === this.editingTrade;
+  public deleteTrade(trade: Trade) {
+    if (confirm(`Do you really want to delete trade #${trade.id}?`)) {
+      this.tradeService.delete(trade.id)
+        .subscribe(
+          () => {
+            // Find trade index in item and data points array
+            const chartIndex = this.dataPoints.findIndex(item => item.id === +trade.id);
+            // Calculate new result balance
+            let newResultBalance = this.dataPoints[chartIndex].value - +trade.resultBalance;
+            // Update current balance
+            this.currentBalance = +this.currentBalance - +trade.resultBalance;
+            // Update right and next data points values
+            this.dataPoints.map((item, index) => {
+              if (index >= chartIndex) {
+                newResultBalance = item.value - +trade.resultBalance;
+                this.dataPoints[index] = {
+                  name: item.name,
+                  value: newResultBalance,
+                  id: +item.id
+                };
+              }
+            });
+            this.multi = [
+              {
+                name: 'Balance',
+                series: this.dataPoints
+              }
+            ];
+            this.accountTrades = this.accountTrades.filter(a => a !== trade);
+            this.flashMessages.buildFlashMessage(
+              [`Trade #${trade.id} deleted!`],
+              5000,
+              true,
+              'success'
+            );
+          },
+          () => {
+            this.flashMessages.buildFlashMessage(
+              [`Tarde #${trade.id} not deleted due to a server error. Please try again.`],
+              0,
+              true,
+              'danger'
+            );
+          }
+        );
+    }
   }
 
   public demoRealClass(): string {
