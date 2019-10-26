@@ -38,6 +38,7 @@ import {CountUpModule} from 'countup.js-angular2';
 import { TradesAccountComponent } from './trades/trades-account/trades-account.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
     SignUpFormComponent,
     SignInComponent,
     TradesComponent,
-    TradesAccountComponent
+    TradesAccountComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
