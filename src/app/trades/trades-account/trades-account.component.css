@@ -1,0 +1,25 @@
+.account-balance {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.account-balance.real {
+  color: #28a745;
+}
+
+.account-balance.demo {
+  color: darkorange;
+}
+
+.lose {
+  color: #dc3545;
+}
+
+.win{
+  color: #28a745;
+}
+
+.page-link{
+  cursor: pointer;
+}

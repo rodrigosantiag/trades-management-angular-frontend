@@ -33,6 +33,11 @@ import {AccountDetailComponent} from './accounts/account-detail/account-detail.c
 library.add(fas, far, fab);
 
 import {NgxMaskModule} from 'ngx-mask';
+import { TradesComponent } from './trades/trades.component';
+import {CountUpModule} from 'countup.js-angular2';
+import { TradesAccountComponent } from './trades/trades-account/trades-account.component';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -43,7 +48,9 @@ import {NgxMaskModule} from 'ngx-mask';
     NavbarComponent,
     SidebarComponent,
     SignUpFormComponent,
-    SignInComponent
+    SignInComponent,
+    TradesComponent,
+    TradesAccountComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
@@ -52,11 +59,14 @@ import {NgxMaskModule} from 'ngx-mask';
     }),
     AppRoutingModule,
     BrowserModule,
+    CountUpModule,
     FontAwesomeModule,
     HttpClientModule,
     NgFlashMessagesModule.forRoot(),
     NgbModule,
+    NgxChartsModule,
     NgxMaskModule.forRoot(),
+    NgxPaginationModule,
     ReactiveFormsModule
   ],
   providers: [

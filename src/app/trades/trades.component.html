@@ -1,0 +1,18 @@
+<h1>Trades</h1>
+<hr>
+
+<ng-flash-message></ng-flash-message>
+
+<div class="form-inline">
+  <label for="account-filter" class="my-1 mr-2 sr-only">Choose an account</label>
+  <select (change)="goToTrades($event)" id="account-filter" class="custom-select my-1 mr-4">
+    <option value="" disabled>Choose an acocunt</option>
+    <option *ngFor="let account of accounts" value="{{account.id}}" [selected]="router.url.endsWith(account.id.toString())">{{account.broker.name}}
+      - {{account.getAccountType()}}</option>
+  </select>
+</div>
+
+<router-outlet></router-outlet>
+
+
+
