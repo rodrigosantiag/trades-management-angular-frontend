@@ -9,10 +9,14 @@ import {AccountsComponent} from './accounts/accounts.component';
 import {AccountDetailComponent} from './accounts/account-detail/account-detail.component';
 import {TradesComponent} from './trades/trades.component';
 import {TradesAccountComponent} from './trades/trades-account/trades-account.component';
+import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
+import {ResetPasswordComponent} from './reset-password/reset-password.component';
 
 const routes: Routes = [
   {path: 'sign-up', component: SignUpFormComponent, canActivate: [NotAuthenticatedGuard]},
   {path: 'sign-in', component: SignInComponent, canActivate: [NotAuthenticatedGuard]},
+  {path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [NotAuthenticatedGuard]},
+  {path: 'reset-password/:reset_password_token', component: ResetPasswordComponent, canActivate: [NotAuthenticatedGuard]},
   {path: 'brokers', component: BrokersComponent, canActivate: [AuthGuard]},
   {path: 'brokers/:id', component: BrokersComponent, canActivate: [AuthGuard]},
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard]},

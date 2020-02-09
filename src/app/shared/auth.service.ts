@@ -33,6 +33,11 @@ export class AuthService {
       .pipe(catchError(this.handleErrors));
   }
 
+  public forgotPassWord(email: string): Observable<HttpResponse<any>> {
+    return this.tokenService.resetPassword({login: email})
+      .pipe(catchError(this.handleErrors));
+  }
+
   public handleErrors(error: HttpResponse<any>) {
     return throwError(error);
   }

@@ -6,5 +6,6 @@ export class UserModel {
     public passwordConfirmation: string,
     public risk?: number,
     public id?: number
-  ) {}
+  ) {
+  }
 }

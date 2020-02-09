@@ -38,6 +38,8 @@ import {CountUpModule} from 'countup.js-angular2';
 import { TradesAccountComponent } from './trades/trades-account/trades-account.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -50,12 +52,15 @@ import {NgxPaginationModule} from 'ngx-pagination';
     SignUpFormComponent,
     SignInComponent,
     TradesComponent,
-    TradesAccountComponent
+    TradesAccountComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
       apiBase: 'http://api.binaryoptionsmanagement.local:3000',
-      registerAccountCallback: window.location.origin + '/sign-in'
+      registerAccountCallback: window.location.origin + '/sign-in',
+      resetPasswordCallback: window.location.origin + '/reset-password'
     }),
     AppRoutingModule,
     BrowserModule,
