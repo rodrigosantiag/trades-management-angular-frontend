@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {FlashMessagesService} from '../shared/flashMessages.service';
+import {AuthService} from '../shared/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -14,11 +15,29 @@ export class ForgotPasswordComponent implements OnInit {
   public formUtils: FormUtils;
   public messages: Array<string>;
 
-  constructor(private formBuilder: FormBuilder, private flashMessage: FlashMessagesService) {
+  constructor(private formBuilder: FormBuilder, private flashMessage: FlashMessagesService, private authService: AuthService) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.submitted = false;
     this.messages = null;
+  }
+
+  public forgotPassword() {
+    this.submitted = true;
+    this.authService.forgotPassWord(this.form.get('login').value)
+      .subscribe(
+        () => {
+          this.messages = ['Success! Check your email for instructions'];
+          this.form.reset();
+          this.submitted = false;
+          this.flashMessage.buildFlashMessage(this.messages, false, false, 'success');
+        },
+        (error) => {
+          this.messages = error.error.errors;
+          this.submitted = false;
+          this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
+        }
+      );
   }
 
   ngOnInit() {

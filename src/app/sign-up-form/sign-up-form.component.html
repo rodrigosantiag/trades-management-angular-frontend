@@ -55,16 +55,17 @@
   </div>
 
   <div class="form-label-group">
-    <input type="number" id="inputRisk" class="form-control" formControlName="risk" placeholder="Risk" min="1" max="100" oninput="validity.valid||(value='');">
+    <input type="number" id="inputRisk" class="form-control" formControlName="risk" placeholder="Risk" min="1" max="100"
+           oninput="validity.valid||(value='');">
     <label for="inputRisk">Risk (%)</label>
   </div>
+
   <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">
-    <button [disabled]="form.invalid || submitted" class="btn btn-lg btn-success btn-block" type="submit">
-      <span *ngIf="!submitted">Register</span>
-      <div *ngIf="submitted">
-        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-        Loading...
-      </div>
-    </button>
+    <span *ngIf="!submitted">Register</span>
+    <div *ngIf="submitted">
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      Loading...
+    </div>
   </button>
+
 </form>

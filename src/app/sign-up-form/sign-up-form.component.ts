@@ -64,8 +64,7 @@ export class SignUpFormComponent implements OnInit {
           this.submitted = false;
           this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
         }
-      )
-    ;
+      );
     window.scrollTo(0, 0);
   }
 
