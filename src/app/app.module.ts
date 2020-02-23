@@ -40,6 +40,7 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     TradesComponent,
     TradesAccountComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
