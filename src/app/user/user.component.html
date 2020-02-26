@@ -1,1 +1,41 @@
-<h1>Edit {{user.name}}'s profile</h1>
+<h1 *ngIf="user">Edit {{user.name}}'s profile</h1>
+
+<h6 *ngIf="email">Your email: {{email}}</h6>
+
+<ng-flash-message></ng-flash-message>
+
+<form [formGroup]="form" (submit)="updateUser()">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="name">Name</label>
+      <input type="text" formControlName="name" id="name" class="form-control"
+             [ngClass]="formUtils.showSuccessOrError('name')">
+
+      <div *ngIf="formUtils.showFieldError('name')" class="invalid-feedback">
+        <span *ngIf="form.get('name').errors.required">Name required!</span>
+      </div>
+    </div>
+
+    <div class="form-group col-md-4">
+      <label for="risk">Risk (%)</label>
+      <input type="number" formControlName="risk" id="risk" class="form-control"
+             [ngClass]="formUtils.showSuccessOrError('risk')" min="1" max="100" oninput="validity.valid||(value='');">
+
+      <div *ngIf="formUtils.showFieldError('risk')" class="invalid-feedback">
+        <span *ngIf="form.get('risk').errors.required">Risk required!</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <button [disabled]="form.invalid || submitted" class="btn-success btn mr-2">
+        <span *ngIf="!submitted">Save</span>
+        <div *ngIf="submitted">
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        </div>
+      </button>
+      <button class="btn btn-outline-secondary" type="button" (click)="helpers.goBack()">Cancel</button>
+    </div>
+  </div>
+</form>

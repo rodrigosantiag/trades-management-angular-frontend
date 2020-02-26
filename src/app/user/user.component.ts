@@ -5,6 +5,7 @@ import {FormUtils} from '../shared/form.utils';
 import {FlashMessagesService} from '../shared/flashMessages.service';
 import {UserService} from './shared/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {HelpersFunctionsService} from '../shared/helpers.functions.service';
 
 @Component({
   selector: 'app-user',
@@ -12,8 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  pubic;
-  email: string;
+  public email: string;
   public user: User;
   public form: FormGroup;
   public formUtils: FormUtils;
@@ -25,32 +25,36 @@ export class UserComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private helpers: HelpersFunctionsService
   ) {
+    this.setUpForm();
+    this.formUtils = new FormUtils(this.form);
+  }
 
+  ngOnInit() {
     this.userService.getUser(this.activatedRoute.snapshot.paramMap.get('id')).subscribe(
       (user: User) => {
-        console.log(user);
         this.email = user.email;
         this.user = user;
-        this.setUpForm();
-      //  TODO: setup form on view
+        this.form.patchValue(this.user);
       },
       error => {
         alert('An error ocurred. Please try again later.');
         this.router.navigate(['/']);
       }
     );
-
   }
 
-  ngOnInit() {
+  public updateUser() {
+    this.submitted = true;
+    //  TODO: update user function
   }
 
   private setUpForm() {
     this.form = this.formBuilder.group({
-      name: [this.user.name, Validators.required],
-      risk: [this.user.risk, Validators.required]
+      name: [null, [Validators.required]],
+      risk: [null, [Validators.required]]
     });
   }
 
