@@ -62,7 +62,8 @@ import { UserComponent } from './user/user.component';
     AngularTokenModule.forRoot({
       apiBase: 'http://api.binaryoptionsmanagement.local:3000',
       registerAccountCallback: window.location.origin + '/sign-in',
-      resetPasswordCallback: window.location.origin + '/reset-password'
+      resetPasswordCallback: window.location.origin + '/reset-password',
+      signOutFailedValidate: true
     }),
     AppRoutingModule,
     BrowserModule,

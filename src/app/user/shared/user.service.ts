@@ -26,13 +26,24 @@ export class UserService {
       );
   }
 
+  update(user: User): Observable<User> {
+    const url = `${this.userUrl}/${user.id}`;
+
+    return this.httpClient.put(url, user)
+      .pipe(
+        map(response => this.responseToUser(response)),
+        catchError(this.errorUtils.handleErrors)
+      );
+  }
+
   private responseToUser(response: any) {
     return new User(
       response.data.attributes.email,
       response.data.attributes.name,
       null,
       null,
-      response.data.attributes.risk
+      response.data.attributes.risk,
+      response.data.id
     );
   }
 

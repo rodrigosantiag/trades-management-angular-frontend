@@ -48,7 +48,22 @@ export class UserComponent implements OnInit {
 
   public updateUser() {
     this.submitted = true;
-    //  TODO: update user function
+    this.user.name = this.form.get('name').value;
+    this.user.risk = this.form.get('risk').value;
+
+    return this.userService.update(this.user)
+      .subscribe(
+        (response) => {
+          this.messages = [`User ${response.name}'s profile updated!`];
+          this.flashMessages.buildFlashMessage(this.messages, 5000, true, 'success');
+          this.submitted = false;
+        },
+        (response) => {
+          this.messages = response.errors.full_messages;
+          this.flashMessages.buildFlashMessage(this.messages, 0, true, 'danger');
+          this.submitted = false;
+        }
+      );
   }
 
   private setUpForm() {
