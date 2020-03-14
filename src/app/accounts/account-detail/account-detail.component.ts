@@ -10,6 +10,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {AccountService} from '../shared/account.service';
 import {Location} from '@angular/common';
 import {switchMap} from 'rxjs/operators';
+import {HelpersFunctionsService} from '../../shared/helpers.functions.service';
 
 @Component({
   selector: 'app-account-detail',
@@ -33,7 +34,8 @@ export class AccountDetailComponent implements OnInit {
     private flashMessages: FlashMessagesService,
     private formBuilder: FormBuilder,
     private location: Location,
-    private router: Router) {
+    private router: Router,
+    private helper: HelpersFunctionsService) {
     this.brokerService.getAll()
       .subscribe(
         brokers => this.brokers = brokers
@@ -150,10 +152,6 @@ export class AccountDetailComponent implements OnInit {
           );
         }
       );
-  }
-
-  public goBack() {
-    this.location.back();
   }
 
   private setUpForm() {

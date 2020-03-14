@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
-import {UserModel} from '../shared/user.model';
+import {User} from '../shared/user.model';
 import {FlashMessagesService} from '../shared/flashMessages.service';
 
 @Component({
@@ -38,7 +38,7 @@ export class SignUpFormComponent implements OnInit {
         name: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(255)]],
         password: [null, [Validators.required, Validators.minLength(8)]],
         passwordConfirmation: [null, [Validators.required]],
-        risk: [null]
+        risk: [null, Validators.required]
       },
       {
         validators: this.passwordConfimationValidation
@@ -47,7 +47,7 @@ export class SignUpFormComponent implements OnInit {
 
   public sigUpUser() {
     this.submitted = true;
-    this.authService.signUp(this.form.value as UserModel)
+    this.authService.signUp(this.form.value as User)
       .subscribe(
         () => {
           this.messages = ['Check your email to confirm your account'];

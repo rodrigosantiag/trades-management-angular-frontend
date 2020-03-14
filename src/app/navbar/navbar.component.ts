@@ -23,6 +23,14 @@ export class NavbarComponent implements OnInit {
     return this.authService.userSignedIn();
   }
 
+  public getUserName(): string {
+    return this.authService.getUserName();
+  }
+
+  public getUserId(): string {
+    return this.authService.getUserId();
+  }
+
   ngOnInit() {
   }
 

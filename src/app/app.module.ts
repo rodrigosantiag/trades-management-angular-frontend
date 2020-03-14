@@ -40,6 +40,7 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -54,13 +55,15 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     TradesComponent,
     TradesAccountComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
       apiBase: 'http://api.binaryoptionsmanagement.local:3000',
       registerAccountCallback: window.location.origin + '/sign-in',
-      resetPasswordCallback: window.location.origin + '/reset-password'
+      resetPasswordCallback: window.location.origin + '/reset-password',
+      signOutFailedValidate: true
     }),
     AppRoutingModule,
     BrowserModule,

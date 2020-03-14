@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
 import {Router} from '@angular/router';
-import {NgFlashMessageService} from 'ng-flash-messages';
 import {FlashMessagesService} from '../shared/flashMessages.service';
 
 @Component({
@@ -40,7 +39,9 @@ export class SignInComponent implements OnInit {
     this.submitted = true;
     this.auth.signIn(this.form.get('login').value, this.form.get('password').value)
       .subscribe(
-        () => {
+        (response) => {
+          localStorage.setItem('userId', response.body.data.id);
+          localStorage.setItem('userName', response.body.data.name);
           this.router.navigate(['/brokers']);
           this.messages = null;
         },

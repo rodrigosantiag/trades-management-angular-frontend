@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {AngularTokenService, SignInData} from 'angular-token';
-import {UserModel} from './user.model';
+import {AngularTokenService, SignInData, UserData} from 'angular-token';
+import {User} from './user.model';
 import {Observable, pipe, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {HttpResponse} from '@angular/common/http';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class AuthService {
   constructor(private tokenService: AngularTokenService) {
   }
 
-  public signUp(user: UserModel): Observable<HttpResponse<any>> {
+  public signUp(user: User): Observable<HttpResponse<any>> {
     return this.tokenService.registerAccount(user as any)
       .pipe(catchError(this.handleErrors));
   }
@@ -44,5 +44,13 @@ export class AuthService {
 
   public userSignedIn(): boolean {
     return this.tokenService.userSignedIn();
+  }
+
+  public getUserName(): string {
+    return localStorage.getItem('userName');
+  }
+
+  public getUserId(): string {
+    return localStorage.getItem('userId');
   }
 }

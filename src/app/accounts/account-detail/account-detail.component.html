@@ -47,7 +47,7 @@
     <div class="form-group col-md-6">
       <label for="initial-balance">Initial balance (example: 1234.50)</label>
       <input formControlName="initialBalance" id="initial-balance" type="text" class="form-control" mask="0*.00" [dropSpecialCharacters]="false" [ngClass]="formUtils.showSuccessOrError('initialBalance')">
-      
+
       <div class="invalid-feedback" *ngIf="formUtils.showFieldError('initialBalance')">
         <span *ngIf="form.get('initialBalance').errors.required">Initial balance required!</span>
         <span *ngIf="form.get('initialBalance').errors.min">Minimum deposit value is {{form.get('initialBalance').errors.min.min}}</span>
@@ -61,5 +61,5 @@
       <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
     </div>
   </button>
-  <button class="btn btn-outline-secondary" type="button" (click)="goBack()">Cancel</button>
+  <button class="btn btn-outline-secondary" type="button" (click)="helper.goBack()">Cancel</button>
 </form>
