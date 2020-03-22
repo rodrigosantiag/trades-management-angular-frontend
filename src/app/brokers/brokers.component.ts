@@ -107,10 +107,6 @@ export class BrokersComponent implements OnInit {
   }
 
   public updateBroker(broker: Broker) {
-    // TODO: continue to upgrade to angular 9
-    // TODO: last step made on https://update.angular.io/#8.0:9.0:
-    // TODO: "Run ng update @angular/core@8 @angular/cli@8 in your workspace directory to update to the latest 8.x version
-    // TODO: of @angular/core and @angular/cli and commit these changes."
     broker.name = this.formEdit.get('name').value;
 
     return this.brokerService.update(broker)

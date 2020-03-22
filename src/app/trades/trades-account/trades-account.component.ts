@@ -28,7 +28,7 @@ export class TradesAccountComponent implements OnInit {
   public formEdit: FormGroup;
   public formEditUtils: FormUtils;
   public isEditing: boolean;
-  @ViewChild('closeBtn', {static: false}) public closeBtn: ElementRef;
+  @ViewChild('closeBtn') public closeBtn: ElementRef;
 
   /* Chart's variables */
   public dataPoints: Array<any>;
