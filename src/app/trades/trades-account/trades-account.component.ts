@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../../shared/form.utils';
 import {getCurrencySymbol} from '@angular/common';
 import {AccountService} from '../../accounts/shared/account.service';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, ResolveEnd, Router} from '@angular/router';
 import {TradeService} from '../shared/trade.service';
 import {FlashMessagesService} from '../../shared/flashMessages.service';
 import {PaginationInstance} from 'ngx-pagination';
@@ -47,6 +47,7 @@ export class TradesAccountComponent implements OnInit {
   // Pagination
   public config: PaginationInstance;
   public total: number;
+  public counter: number;
 
 
   public constructor(
@@ -57,6 +58,7 @@ export class TradesAccountComponent implements OnInit {
     private router: Router,
     private tradeService: TradeService
   ) {
+    this.counter = 0;
     this.accountSelected = null;
     this.currencyCode = '';
     this.accountTrades = [];
@@ -66,7 +68,7 @@ export class TradesAccountComponent implements OnInit {
     this.isEditing = false;
 
     this.router.events.subscribe((val) => {
-      if (val instanceof NavigationEnd && val.url.startsWith('/trades/trades-account/')) {
+      if (val instanceof NavigationEnd && val.url.startsWith(`/trades/trades-account/${this.activatedRoute.snapshot.paramMap.get('id')}`)) {
         this.accountService.getById(+this.activatedRoute.snapshot.paramMap.get('id'))
           .subscribe(account => {
               this.accountSelected = account;
@@ -102,7 +104,8 @@ export class TradesAccountComponent implements OnInit {
                 }
               ];
             },
-            () => {
+            error => {
+              console.log(error);
               this.flashMessages.buildFlashMessage(
                 ['An error ocurred. Please try again'],
                 5000,
