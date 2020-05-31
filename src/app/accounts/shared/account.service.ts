@@ -74,7 +74,7 @@ export class AccountService {
       response.data.attributes['created-date-formatted'],
       response.data.attributes.broker,
       response.data.attributes.trades,
-      response.data.relationships.user.data.risk
+      response.data.attributes['account-risk']
     );
   }
 
