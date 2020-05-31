@@ -105,7 +105,6 @@ export class TradesAccountComponent implements OnInit {
               ];
             },
             error => {
-              console.log(error);
               this.flashMessages.buildFlashMessage(
                 ['An error ocurred. Please try again'],
                 5000,
@@ -153,7 +152,7 @@ export class TradesAccountComponent implements OnInit {
           this.accountTrades.unshift(newTrade);
           this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
           this.y = this.y + +newTrade.resultBalance;
-          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y, id: newTrade.id});
+          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y, id: +newTrade.id});
           this.multi = [
             {
               name: 'Balance',
