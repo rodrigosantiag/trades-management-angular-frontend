@@ -4,6 +4,7 @@ import {BrokerService} from './shared/broker.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {FlashMessagesService} from '../shared/flashMessages.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-brokers',
@@ -24,7 +25,8 @@ export class BrokersComponent implements OnInit {
     private brokerService: BrokerService,
     private formBuilder: FormBuilder,
     private flashMessageService: FlashMessagesService,
-    private renderer: Renderer2) {
+    private renderer: Renderer2,
+    private router: Router) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.newBroker = new Broker(null, '');
@@ -43,7 +45,12 @@ export class BrokersComponent implements OnInit {
           this.brokers = brokers;
         },
         error => {
-          alert('An error ocurred. Please try again');
+          this.flashMessageService.buildFlashMessage(
+            ['Something went wrong. Please refresh page.'],
+            0,
+            true,
+            'danger'
+          );
         }
       );
   }
@@ -88,7 +95,9 @@ export class BrokersComponent implements OnInit {
             this.brokers = this.brokers.filter(t => t !== broker);
             this.flashMessageService.buildFlashMessage([`Broker ${broker.name} removed!`], 5000, true, 'danger');
           },
-          () => alert('An error ocurred. Please try again.')
+          () => {
+            this.flashMessageService.buildFlashMessage(['An error ocurred. Please try again later.'], false, true, 'danger');
+          }
         );
     }
   }
