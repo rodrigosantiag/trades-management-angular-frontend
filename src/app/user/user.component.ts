@@ -6,6 +6,7 @@ import {FlashMessagesService} from '../shared/flashMessages.service';
 import {UserService} from './shared/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HelpersFunctionsService} from '../shared/helpers.functions.service';
+import {AuthService} from '../shared/auth.service';
 
 @Component({
   selector: 'app-user',
@@ -26,7 +27,8 @@ export class UserComponent implements OnInit {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private helpers: HelpersFunctionsService
+    private helpers: HelpersFunctionsService,
+    private authService: AuthService
   ) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
@@ -56,6 +58,7 @@ export class UserComponent implements OnInit {
         (response) => {
           this.messages = [`User ${response.name}'s profile updated!`];
           this.flashMessages.buildFlashMessage(this.messages, 5000, true, 'success');
+          this.authService.setUserName(response.name);
           this.submitted = false;
         },
         (response) => {

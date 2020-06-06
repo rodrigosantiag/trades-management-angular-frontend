@@ -50,6 +50,10 @@ export class AuthService {
     return localStorage.getItem('userName');
   }
 
+  public setUserName(username: string): void {
+    localStorage.setItem('userName', username);
+  }
+
   public getUserId(): string {
     return localStorage.getItem('userId');
   }
