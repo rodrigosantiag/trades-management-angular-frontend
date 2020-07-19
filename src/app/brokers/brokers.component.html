@@ -37,7 +37,7 @@
         </div>
         <form class="form-inline" *ngIf="isEditingThisBroker(broker)" [formGroup]="formEdit" (ngSubmit)="updateBroker(broker)">
           <input type="text" class="form-control mr-2 input-edit" formControlName="name">
-          <button class="btn btn-success" type="submit"><fa-icon [icon]="['fas', 'check']"></fa-icon></button>
+          <button [disabled]="formEdit.invalid || submitted" class="btn btn-success" type="submit"><fa-icon [icon]="['fas', 'check']"></fa-icon></button>
         </form>
       </td>
       <td width="1%" class="text-right">
