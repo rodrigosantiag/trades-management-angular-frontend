@@ -1,0 +1,5 @@
+deploy:
+  stage: deploy
+  script:
+    - gem install dpl
+    - dpl --provider=heroku --app=binary-financial-system --api-key=527cbecd-d490-46c4-bb1f-4a30697fe2bd
