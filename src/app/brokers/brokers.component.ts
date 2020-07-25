@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, OnInit, QueryList, Renderer2, ViewChild, ViewChildren} from '@angular/core';
+import {Component, OnInit, Renderer2} from '@angular/core';
 import {Broker} from './shared/broker.model';
 import {BrokerService} from './shared/broker.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {FlashMessagesService} from '../shared/flashMessages.service';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-brokers',
@@ -25,8 +24,7 @@ export class BrokersComponent implements OnInit {
     private brokerService: BrokerService,
     private formBuilder: FormBuilder,
     private flashMessageService: FlashMessagesService,
-    private renderer: Renderer2,
-    private router: Router) {
+    private renderer: Renderer2) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.newBroker = new Broker(null, '');
@@ -116,21 +114,29 @@ export class BrokersComponent implements OnInit {
   }
 
   public updateBroker(broker: Broker) {
-    broker.name = this.formEdit.get('name').value;
+    const oldName = broker.name;
+    broker.name = this.formEdit.get('name').value.trim();
 
     return this.brokerService.update(broker)
       .subscribe(
         (response) => {
+          this.submitted = true;
           const itemIndex = this.brokers.findIndex(item => item.id === response.id);
           this.brokers[itemIndex] = response;
           this.brokers.sort((a, b) => a.name.localeCompare(b.name));
           this.editingBroker = new Broker(null, null);
           this.messages = [`Broker ${broker.name} updated!`];
-          this.flashMessageService.buildFlashMessage(this.messages, 5000, true, 'success');
+          this.flashMessageService.buildFlashMessage(this.messages, 10000, true, 'success');
         },
-        () => {
-          this.messages = ['Broker not updated! Please try again.'];
-          this.flashMessageService.buildFlashMessage(this.messages, 5000, true, 'danger');
+        error => {
+          broker.name = oldName;
+          if (error.status === 422) {
+            this.messages = ['Broker name can\'t be blank'];
+          } else {
+            this.messages = ['An error ocurred. Try again later.'];
+          }
+          this.submitted = false;
+          this.flashMessageService.buildFlashMessage(this.messages, 10000, true, 'danger');
         }
       );
   }

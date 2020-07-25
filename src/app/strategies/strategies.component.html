@@ -1,0 +1,55 @@
+<h1>Strategies</h1>
+<hr>
+
+<ng-flash-message></ng-flash-message>
+
+<div class="card">
+  <div class="card-header">
+    <form [formGroup]="form" (ngSubmit)="createStrategy()">
+      <div class="form-row">
+        <div class="col-10">
+          <input type="text" class="form-control" placeholder="Strategy name" id="name" formControlName="name">
+        </div>
+        <div class="col">
+          <button [disabled]="form.invalid || submitted" class="btn btn-success btn-block" type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-stripped table-sm">
+    <thead>
+    <th colspan="3">Name</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let strategy of strategies">
+      <td width="98%">
+        <span *ngIf="!isEditingThiStrategy(strategy)">{{strategy.name}}</span>
+        <form class="form-inline" *ngIf="isEditingThiStrategy(strategy)" [formGroup]="formEdit"
+              (ngSubmit)="updateStrategy(strategy)">
+          <input type="text" class="form-control mr-2 input-edit" formControlName="name">
+          <button [disabled]="formEdit.invalid" class="btn btn-success" type="submit">
+            <fa-icon [icon]="['fas', 'check']"></fa-icon>
+          </button>
+        </form>
+      </td>
+      <td width="1%" class="text-right">
+        <button type="button" *ngIf="!isEditingThiStrategy(strategy)" (click)="beginEdit(strategy)"
+                class="btn btn-light">
+          <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+        </button>
+        <button *ngIf="isEditingThiStrategy(strategy)" type="button" class="btn btn-danger" (click)="cancelEdit()">
+          <fa-icon [icon]="['fas', 'window-close']"></fa-icon>
+        </button>
+      </td>
+      <td width="1%">
+        <button (click)="deleteStrategy(strategy)" type="button" class="btn btn-danger">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

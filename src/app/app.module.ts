@@ -41,6 +41,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UserComponent } from './user/user.component';
+import { StrategiesComponent } from './strategies/strategies.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { UserComponent } from './user/user.component';
     TradesAccountComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    UserComponent
+    UserComponent,
+    StrategiesComponent
   ],
   imports: [
     AngularTokenModule.forRoot({

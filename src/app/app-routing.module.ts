@@ -12,6 +12,7 @@ import {TradesAccountComponent} from './trades/trades-account/trades-account.com
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './reset-password/reset-password.component';
 import {UserComponent} from './user/user.component';
+import {StrategiesComponent} from './strategies/strategies.component';
 
 const routes: Routes = [
   {path: 'sign-up', component: SignUpFormComponent, canActivate: [NotAuthenticatedGuard]},
@@ -27,6 +28,7 @@ const routes: Routes = [
       {path: 'trades-account/:id', component: TradesAccountComponent}
     ], canActivate: [AuthGuard]},
   {path: 'users/:id', component: UserComponent, canActivate: [AuthGuard]},
+  {path: 'strategies', component: StrategiesComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: '/brokers', pathMatch: 'full'}
 ];
 
