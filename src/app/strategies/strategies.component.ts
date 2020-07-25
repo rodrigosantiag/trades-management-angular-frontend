@@ -123,7 +123,18 @@ export class StrategiesComponent implements OnInit {
   }
 
   public deleteStrategy(strategy: Strategy) {
-  //  TODO: here is the next and last step to finish strategy CRUD screens
+    if (confirm(`Confirm "${strategy.name}" strategy remove? This action is irreversible.`)) {
+      this.strategyService.delete(strategy.id)
+        .subscribe(
+          () => {
+            this.strategies = this.strategies.filter(s => s !== strategy);
+            this.flashMessageService.buildFlashMessage([`Strategy "${strategy.name}" removed!`], 5000, true, 'danger');
+          },
+          () => {
+            this.flashMessageService.buildFlashMessage(['An error ocurred. Please try again later.'], false, true, 'danger');
+          }
+        );
+    }
   }
 
   public cancelEdit() {

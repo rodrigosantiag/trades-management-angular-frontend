@@ -41,6 +41,16 @@ export class StrategyService {
       );
   }
 
+  public delete(id: number): Observable<null> {
+    const url = `${this.strategiesUrl}/${id}`;
+
+    return this.httpClient.delete(url)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map(() => null)
+      );
+  }
+
   public responseToStrategies(response: any): Array<Strategy> {
     const strategiesArray = response.data;
     const strategies: Strategy[] = [];
