@@ -4,7 +4,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
 import {User} from '../shared/user.model';
-import {FlashMessagesService} from '../shared/flashMessages.service';
+import {FlashMessagesService} from 'angular2-flash-messages';
+
 
 @Component({
   selector: 'app-sign-up-form',
@@ -53,7 +54,10 @@ export class SignUpFormComponent implements OnInit {
           this.messages = ['Check your email to confirm your account'];
           this.form.reset();
           this.submitted = false;
-          this.flashMessage.buildFlashMessage(this.messages, false, false, 'success');
+          this.flashMessage.show(this.messages.join(' | '), {
+              cssClass: 'alert-success',
+              timeout: 5000
+            });
         },
         (error) => {
           if (error.status === 422) {
@@ -62,7 +66,10 @@ export class SignUpFormComponent implements OnInit {
             this.messages = ['An error ocurred. Please try again later.'];
           }
           this.submitted = false;
-          this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
+          this.flashMessage.show(this.messages.join(' | '), {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
         }
       );
     window.scrollTo(0, 0);

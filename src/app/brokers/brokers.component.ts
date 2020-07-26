@@ -3,7 +3,8 @@ import {Broker} from './shared/broker.model';
 import {BrokerService} from './shared/broker.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
-import {FlashMessagesService} from '../shared/flashMessages.service';
+import {FlashMessagesService} from 'angular2-flash-messages';
+
 
 @Component({
   selector: 'app-brokers',
@@ -43,11 +44,12 @@ export class BrokersComponent implements OnInit {
           this.brokers = brokers;
         },
         error => {
-          this.flashMessageService.buildFlashMessage(
-            ['Something went wrong. Please refresh page.'],
-            0,
-            true,
-            'danger'
+          this.flashMessageService.show(
+            'Something went wrong. Please refresh page.',
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            }
           );
         }
       );
@@ -71,7 +73,10 @@ export class BrokersComponent implements OnInit {
           this.newBroker = new Broker(null, '');
           this.form.reset();
           this.submitted = false;
-          this.flashMessageService.buildFlashMessage([`Broker ${broker.name} added!`], 5000, true, 'success');
+          this.flashMessageService.show(`Broker ${broker.name} added!`, {
+            cssClass: 'alert-success',
+            timeout: 5000
+          });
         },
         error => {
           if (error.status === 422) {
@@ -80,7 +85,10 @@ export class BrokersComponent implements OnInit {
             this.messages = ['An error ocurred. Try again later.'];
           }
           this.submitted = false;
-          this.flashMessageService.buildFlashMessage(this.messages, false, true, 'danger');
+          this.flashMessageService.show(this.messages.join(' | '), {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
         }
       );
   }
@@ -91,10 +99,16 @@ export class BrokersComponent implements OnInit {
         .subscribe(
           () => {
             this.brokers = this.brokers.filter(t => t !== broker);
-            this.flashMessageService.buildFlashMessage([`Broker ${broker.name} removed!`], 5000, true, 'danger');
+            this.flashMessageService.show(`Broker ${broker.name} removed!`, {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
           },
           () => {
-            this.flashMessageService.buildFlashMessage(['An error ocurred. Please try again later.'], false, true, 'danger');
+            this.flashMessageService.show('An error ocurred. Please try again later.', {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
           }
         );
     }
@@ -126,7 +140,10 @@ export class BrokersComponent implements OnInit {
           this.brokers.sort((a, b) => a.name.localeCompare(b.name));
           this.editingBroker = new Broker(null, null);
           this.messages = [`Broker ${broker.name} updated!`];
-          this.flashMessageService.buildFlashMessage(this.messages, 10000, true, 'success');
+          this.flashMessageService.show(this.messages.join(' | '), {
+            cssClass: 'alert-success',
+            timeout: 5000
+          });
         },
         error => {
           broker.name = oldName;
@@ -136,7 +153,10 @@ export class BrokersComponent implements OnInit {
             this.messages = ['An error ocurred. Try again later.'];
           }
           this.submitted = false;
-          this.flashMessageService.buildFlashMessage(this.messages, 10000, true, 'danger');
+          this.flashMessageService.show(this.messages.join(' | '), {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
         }
       );
   }

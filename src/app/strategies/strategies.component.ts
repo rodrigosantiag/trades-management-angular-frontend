@@ -3,7 +3,8 @@ import {Strategy} from './shared/strategy.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {StrategyService} from './shared/strategy.service';
-import {FlashMessagesService} from '../shared/flashMessages.service';
+import {FlashMessagesService} from 'angular2-flash-messages';
+
 
 @Component({
   selector: 'app-strategies',
@@ -44,12 +45,12 @@ export class StrategiesComponent implements OnInit {
           this.strategies = strategies;
         },
         () => {
-          this.flashMessageService.buildFlashMessage(
-            ['Something went wrong. Please refresh page.'],
-            0,
-            true,
-            'danger'
-          );
+          this.flashMessageService.show(
+            'Something went wrong. Please refresh page.',
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
         }
       );
   }
@@ -66,12 +67,12 @@ export class StrategiesComponent implements OnInit {
           this.newStrategy = new Strategy(null, null);
           this.form.reset();
           this.submitted = false;
-          this.flashMessageService.buildFlashMessage(
-            [`Strategy ${strategy.name} added!`],
-            0,
-            true,
-            'success'
-          );
+          this.flashMessageService.show(
+            `Strategy ${strategy.name} added!`,
+            {
+              cssClass: 'alert-success',
+              timeout: 5000
+            });
         },
         error => {
           if (error.status === 422) {
@@ -80,7 +81,10 @@ export class StrategiesComponent implements OnInit {
             this.messages = ['An error ocurred. Try again later.'];
           }
           this.submitted = false;
-          this.flashMessageService.buildFlashMessage(this.messages, 0, true, 'danger');
+          this.flashMessageService.show(this.messages.join(' | '), {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
         }
       );
   }
@@ -107,7 +111,10 @@ export class StrategiesComponent implements OnInit {
           this.strategies.sort((a, b) => a.name.localeCompare(b.name));
           this.editingStrategy = new Strategy(null, null);
           this.messages = [`Strategy '${strategy.name}' updated!`];
-          this.flashMessageService.buildFlashMessage(this.messages, 10000, true, 'success');
+          this.flashMessageService.show(this.messages.join(' | '), {
+            cssClass: 'alert-success',
+            timeout: 5000
+          });
         },
         error => {
           strategy.name = oldName;
@@ -117,7 +124,10 @@ export class StrategiesComponent implements OnInit {
             this.messages = ['An error ocurred. Try again later.'];
           }
           this.submitted = false;
-          this.flashMessageService.buildFlashMessage(this.messages, 10000, true, 'danger');
+          this.flashMessageService.show(this.messages.join(' | '), {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
         }
       );
   }
@@ -128,10 +138,16 @@ export class StrategiesComponent implements OnInit {
         .subscribe(
           () => {
             this.strategies = this.strategies.filter(s => s !== strategy);
-            this.flashMessageService.buildFlashMessage([`Strategy "${strategy.name}" removed!`], 5000, true, 'danger');
+            this.flashMessageService.show(`Strategy "${strategy.name}" removed!`, {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
           },
           () => {
-            this.flashMessageService.buildFlashMessage(['An error ocurred. Please try again later.'], false, true, 'danger');
+            this.flashMessageService.show('An error ocurred. Please try again later.', {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
           }
         );
     }
