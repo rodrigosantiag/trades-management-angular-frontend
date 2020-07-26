@@ -25,7 +25,6 @@ import {AuthGuard} from './guard/auth.guard';
 import {BrokerService} from './brokers/shared/broker.service';
 import {NotAuthenticatedGuard} from './guard/not-authenticated.guard';
 import {AuthService} from './shared/auth.service';
-import {NgFlashMessagesModule} from 'ng-flash-messages';
 import {AccountsComponent} from './accounts/accounts.component';
 import {ErrorUtils} from './shared/error.utils';
 import {AccountDetailComponent} from './accounts/account-detail/account-detail.component';
@@ -33,15 +32,18 @@ import {AccountDetailComponent} from './accounts/account-detail/account-detail.c
 library.add(fas, far, fab);
 
 import {NgxMaskModule} from 'ngx-mask';
-import { TradesComponent } from './trades/trades.component';
+import {TradesComponent} from './trades/trades.component';
 import {CountUpModule} from 'countup.js-angular2';
-import { TradesAccountComponent } from './trades/trades-account/trades-account.component';
+import {TradesAccountComponent} from './trades/trades-account/trades-account.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { UserComponent } from './user/user.component';
-import { StrategiesComponent } from './strategies/strategies.component';
+import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
+import {ResetPasswordComponent} from './reset-password/reset-password.component';
+import {UserComponent} from './user/user.component';
+import {StrategiesComponent} from './strategies/strategies.component';
+import {FlashMessagesModule} from 'angular2-flash-messages';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -69,10 +71,11 @@ import { StrategiesComponent } from './strategies/strategies.component';
     }),
     AppRoutingModule,
     BrowserModule,
+    BrowserAnimationsModule,
     CountUpModule,
     FontAwesomeModule,
     HttpClientModule,
-    NgFlashMessagesModule.forRoot(),
+    FlashMessagesModule.forRoot(),
     NgbModule,
     NgxChartsModule,
     NgxMaskModule.forRoot(),

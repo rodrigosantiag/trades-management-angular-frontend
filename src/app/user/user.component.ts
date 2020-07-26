@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {User} from '../shared/user.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
-import {FlashMessagesService} from '../shared/flashMessages.service';
 import {UserService} from './shared/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HelpersFunctionsService} from '../shared/helpers.functions.service';
 import {AuthService} from '../shared/auth.service';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-user',
@@ -27,7 +27,7 @@ export class UserComponent implements OnInit {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private helpers: HelpersFunctionsService,
+    public helpers: HelpersFunctionsService,
     private authService: AuthService
   ) {
     this.setUpForm();
@@ -57,13 +57,19 @@ export class UserComponent implements OnInit {
       .subscribe(
         (response) => {
           this.messages = [`User ${response.name}'s profile updated!`];
-          this.flashMessages.buildFlashMessage(this.messages, 5000, true, 'success');
+          this.flashMessages.show(this.messages.join(' | '), {
+              cssClass: 'alert-success',
+              timeout: 5000
+            });
           this.authService.setUserName(response.name);
           this.submitted = false;
         },
         (response) => {
           this.messages = response.errors.full_messages;
-          this.flashMessages.buildFlashMessage(this.messages, 0, true, 'danger');
+          this.flashMessages.show(this.messages.join(' | '), {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
           this.submitted = false;
         }
       );

@@ -5,12 +5,13 @@ import {BrokerService} from '../../brokers/shared/broker.service';
 import {Account} from '../shared/account.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../../shared/form.utils';
-import {FlashMessagesService} from '../../shared/flashMessages.service';
+
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {AccountService} from '../shared/account.service';
 import {Location} from '@angular/common';
 import {switchMap} from 'rxjs/operators';
 import {HelpersFunctionsService} from '../../shared/helpers.functions.service';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-account-detail',
@@ -35,7 +36,7 @@ export class AccountDetailComponent implements OnInit {
     private formBuilder: FormBuilder,
     private location: Location,
     private router: Router,
-    private helper: HelpersFunctionsService) {
+    public helpers: HelpersFunctionsService) {
     this.brokerService.getAll()
       .subscribe(
         brokers => this.brokers = brokers
@@ -95,11 +96,12 @@ export class AccountDetailComponent implements OnInit {
         (account) => {
           this.form.reset();
           this.submitted = false;
-          this.flashMessages.buildFlashMessage(
-            ['Account created!'],
-            5000,
-            true,
-            'success'
+          this.flashMessages.show(
+            'Account created!',
+            {
+              cssClass: 'alert-success',
+              timeout: 5000
+            }
           );
           this.newAccount = new Account(
             null,
@@ -117,11 +119,12 @@ export class AccountDetailComponent implements OnInit {
           } else {
             this.messages = ['An error ocurred, please try again.'];
           }
-          this.flashMessages.buildFlashMessage(
-            this.messages,
-            0,
-            true,
-            'danger'
+          this.flashMessages.show(
+            this.messages.join(' | '),
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            }
           );
         }
       );
@@ -136,19 +139,21 @@ export class AccountDetailComponent implements OnInit {
     this.accountService.update(this.account)
       .subscribe(
         () => {
-          this.flashMessages.buildFlashMessage(
-            ['Account updated!'],
-            5000,
-            true,
-            'success'
+          this.flashMessages.show(
+            'Account updated!',
+            {
+              cssClass: 'alert-success',
+              timeout: 5000
+            }
           );
         },
         () => {
-          this.flashMessages.buildFlashMessage(
-            ['Account not updated! Please try again'],
-            5000,
-            true,
-            'danger'
+          this.flashMessages.show(
+            'Account not updated! Please try again',
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            }
           );
         }
       );

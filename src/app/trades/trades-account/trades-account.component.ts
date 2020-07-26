@@ -7,8 +7,8 @@ import {getCurrencySymbol} from '@angular/common';
 import {AccountService} from '../../accounts/shared/account.service';
 import {ActivatedRoute, NavigationEnd, ResolveEnd, Router} from '@angular/router';
 import {TradeService} from '../shared/trade.service';
-import {FlashMessagesService} from '../../shared/flashMessages.service';
 import {PaginationInstance} from 'ngx-pagination';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-trades-account',
@@ -28,7 +28,7 @@ export class TradesAccountComponent implements OnInit {
   public formEdit: FormGroup;
   public formEditUtils: FormUtils;
   public isEditing: boolean;
-  @ViewChild('closeBtn', {static: false}) public closeBtn: ElementRef;
+  @ViewChild('closeBtn') public closeBtn: ElementRef;
 
   /* Chart's variables */
   public dataPoints: Array<any>;
@@ -105,12 +105,12 @@ export class TradesAccountComponent implements OnInit {
               ];
             },
             error => {
-              this.flashMessages.buildFlashMessage(
-                ['An error ocurred. Please try again'],
-                5000,
-                true,
-                'danger'
-              );
+              this.flashMessages.show(
+                'An error ocurred. Please try again',
+                {
+                  cssClass: 'alert-danger',
+                  timeout: 5000
+                });
             },
             () => this.getPage(1));
       }
@@ -172,12 +172,12 @@ export class TradesAccountComponent implements OnInit {
           this.getPage(this.config.currentPage);
         },
         () => {
-          this.flashMessages.buildFlashMessage(
-            ['An error ocurred. Please try again.'],
-            5000,
-            true,
-            'danger'
-          );
+          this.flashMessages.show(
+            'An error ocurred. Please try again.',
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
         }
       );
     this.submitted = false;
@@ -227,20 +227,20 @@ export class TradesAccountComponent implements OnInit {
               series: this.dataPoints
             }
           ];
-          this.flashMessages.buildFlashMessage(
-            [`Trade #${updatedTrade.id} successfuly updated!`],
-            5000,
-            true,
-            'success'
-          );
+          this.flashMessages.show(
+            `Trade #${updatedTrade.id} successfuly updated!`,
+            {
+              cssClass: 'alert-success',
+              timeout: 5000
+            });
         },
         () => {
-          this.flashMessages.buildFlashMessage(
-            ['An error ocurred, please rty again'],
-            5000,
-            true,
-            'danger'
-          );
+          this.flashMessages.show(
+            'An error ocurred, please rty again',
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
         }
       );
     this.submitted = false;
@@ -276,20 +276,20 @@ export class TradesAccountComponent implements OnInit {
               }
             ];
             this.accountTrades = this.accountTrades.filter(a => a !== trade);
-            this.flashMessages.buildFlashMessage(
-              [`Trade #${trade.id} deleted!`],
-              5000,
-              true,
-              'success'
-            );
+            this.flashMessages.show(
+              `Trade #${trade.id} deleted!`,
+              {
+              cssClass: 'alert-success',
+              timeout: 5000
+            });
           },
           () => {
-            this.flashMessages.buildFlashMessage(
-              [`Tarde #${trade.id} not deleted due to a server error. Please try again.`],
-              0,
-              true,
-              'danger'
-            );
+            this.flashMessages.show(
+              `Trade #${trade.id} not deleted due to a server error. Please try again.`,
+              {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
           }
         );
     }

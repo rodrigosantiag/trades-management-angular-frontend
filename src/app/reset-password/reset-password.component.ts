@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
-import {FlashMessagesService} from '../shared/flashMessages.service';
 import {AuthService} from '../shared/auth.service';
 import {ResetPasswordService} from './shared/reset-password.service';
 import {ResetPasswordModel} from './shared/reset-password.model';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-reset-password',
@@ -55,12 +55,18 @@ export class ResetPasswordComponent implements OnInit {
           this.messages = [`Password updated! Now you can <a href="sign-in">login</a> using your new password`];
           this.submitted = false;
           this.form.reset();
-          this.flashMessage.buildFlashMessage(this.messages, false, false, 'success');
+          this.flashMessage.show(this.messages.join(' | '), {
+            cssClass: 'alert-success',
+            timeout: 5000
+          });
         },
         (error) => {
           this.messages = error.error.errors;
           this.submitted = false;
-          this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
+          this.flashMessage.show(this.messages.join(' | '), {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
         }
       );
   }

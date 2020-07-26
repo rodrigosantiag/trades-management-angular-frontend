@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
-import {FlashMessagesService} from '../shared/flashMessages.service';
+
 import {AuthService} from '../shared/auth.service';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-forgot-password',
@@ -30,12 +31,18 @@ export class ForgotPasswordComponent implements OnInit {
           this.messages = ['Success! Check your email for instructions'];
           this.form.reset();
           this.submitted = false;
-          this.flashMessage.buildFlashMessage(this.messages, false, false, 'success');
+          this.flashMessage.show(this.messages.join(' | '), {
+            cssClass: 'alert-success',
+            timeout: 5000
+          });
         },
         (error) => {
           this.messages = error.error.errors;
           this.submitted = false;
-          this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
+          this.flashMessage.show(this.messages.join(' | '), {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
         }
       );
   }

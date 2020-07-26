@@ -4,7 +4,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
 import {Router} from '@angular/router';
-import {FlashMessagesService} from '../shared/flashMessages.service';
+import {FlashMessagesService} from 'angular2-flash-messages';
+
 
 @Component({
   selector: 'app-sign-in',
@@ -52,7 +53,10 @@ export class SignInComponent implements OnInit {
             this.messages = ['An error ocurred. Please try again later.'];
           }
           this.submitted = false;
-          this.flashMessage.buildFlashMessage(this.messages, false, false, 'danger');
+          this.flashMessage.show(this.messages.join(' | '), {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
         }
       );
   }
