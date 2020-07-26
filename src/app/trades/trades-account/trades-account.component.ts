@@ -9,6 +9,9 @@ import {ActivatedRoute, NavigationEnd, ResolveEnd, Router} from '@angular/router
 import {TradeService} from '../shared/trade.service';
 import {PaginationInstance} from 'ngx-pagination';
 import {FlashMessagesService} from 'angular2-flash-messages';
+import {Strategy} from '../../strategies/shared/strategy.model';
+import {StrategyService} from '../../strategies/shared/strategy.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-trades-account',
@@ -23,6 +26,7 @@ export class TradesAccountComponent implements OnInit {
   public formUtils: FormUtils;
   public newTrade: Trade;
   public submitted: boolean;
+  public strategies: Array<Strategy>;
   public currentBalance: number;
   public editingTrade: Trade;
   public formEdit: FormGroup;
@@ -56,7 +60,8 @@ export class TradesAccountComponent implements OnInit {
     private flashMessages: FlashMessagesService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private tradeService: TradeService
+    private tradeService: TradeService,
+    private strategyService: StrategyService
   ) {
     this.counter = 0;
     this.accountSelected = null;
@@ -64,8 +69,20 @@ export class TradesAccountComponent implements OnInit {
     this.accountTrades = [];
     this.form = null;
     this.submitted = false;
-    this.editingTrade = new Trade(null, null, null, null, null);
+    this.editingTrade = new Trade(null, null, null, null, null, null);
     this.isEditing = false;
+    this.strategyService.getAll().subscribe(
+      strategies => this.strategies = strategies,
+      () => {
+        this.flashMessages.show(
+          'Something went wrong. Please try again.',
+          {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          }
+        );
+      }
+    );
 
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd && val.url.startsWith(`/trades/trades-account/${this.activatedRoute.snapshot.paramMap.get('id')}`)) {
@@ -143,6 +160,7 @@ export class TradesAccountComponent implements OnInit {
       +this.form.get('profit').value,
       this.form.get('result').value,
       +this.form.get('accountId').value,
+      +this.form.get('strategyId').value,
       this.form.get('typeTrade').value
     );
 
@@ -160,6 +178,7 @@ export class TradesAccountComponent implements OnInit {
             }
           ];
           this.newTrade = new Trade(
+            null,
             null,
             null,
             null,
@@ -198,6 +217,7 @@ export class TradesAccountComponent implements OnInit {
     trade.value = this.formEdit.value.value;
     trade.profit = this.formEdit.value.profit;
     trade.result = this.formEdit.value.result;
+    trade.strategyId = this.formEdit.value.strategyId;
 
     this.tradeService.update(trade)
       .subscribe(
@@ -279,17 +299,17 @@ export class TradesAccountComponent implements OnInit {
             this.flashMessages.show(
               `Trade #${trade.id} deleted!`,
               {
-              cssClass: 'alert-success',
-              timeout: 5000
-            });
+                cssClass: 'alert-success',
+                timeout: 5000
+              });
           },
           () => {
             this.flashMessages.show(
               `Trade #${trade.id} not deleted due to a server error. Please try again.`,
               {
-              cssClass: 'alert-danger',
-              timeout: 5000
-            });
+                cssClass: 'alert-danger',
+                timeout: 5000
+              });
           }
         );
     }
@@ -312,6 +332,7 @@ export class TradesAccountComponent implements OnInit {
       profit: [null, [Validators.required]],
       result: [null, [Validators.required]],
       accountId: [this.accountSelected.id],
+      strategyId: [null, [Validators.required]],
       typeTrade: ['T']
     });
   }

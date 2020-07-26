@@ -7,7 +7,7 @@
   <div class="card-header mt-3 mb-3">
     <form (ngSubmit)="createTrade()" [formGroup]="form">
       <div class="form-row">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <input type="text" [formControl]="form.controls['value']" placeholder="Investment" class="form-control"
                  mask="0*.00"
                  [dropSpecialCharacters]="false" [ngClass]="formUtils.showSuccessOrError('value')">
@@ -19,7 +19,7 @@
           </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
           <input type="text" [formControl]="form.controls['profit']" placeholder="Profit" suffix="%"
                  class="form-control" mask="0*.00"
                  [dropSpecialCharacters]="false" [ngClass]="formUtils.showSuccessOrError('profit')">
@@ -28,8 +28,20 @@
           </div>
         </div>
 
+        <div class="col-md-2">
+          <select [formControl]="form.controls['strategyId']" class="form-control"
+                  [ngClass]="formUtils.showSuccessOrError('strategyId')">
+            <option value="" disabled selected>Select a strategy</option>
+            <option *ngFor="let strategy of strategies" value="{{strategy.id}}">{{strategy.name}}</option>
+          </select>
 
-        <div class="col-md-3">
+          <div *ngIf="formUtils.showFieldError('strategyId')" class="invalid-feedback">
+            <span *ngIf="form.get('strategyId').errors.required">You must inform a trading strategy</span>
+          </div>
+        </div>
+
+
+        <div class="col-md-2">
           <select [formControl]="form.controls['result']" class="form-control"
                   [ngClass]="formUtils.showSuccessOrError('result')">
             <option value="" disabled selected>ITM or OTM?</option>
@@ -46,7 +58,7 @@
           <input type="hidden" [formControl]="form.controls['typeTrade']">
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
           <button [disabled]="form.invalid || submitted" type="submit" class="btn btn-success">
             <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           </button>
@@ -76,6 +88,7 @@
     <th>Broker/Account</th>
     <th>Value</th>
     <th>Profit</th>
+    <th>Strategy</th>
     <th>Result</th>
     <th>Result Balance</th>
     <th colspan="2"></th>
@@ -87,6 +100,7 @@
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
       <td>{{trade.value | currency:accountSelected.currency}}</td>
       <td>{{trade.profit}}%</td>
+      <td>{{trade.strategy === null ? 'Strategy deleted' : trade.strategy.name}}</td>
       <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
       <td
         [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
@@ -164,7 +178,18 @@
             </div>
           </div>
           <div class="form-group">
-          <!-- TODO: check how to select load selected with the trade result -->
+            <label for="editTradeStrategyId"></label>
+            <select id="editTradeStrategyId" [formControl]="formEdit.controls['strategyId']" class="form-control"
+                    [ngClass]="formEditUtils.showSuccessOrError('strategyId')">
+              <option value="" disabled selected>Select a strategy</option>
+              <option *ngFor="let strategy of strategies" value="{{strategy.id}}">{{strategy.name}}</option>
+            </select>
+
+            <div *ngIf="formEditUtils.showFieldError('strategyId')" class="invalid-feedback">
+              <span *ngIf="formEdit.get('strategyId').errors.required">You must inform a trading strategy</span>
+            </div>
+          </div>
+          <div class="form-group">
             <label for="editTradeResult">Result</label>
             <select id="editTradeResult" [formControl]="formEdit.controls['result']" class="form-control"
                     [ngClass]="formEditUtils.showSuccessOrError('result')">

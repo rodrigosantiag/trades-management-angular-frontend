@@ -68,10 +68,12 @@ export class TradeService {
         item.attributes.profit,
         item.attributes.result,
         item.attributes['account-id'],
+        item.attributes['strategy-id'],
         item.attributes['created-date-formatted'],
         item.attributes['type-trade'],
         item.attributes['result-balance'],
-        item.attributes.account
+        item.attributes.account,
+        item.attributes.strategy
       );
       trades.push(trade);
     });
@@ -87,10 +89,12 @@ export class TradeService {
       response.data.attributes.profit,
       response.data.attributes.result,
       response.data.attributes['account-id'],
+      response.data.attributes['strategy-id'],
       response.data.attributes['created-date-formatted'],
       response.data.attributes['type-trade'],
       response.data.attributes['result-balance'],
-      response.data.attributes.account
+      response.data.attributes.account,
+      response.data.attributes.strategy
     );
   }
 }
