@@ -13,6 +13,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ],
             "aot": true,
             "outputPath": "dist/binary-financial-system-frontend",
             "index": "src/index.html",
@@ -34,9 +37,7 @@
               "node_modules/popper.js/dist/umd/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/bootstrap-select/dist/js/bootstrap-select.min.js"
-
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
