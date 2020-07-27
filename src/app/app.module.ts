@@ -43,6 +43,7 @@ import {UserComponent} from './user/user.component';
 import {StrategiesComponent} from './strategies/strategies.component';
 import {FlashMessagesModule} from 'angular2-flash-messages';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {environment} from '../environments/environment';
 
 
 @NgModule({
@@ -64,7 +65,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
   ],
   imports: [
     AngularTokenModule.forRoot({
-      apiBase: 'http://api.binaryoptionsmanagement.local:3000',
+      apiBase: environment.apiBaseUrl,
       registerAccountCallback: window.location.origin + '/sign-in',
       resetPasswordCallback: window.location.origin + '/reset-password',
       signOutFailedValidate: true
