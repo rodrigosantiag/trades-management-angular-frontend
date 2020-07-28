@@ -14,7 +14,7 @@ deploy_staging:
   stage: deploy
   when: on_success
   dependencies:
-    - build
+    - build_staging
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
