@@ -1,3 +1,9 @@
+// tslint:disable-next-line:max-line-length
+// TODO: For real account => Deposit/Withdrawal: both will be added as a trade of types 'D' and 'W'. In trade's list their display should
+//  different (think about best way to do it)
+// TODO: For demo account will be a trade type 'R' and refunding value difference from balance should be added to account balance. Its
+// displaying have to be thought too
+
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Trade} from '../shared/trade.model';
 import {Account} from '../../accounts/shared/account.model';
@@ -12,6 +18,7 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 import {Strategy} from '../../strategies/shared/strategy.model';
 import {StrategyService} from '../../strategies/shared/strategy.service';
 import {Observable} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'app-trades-account',
@@ -189,6 +196,7 @@ export class TradesAccountComponent implements OnInit {
           this.form.get('profit').reset();
           this.form.get('result').reset();
           this.getPage(this.config.currentPage);
+          this.submitted = false;
         },
         () => {
           this.flashMessages.show(
@@ -197,9 +205,9 @@ export class TradesAccountComponent implements OnInit {
               cssClass: 'alert-danger',
               timeout: 5000
             });
+          this.submitted = false;
         }
       );
-    this.submitted = false;
   }
 
   public beginEdit(trade: Trade) {

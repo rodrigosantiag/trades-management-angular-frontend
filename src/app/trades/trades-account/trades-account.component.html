@@ -60,7 +60,8 @@
 
         <div class="col-md-2">
           <button [disabled]="form.invalid || submitted" type="submit" class="btn btn-success">
-            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            <fa-icon *ngIf="!submitted" [icon]="['fas', 'plus']"></fa-icon>
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
           </button>
         </div>
       </div>
