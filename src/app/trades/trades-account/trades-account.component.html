@@ -1,7 +1,20 @@
 <div *ngIf="accountSelected">
-  <div class="account-balance mt-3" [ngClass]="demoRealClass()">{{accountSelected.broker.name}}
-    - {{accountSelected.getAccountType()}} - <span [countUp]="currentBalance"
-                                                   [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
+  <div class="row">
+    <div class="account-balance mt-3 col-" [ngClass]="demoRealClass()">{{accountSelected.broker.name}}
+      - {{accountSelected.getAccountType()}} - <span [countUp]="currentBalance"
+                                                     [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
+    </div>
+
+    <button type="button" class="ml-3 col- mt-3 btn btn-success" (click)="openDepositForm()" data-toggle="modal"
+            data-target="#depositTradeModal">
+      <fa-icon [icon]="['fas', 'piggy-bank']"></fa-icon>
+      Deposit
+    </button>
+    <button type="button" class="ml-3 col- mt-3 btn btn-success">
+      <fa-icon [icon]="['fas', 'hand-holding-usd']"></fa-icon>
+      Withdraw
+    </button>
+
   </div>
 
   <div class="card-header mt-3 mb-3">
@@ -52,10 +65,6 @@
           <div *ngIf="formUtils.showFieldError('result')" class="invalid-feedback">
             <span *ngIf="form.get('result').errors.required">You must inform if operation was ITM or OTM</span>
           </div>
-
-
-          <input type="hidden" [formControl]="form.controls['accountId']">
-          <input type="hidden" [formControl]="form.controls['typeTrade']">
         </div>
 
         <div class="col-md-2">
@@ -141,7 +150,7 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Modal Trade Edition -->
 <div *ngIf="isEditing" class="modal fade" id="editTradeModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -159,7 +168,8 @@
 
           <div class="form-group">
             <label for="editTradeValue">Value</label>
-            <input type="text" [formControl]="formEdit.controls['value']" id="editTradeValue" placeholder="Investment" class="form-control"
+            <input type="text" [formControl]="formEdit.controls['value']" id="editTradeValue" placeholder="Investment"
+                   class="form-control"
                    mask="0*.00"
                    [dropSpecialCharacters]="false" [ngClass]="formEditUtils.showSuccessOrError('value')">
             <div *ngIf="formEditUtils.showFieldError('value')" class="invalid-feedback">
@@ -171,7 +181,8 @@
           </div>
           <div class="form-group">
             <label for="editTradeProfit">Profit</label>
-            <input type="text" id="editTradeProfit" [formControl]="formEdit.controls['profit']" placeholder="Profit" suffix="%"
+            <input type="text" id="editTradeProfit" [formControl]="formEdit.controls['profit']" placeholder="Profit"
+                   suffix="%"
                    class="form-control" mask="0*.00"
                    [dropSpecialCharacters]="false" [ngClass]="formEditUtils.showSuccessOrError('profit')">
             <div *ngIf="formEditUtils.showFieldError('profit')" class="invalid-feedback">
@@ -214,3 +225,42 @@
     </div>
   </div>
 </div>
+<!-- Modal Deposit -->
+<div *ngIf="isDepositing" class="modal fade" id="depositTradeModal" tabindex="-1" role="dialog"
+     aria-labelledby="depositModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="depositModalLabel">Deposit - Account: {{accountSelected.broker.name}}
+          - {{accountSelected.getAccountType()}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="formDeposit" (ngSubmit)="createTrade('D')">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="depositValue">Value</label>
+            <input type="text" [formControl]="formDeposit.controls['value']" id="depositValue"
+                   placeholder="Deposit Value" class="form-control"
+                   mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formDepositUtils.showSuccessOrError('value')">
+            <div *ngIf="formDepositUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="formDeposit.get('value').errors.required || formDeposit.get('value').errors.min">Deposit value must be at least 1!</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="formDeposit.invalid || submitted">
+            Submit
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

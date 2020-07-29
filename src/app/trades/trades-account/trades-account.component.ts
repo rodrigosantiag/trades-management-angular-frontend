@@ -3,6 +3,7 @@
 //  different (think about best way to do it)
 // TODO: For demo account will be a trade type 'R' and refunding value difference from balance should be added to account balance. Its
 // displaying have to be thought too
+// TODO: implement createDeposit() method
 
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Trade} from '../shared/trade.model';
@@ -39,6 +40,10 @@ export class TradesAccountComponent implements OnInit {
   public formEdit: FormGroup;
   public formEditUtils: FormUtils;
   public isEditing: boolean;
+  public isDepositing: boolean;
+  public isWithdrawing: boolean;
+  public formDeposit: FormGroup;
+  public formDepositUtils: FormUtils;
   @ViewChild('closeBtn') public closeBtn: ElementRef;
 
   /* Chart's variables */
@@ -78,6 +83,8 @@ export class TradesAccountComponent implements OnInit {
     this.submitted = false;
     this.editingTrade = new Trade(null, null, null, null, null, null);
     this.isEditing = false;
+    this.isEditing = false;
+    this.formDeposit = null;
     this.strategyService.getAll().subscribe(
       strategies => this.strategies = strategies,
       () => {
@@ -166,9 +173,10 @@ export class TradesAccountComponent implements OnInit {
       +this.form.get('value').value,
       +this.form.get('profit').value,
       this.form.get('result').value,
-      +this.form.get('accountId').value,
+      +this.accountSelected.id,
       +this.form.get('strategyId').value,
-      this.form.get('typeTrade').value
+      '',
+      'T'
     );
 
     this.tradeService.create(this.newTrade)
@@ -208,6 +216,14 @@ export class TradesAccountComponent implements OnInit {
           this.submitted = false;
         }
       );
+  }
+
+  public openDepositForm() {
+    console.log(this.submitted);
+    this.formDeposit = null;
+    this.isDepositing = true;
+    this.formDeposit = this.setUpDepositForm();
+    this.formDepositUtils = new FormUtils(this.formDeposit);
   }
 
   public beginEdit(trade: Trade) {
@@ -339,9 +355,13 @@ export class TradesAccountComponent implements OnInit {
       ],
       profit: [null, [Validators.required]],
       result: [null, [Validators.required]],
-      accountId: [this.accountSelected.id],
-      strategyId: [null, [Validators.required]],
-      typeTrade: ['T']
+      strategyId: [null, [Validators.required]]
+    });
+  }
+
+  public setUpDepositForm(): FormGroup {
+    return this.formBuilder.group({
+      value: [null, [Validators.required, Validators.min(1)]]
     });
   }
 
