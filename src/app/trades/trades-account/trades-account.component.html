@@ -1,7 +1,28 @@
 <div *ngIf="accountSelected">
-  <div class="account-balance mt-3" [ngClass]="demoRealClass()">{{accountSelected.broker.name}}
-    - {{accountSelected.getAccountType()}} - <span [countUp]="currentBalance"
-                                                   [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
+  <div class="row">
+    <div class="account-balance mt-3 col-" [ngClass]="demoRealClass()">{{accountSelected.broker.name}}
+      - {{accountSelected.getAccountType()}} - <span [countUp]="currentBalance"
+                                                     [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
+    </div>
+
+    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success" (click)="openDepositForm()" data-toggle="modal"
+            data-target="#depositTradeModal">
+      <fa-icon [icon]="['fas', 'piggy-bank']"></fa-icon>
+      Deposit
+    </button>
+    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openWithdrawForm()"
+            data-toggle="modal" data-target="#withdrawTradeModal">
+      <fa-icon [icon]="['fas', 'hand-holding-usd']"></fa-icon>
+      Withdraw
+    </button>
+
+    <button *ngIf="accountSelected.typeAccount == 'D'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openRefillForm()"
+            data-toggle="modal" data-target="#refillTradeModal" [disabled]="accountSelected.initialBalance > [currentBalance]">
+      <fa-icon [icon]="['fas', 'charging-station']"></fa-icon>
+      Refill
+    </button>
+
+
   </div>
 
   <div class="card-header mt-3 mb-3">
@@ -52,15 +73,12 @@
           <div *ngIf="formUtils.showFieldError('result')" class="invalid-feedback">
             <span *ngIf="form.get('result').errors.required">You must inform if operation was ITM or OTM</span>
           </div>
-
-
-          <input type="hidden" [formControl]="form.controls['accountId']">
-          <input type="hidden" [formControl]="form.controls['typeTrade']">
         </div>
 
         <div class="col-md-2">
           <button [disabled]="form.invalid || submitted" type="submit" class="btn btn-success">
-            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            <fa-icon *ngIf="!submitted" [icon]="['fas', 'plus']"></fa-icon>
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
           </button>
         </div>
       </div>
@@ -95,17 +113,23 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let trade of accountTrades | paginate: config">
+    <tr *ngFor="let trade of accountTrades | paginate: config" class="trade-line">
       <td>{{trade.id}}</td>
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
       <td>{{trade.value | currency:accountSelected.currency}}</td>
-      <td>{{trade.profit}}%</td>
-      <td>{{trade.strategy === null ? 'Strategy deleted' : trade.strategy.name}}</td>
-      <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
+      <td *ngIf="trade.typeTrade == 'T'">{{trade.profit}}%</td>
+      <td *ngIf="trade.typeTrade == 'T'">{{trade.strategy === null ? 'Strategy deleted' : trade.strategy.name}}</td>
+      <td *ngIf="trade.typeTrade == 'T'">{{trade.result ? 'ITM' : 'OTM'}}</td>
+      <td *ngIf="trade.typeTrade == 'D'"></td>
+      <td *ngIf="trade.typeTrade == 'D'" colspan="2">Deposit</td>
+      <td *ngIf="trade.typeTrade == 'W'"></td>
+      <td *ngIf="trade.typeTrade == 'W'" colspan="2">Withdrawal</td>
+      <td *ngIf="trade.typeTrade == 'R'"></td>
+      <td *ngIf="trade.typeTrade == 'R'" colspan="2">Refillment</td>
       <td
         [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
       <td width="1%">
-        <button (click)="beginEdit(trade)" type="button" class="btn btn-light" data-toggle="modal"
+        <button *ngIf="trade.typeTrade == 'T'" (click)="beginEdit(trade)" type="button" class="btn btn-light" data-toggle="modal"
                 data-target="#editTradeModal">
           <fa-icon [icon]="['far', 'edit']"></fa-icon>
         </button>
@@ -140,7 +164,7 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Modal Trade Edition -->
 <div *ngIf="isEditing" class="modal fade" id="editTradeModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -158,7 +182,8 @@
 
           <div class="form-group">
             <label for="editTradeValue">Value</label>
-            <input type="text" [formControl]="formEdit.controls['value']" id="editTradeValue" placeholder="Investment" class="form-control"
+            <input type="text" [formControl]="formEdit.controls['value']" id="editTradeValue" placeholder="Investment"
+                   class="form-control"
                    mask="0*.00"
                    [dropSpecialCharacters]="false" [ngClass]="formEditUtils.showSuccessOrError('value')">
             <div *ngIf="formEditUtils.showFieldError('value')" class="invalid-feedback">
@@ -170,7 +195,8 @@
           </div>
           <div class="form-group">
             <label for="editTradeProfit">Profit</label>
-            <input type="text" id="editTradeProfit" [formControl]="formEdit.controls['profit']" placeholder="Profit" suffix="%"
+            <input type="text" id="editTradeProfit" [formControl]="formEdit.controls['profit']" placeholder="Profit"
+                   suffix="%"
                    class="form-control" mask="0*.00"
                    [dropSpecialCharacters]="false" [ngClass]="formEditUtils.showSuccessOrError('profit')">
             <div *ngIf="formEditUtils.showFieldError('profit')" class="invalid-feedback">
@@ -206,6 +232,123 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
           <button type="submit" class="btn btn-success" [disabled]="formEdit.invalid || submitted">
             Save
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Deposit -->
+<div *ngIf="isDepositing" class="modal fade" id="depositTradeModal" tabindex="-1" role="dialog"
+     aria-labelledby="depositModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="depositModalLabel">Deposit - Account: {{accountSelected.broker.name}}
+          - {{accountSelected.getAccountType()}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="formDeposit" (ngSubmit)="createDeposit()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="depositValue">Value</label>
+            <input type="text" [formControl]="formDeposit.controls['value']" id="depositValue"
+                   placeholder="Deposit Value" class="form-control"
+                   mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formDepositUtils.showSuccessOrError('value')">
+            <div *ngIf="formDepositUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="formDeposit.get('value').errors.required || formDeposit.get('value').errors.min">Deposit value must be at least 1!</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="formDeposit.invalid || submitted">
+            Submit
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Withdraw -->
+<div *ngIf="isWithdrawing" class="modal fade" id="withdrawTradeModal" tabindex="-1" role="dialog"
+     aria-labelledby="withdrawModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="withdrawModalLabel">Withdrawal - Account: {{accountSelected.broker.name}}
+          - {{accountSelected.getAccountType()}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="formWithdraw" (ngSubmit)="createWithdraw()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="withdrawValue">Value</label>
+            <input type="text" [formControl]="formWithdraw.controls['value']" id="withdrawValue"
+                   placeholder="Withdraw Value" class="form-control"
+                   mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formWithdrawUtils.showSuccessOrError('value')">
+            <div *ngIf="formWithdrawUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="formWithdraw.get('value').errors.required || formWithdraw.get('value').errors.min">Withdrawal value must be at least 1!</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="formWithdraw.invalid || submitted">
+            Submit
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Withdraw -->
+<div *ngIf="isRefilling" class="modal fade" id="refillTradeModal" tabindex="-1" role="dialog"
+     aria-labelledby="refillModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="refillModalLabel">Refill - Account: {{accountSelected.broker.name}}
+          - {{accountSelected.getAccountType()}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="formRefill" (ngSubmit)="createRefill()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="refillValue">Value</label>
+            <input type="text" [formControl]="formRefill.controls['value']" id="refillValue"
+                   placeholder="Refillment Value" class="form-control"
+                   mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formRefillUtils.showSuccessOrError('value')">
+            <div *ngIf="formRefillUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="formRefill.get('value').errors.required || formRefill.get('value').errors.min">Refillment value must be at least 1!</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="formRefill.invalid || submitted">
+            Submit
             <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
           </button>
         </div>

@@ -1,3 +1,10 @@
+// tslint:disable-next-line:max-line-length
+// TODO: For real account => Deposit/Withdrawal: both will be added as a trade of types 'D' and 'W'. In trade's list their display should
+//  different (think about best way to do it)
+// TODO: For demo account will be a trade type 'R' and refunding value difference from balance should be added to account balance. Its
+// displaying have to be thought too
+// TODO: implement createDeposit() method
+
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Trade} from '../shared/trade.model';
 import {Account} from '../../accounts/shared/account.model';
@@ -12,6 +19,7 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 import {Strategy} from '../../strategies/shared/strategy.model';
 import {StrategyService} from '../../strategies/shared/strategy.service';
 import {Observable} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'app-trades-account',
@@ -19,39 +27,6 @@ import {Observable} from 'rxjs';
   styleUrls: ['./trades-account.component.css']
 })
 export class TradesAccountComponent implements OnInit {
-  public accountSelected: Account;
-  public accountTrades: Array<Trade>;
-  public currencyCode: string;
-  public form: FormGroup;
-  public formUtils: FormUtils;
-  public newTrade: Trade;
-  public submitted: boolean;
-  public strategies: Array<Strategy>;
-  public currentBalance: number;
-  public editingTrade: Trade;
-  public formEdit: FormGroup;
-  public formEditUtils: FormUtils;
-  public isEditing: boolean;
-  @ViewChild('closeBtn') public closeBtn: ElementRef;
-
-  /* Chart's variables */
-  public dataPoints: Array<any>;
-  public y: number;
-  public showXAxis: boolean;
-  public showYAxis: boolean;
-  public gradient: boolean;
-  public showLegend: boolean;
-  public showXAxisLabel: boolean;
-  public showYAxisLabel: boolean;
-  public yAxisLabel: string;
-  public colorScheme: object;
-  public multi: Array<any>;
-  public autoScale: boolean;
-
-  // Pagination
-  public config: PaginationInstance;
-  public total: number;
-  public counter: number;
 
 
   public constructor(
@@ -71,6 +46,10 @@ export class TradesAccountComponent implements OnInit {
     this.submitted = false;
     this.editingTrade = new Trade(null, null, null, null, null, null);
     this.isEditing = false;
+    this.isEditing = false;
+    this.formDeposit = null;
+    this.formWithdraw = null;
+    this.formRefill = null;
     this.strategyService.getAll().subscribe(
       strategies => this.strategies = strategies,
       () => {
@@ -133,6 +112,51 @@ export class TradesAccountComponent implements OnInit {
       }
     });
   }
+  public accountSelected: Account;
+  public accountTrades: Array<Trade>;
+  public currencyCode: string;
+  public form: FormGroup;
+  public formUtils: FormUtils;
+  public newTrade: Trade;
+  public submitted: boolean;
+  public strategies: Array<Strategy>;
+  public currentBalance: number;
+  public editingTrade: Trade;
+  public formEdit: FormGroup;
+  public formEditUtils: FormUtils;
+  public isEditing: boolean;
+  public isDepositing: boolean;
+  public isWithdrawing: boolean;
+  public isRefilling: boolean;
+  public formDeposit: FormGroup;
+  public formDepositUtils: FormUtils;
+  public formWithdraw: FormGroup;
+  public formWithdrawUtils: FormUtils;
+  public formRefill: FormGroup;
+  public formRefillUtils: FormUtils;
+  @ViewChild('closeBtn') public closeBtn: ElementRef;
+
+  /* Chart's variables */
+  public dataPoints: Array<any>;
+  public y: number;
+  public showXAxis: boolean;
+  public showYAxis: boolean;
+  public gradient: boolean;
+  public showLegend: boolean;
+  public showXAxisLabel: boolean;
+  public showYAxisLabel: boolean;
+  public yAxisLabel: string;
+  public colorScheme: object;
+  public multi: Array<any>;
+  public autoScale: boolean;
+
+  // Pagination
+  public config: PaginationInstance;
+  public total: number;
+  public counter: number;
+
+  // Create refill
+  private refillmentValue: number;
 
   ngOnInit() {
   }
@@ -159,47 +183,96 @@ export class TradesAccountComponent implements OnInit {
       +this.form.get('value').value,
       +this.form.get('profit').value,
       this.form.get('result').value,
-      +this.form.get('accountId').value,
-      +this.form.get('strategyId').value,
-      this.form.get('typeTrade').value
+      +this.accountSelected.id,
+      this.form.get('strategyId').value,
+      '',
+      'T'
     );
 
-    this.tradeService.create(this.newTrade)
-      .subscribe(
-        newTrade => {
-          this.accountTrades.unshift(newTrade);
-          this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
-          this.y = this.y + +newTrade.resultBalance;
-          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y, id: +newTrade.id});
-          this.multi = [
-            {
-              name: 'Balance',
-              series: this.dataPoints
-            }
-          ];
-          this.newTrade = new Trade(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          );
-          this.form.get('profit').reset();
-          this.form.get('result').reset();
-          this.getPage(this.config.currentPage);
-        },
-        () => {
-          this.flashMessages.show(
-            'An error ocurred. Please try again.',
-            {
-              cssClass: 'alert-danger',
-              timeout: 5000
-            });
-        }
-      );
-    this.submitted = false;
+    this.addTrade(this.newTrade);
+
+  }
+
+  // Create deposit
+  public createDeposit() {
+    this.submitted = true;
+    this.newTrade = new Trade(
+      null,
+      +this.formDeposit.get('value').value,
+      100,
+      true,
+      +this.accountSelected.id,
+      null,
+      '',
+      'D'
+    );
+
+    this.addTrade(this.newTrade);
+
+    this.closeBtn.nativeElement.click();
+
+  }
+
+  // Create withdraw
+  public createWithdraw() {
+    this.submitted = true;
+    this.newTrade = new Trade(
+      null,
+      +this.formWithdraw.get('value').value,
+      100,
+      false,
+      +this.accountSelected.id,
+      null,
+      '',
+      'W'
+    );
+
+    this.addTrade(this.newTrade);
+
+    this.closeBtn.nativeElement.click();
+
+  }
+  public createRefill() {
+    this.submitted = true;
+
+    this.refillmentValue = +this.formRefill.get('value').value - +this.currentBalance;
+
+    this.newTrade = new Trade(
+      null,
+      +this.refillmentValue,
+      100,
+      true,
+      +this.accountSelected.id,
+      null,
+      '',
+      'R'
+    );
+
+    this.addTrade(this.newTrade);
+
+    this.closeBtn.nativeElement.click();
+
+  }
+
+  public openDepositForm() {
+    this.formDeposit = null;
+    this.isDepositing = true;
+    this.formDeposit = this.setUpDepositWithdrawForm();
+    this.formDepositUtils = new FormUtils(this.formDeposit);
+  }
+
+  public openWithdrawForm() {
+    this.formWithdraw = null;
+    this.isWithdrawing = true;
+    this.formWithdraw = this.setUpDepositWithdrawForm();
+    this.formWithdrawUtils = new FormUtils(this.formWithdraw);
+  }
+
+  public openRefillForm() {
+    this.formRefill = null;
+    this.isRefilling = true;
+    this.formRefill = this.setUpDepositWithdrawForm();
+    this.formRefillUtils = new FormUtils(this.formRefill);
   }
 
   public beginEdit(trade: Trade) {
@@ -331,10 +404,54 @@ export class TradesAccountComponent implements OnInit {
       ],
       profit: [null, [Validators.required]],
       result: [null, [Validators.required]],
-      accountId: [this.accountSelected.id],
-      strategyId: [null, [Validators.required]],
-      typeTrade: ['T']
+      strategyId: [null, [Validators.required]]
     });
+  }
+
+  public setUpDepositWithdrawForm(): FormGroup {
+    return this.formBuilder.group({
+      value: [null, [Validators.required, Validators.min(1)]]
+    });
+  }
+
+  private addTrade(trade) {
+    this.tradeService.create(trade)
+      .subscribe(
+        newTrade => {
+          this.accountTrades.unshift(newTrade);
+          this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
+          this.y = this.y + +newTrade.resultBalance;
+          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y, id: +newTrade.id});
+          this.multi = [
+            {
+              name: 'Balance',
+              series: this.dataPoints
+            }
+          ];
+          this.newTrade = new Trade(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          );
+          this.form.get('profit').reset();
+          this.form.get('result').reset();
+          this.getPage(this.config.currentPage);
+          this.submitted = false;
+        },
+        () => {
+          this.flashMessages.show(
+            'An error ocurred. Please try again.',
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
+          this.submitted = false;
+        }
+      );
   }
 
 }
