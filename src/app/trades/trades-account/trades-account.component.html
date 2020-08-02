@@ -5,16 +5,23 @@
                                                      [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
     </div>
 
-    <button type="button" class="ml-3 col- mt-3 btn btn-success" (click)="openDepositForm()" data-toggle="modal"
+    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success" (click)="openDepositForm()" data-toggle="modal"
             data-target="#depositTradeModal">
       <fa-icon [icon]="['fas', 'piggy-bank']"></fa-icon>
       Deposit
     </button>
-    <button type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openWithdrawForm()"
+    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openWithdrawForm()"
             data-toggle="modal" data-target="#withdrawTradeModal">
       <fa-icon [icon]="['fas', 'hand-holding-usd']"></fa-icon>
       Withdraw
     </button>
+
+    <button *ngIf="accountSelected.typeAccount == 'D'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openRefillForm()"
+            data-toggle="modal" data-target="#refillTradeModal" [disabled]="accountSelected.initialBalance > [currentBalance]">
+      <fa-icon [icon]="['fas', 'charging-station']"></fa-icon>
+      Refill
+    </button>
+
 
   </div>
 
@@ -117,6 +124,8 @@
       <td *ngIf="trade.typeTrade == 'D'" colspan="2">Deposit</td>
       <td *ngIf="trade.typeTrade == 'W'"></td>
       <td *ngIf="trade.typeTrade == 'W'" colspan="2">Withdrawal</td>
+      <td *ngIf="trade.typeTrade == 'R'"></td>
+      <td *ngIf="trade.typeTrade == 'R'" colspan="2">Refillment</td>
       <td
         [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
       <td width="1%">
@@ -309,4 +318,41 @@
   </div>
 </div>
 
-
+<!-- Modal Withdraw -->
+<div *ngIf="isRefilling" class="modal fade" id="refillTradeModal" tabindex="-1" role="dialog"
+     aria-labelledby="refillModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="refillModalLabel">Refill - Account: {{accountSelected.broker.name}}
+          - {{accountSelected.getAccountType()}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="formRefill" (ngSubmit)="createRefill()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="refillValue">Value</label>
+            <input type="text" [formControl]="formRefill.controls['value']" id="refillValue"
+                   placeholder="Refillment Value" class="form-control"
+                   mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formRefillUtils.showSuccessOrError('value')">
+            <div *ngIf="formRefillUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="formRefill.get('value').errors.required || formRefill.get('value').errors.min">Refillment value must be at least 1!</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="formRefill.invalid || submitted">
+            Submit
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

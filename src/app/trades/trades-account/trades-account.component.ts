@@ -27,45 +27,6 @@ import {delay} from 'rxjs/operators';
   styleUrls: ['./trades-account.component.css']
 })
 export class TradesAccountComponent implements OnInit {
-  public accountSelected: Account;
-  public accountTrades: Array<Trade>;
-  public currencyCode: string;
-  public form: FormGroup;
-  public formUtils: FormUtils;
-  public newTrade: Trade;
-  public submitted: boolean;
-  public strategies: Array<Strategy>;
-  public currentBalance: number;
-  public editingTrade: Trade;
-  public formEdit: FormGroup;
-  public formEditUtils: FormUtils;
-  public isEditing: boolean;
-  public isDepositing: boolean;
-  public isWithdrawing: boolean;
-  public formDeposit: FormGroup;
-  public formDepositUtils: FormUtils;
-  public formWithdraw: FormGroup;
-  public formWithdrawUtils: FormUtils;
-  @ViewChild('closeBtn') public closeBtn: ElementRef;
-
-  /* Chart's variables */
-  public dataPoints: Array<any>;
-  public y: number;
-  public showXAxis: boolean;
-  public showYAxis: boolean;
-  public gradient: boolean;
-  public showLegend: boolean;
-  public showXAxisLabel: boolean;
-  public showYAxisLabel: boolean;
-  public yAxisLabel: string;
-  public colorScheme: object;
-  public multi: Array<any>;
-  public autoScale: boolean;
-
-  // Pagination
-  public config: PaginationInstance;
-  public total: number;
-  public counter: number;
 
 
   public constructor(
@@ -88,6 +49,7 @@ export class TradesAccountComponent implements OnInit {
     this.isEditing = false;
     this.formDeposit = null;
     this.formWithdraw = null;
+    this.formRefill = null;
     this.strategyService.getAll().subscribe(
       strategies => this.strategies = strategies,
       () => {
@@ -150,6 +112,51 @@ export class TradesAccountComponent implements OnInit {
       }
     });
   }
+  public accountSelected: Account;
+  public accountTrades: Array<Trade>;
+  public currencyCode: string;
+  public form: FormGroup;
+  public formUtils: FormUtils;
+  public newTrade: Trade;
+  public submitted: boolean;
+  public strategies: Array<Strategy>;
+  public currentBalance: number;
+  public editingTrade: Trade;
+  public formEdit: FormGroup;
+  public formEditUtils: FormUtils;
+  public isEditing: boolean;
+  public isDepositing: boolean;
+  public isWithdrawing: boolean;
+  public isRefilling: boolean;
+  public formDeposit: FormGroup;
+  public formDepositUtils: FormUtils;
+  public formWithdraw: FormGroup;
+  public formWithdrawUtils: FormUtils;
+  public formRefill: FormGroup;
+  public formRefillUtils: FormUtils;
+  @ViewChild('closeBtn') public closeBtn: ElementRef;
+
+  /* Chart's variables */
+  public dataPoints: Array<any>;
+  public y: number;
+  public showXAxis: boolean;
+  public showYAxis: boolean;
+  public gradient: boolean;
+  public showLegend: boolean;
+  public showXAxisLabel: boolean;
+  public showYAxisLabel: boolean;
+  public yAxisLabel: string;
+  public colorScheme: object;
+  public multi: Array<any>;
+  public autoScale: boolean;
+
+  // Pagination
+  public config: PaginationInstance;
+  public total: number;
+  public counter: number;
+
+  // Create refill
+  private refillmentValue: number;
 
   ngOnInit() {
   }
@@ -225,6 +232,27 @@ export class TradesAccountComponent implements OnInit {
     this.closeBtn.nativeElement.click();
 
   }
+  public createRefill() {
+    this.submitted = true;
+
+    this.refillmentValue = +this.formRefill.get('value').value - +this.currentBalance;
+
+    this.newTrade = new Trade(
+      null,
+      +this.refillmentValue,
+      100,
+      true,
+      +this.accountSelected.id,
+      null,
+      '',
+      'R'
+    );
+
+    this.addTrade(this.newTrade);
+
+    this.closeBtn.nativeElement.click();
+
+  }
 
   public openDepositForm() {
     this.formDeposit = null;
@@ -238,6 +266,13 @@ export class TradesAccountComponent implements OnInit {
     this.isWithdrawing = true;
     this.formWithdraw = this.setUpDepositWithdrawForm();
     this.formWithdrawUtils = new FormUtils(this.formWithdraw);
+  }
+
+  public openRefillForm() {
+    this.formRefill = null;
+    this.isRefilling = true;
+    this.formRefill = this.setUpDepositWithdrawForm();
+    this.formRefillUtils = new FormUtils(this.formRefill);
   }
 
   public beginEdit(trade: Trade) {
