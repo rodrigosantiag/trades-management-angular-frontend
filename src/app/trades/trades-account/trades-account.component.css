@@ -23,3 +23,12 @@
 .page-link{
   cursor: pointer;
 }
+
+tr.trade-line {
+  height: 47px;
+}
+
+button.btn-withdraw {
+  background-color: orange;
+  border-color: orange;
+}

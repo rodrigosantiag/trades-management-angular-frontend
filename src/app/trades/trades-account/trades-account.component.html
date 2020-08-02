@@ -10,7 +10,8 @@
       <fa-icon [icon]="['fas', 'piggy-bank']"></fa-icon>
       Deposit
     </button>
-    <button type="button" class="ml-3 col- mt-3 btn btn-success">
+    <button type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openWithdrawForm()"
+            data-toggle="modal" data-target="#withdrawTradeModal">
       <fa-icon [icon]="['fas', 'hand-holding-usd']"></fa-icon>
       Withdraw
     </button>
@@ -105,17 +106,21 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let trade of accountTrades | paginate: config">
+    <tr *ngFor="let trade of accountTrades | paginate: config" class="trade-line">
       <td>{{trade.id}}</td>
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
       <td>{{trade.value | currency:accountSelected.currency}}</td>
-      <td>{{trade.profit}}%</td>
-      <td>{{trade.strategy === null ? 'Strategy deleted' : trade.strategy.name}}</td>
-      <td>{{trade.result ? 'ITM' : 'OTM'}}</td>
+      <td *ngIf="trade.typeTrade == 'T'">{{trade.profit}}%</td>
+      <td *ngIf="trade.typeTrade == 'T'">{{trade.strategy === null ? 'Strategy deleted' : trade.strategy.name}}</td>
+      <td *ngIf="trade.typeTrade == 'T'">{{trade.result ? 'ITM' : 'OTM'}}</td>
+      <td *ngIf="trade.typeTrade == 'D'"></td>
+      <td *ngIf="trade.typeTrade == 'D'" colspan="2">Deposit</td>
+      <td *ngIf="trade.typeTrade == 'W'"></td>
+      <td *ngIf="trade.typeTrade == 'W'" colspan="2">Withdrawal</td>
       <td
         [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
       <td width="1%">
-        <button (click)="beginEdit(trade)" type="button" class="btn btn-light" data-toggle="modal"
+        <button *ngIf="trade.typeTrade == 'T'" (click)="beginEdit(trade)" type="button" class="btn btn-light" data-toggle="modal"
                 data-target="#editTradeModal">
           <fa-icon [icon]="['far', 'edit']"></fa-icon>
         </button>
@@ -225,6 +230,7 @@
     </div>
   </div>
 </div>
+
 <!-- Modal Deposit -->
 <div *ngIf="isDepositing" class="modal fade" id="depositTradeModal" tabindex="-1" role="dialog"
      aria-labelledby="depositModalLabel"
@@ -238,7 +244,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form [formGroup]="formDeposit" (ngSubmit)="createTrade('D')">
+      <form [formGroup]="formDeposit" (ngSubmit)="createDeposit()">
         <div class="modal-body">
           <div class="form-group">
             <label for="depositValue">Value</label>
@@ -263,4 +269,44 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Withdraw -->
+<div *ngIf="isWithdrawing" class="modal fade" id="withdrawTradeModal" tabindex="-1" role="dialog"
+     aria-labelledby="withdrawModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="withdrawModalLabel">Withdrawal - Account: {{accountSelected.broker.name}}
+          - {{accountSelected.getAccountType()}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="formWithdraw" (ngSubmit)="createWithdraw()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="withdrawValue">Value</label>
+            <input type="text" [formControl]="formWithdraw.controls['value']" id="withdrawValue"
+                   placeholder="Withdraw Value" class="form-control"
+                   mask="0*.00"
+                   [dropSpecialCharacters]="false" [ngClass]="formWithdrawUtils.showSuccessOrError('value')">
+            <div *ngIf="formWithdrawUtils.showFieldError('value')" class="invalid-feedback">
+          <span
+            *ngIf="formWithdraw.get('value').errors.required || formWithdraw.get('value').errors.min">Withdrawal value must be at least 1!</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeBtn>Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="formWithdraw.invalid || submitted">
+            Submit
+            <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 

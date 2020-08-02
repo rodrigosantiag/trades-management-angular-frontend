@@ -44,6 +44,8 @@ export class TradesAccountComponent implements OnInit {
   public isWithdrawing: boolean;
   public formDeposit: FormGroup;
   public formDepositUtils: FormUtils;
+  public formWithdraw: FormGroup;
+  public formWithdrawUtils: FormUtils;
   @ViewChild('closeBtn') public closeBtn: ElementRef;
 
   /* Chart's variables */
@@ -85,6 +87,7 @@ export class TradesAccountComponent implements OnInit {
     this.isEditing = false;
     this.isEditing = false;
     this.formDeposit = null;
+    this.formWithdraw = null;
     this.strategyService.getAll().subscribe(
       strategies => this.strategies = strategies,
       () => {
@@ -174,56 +177,67 @@ export class TradesAccountComponent implements OnInit {
       +this.form.get('profit').value,
       this.form.get('result').value,
       +this.accountSelected.id,
-      +this.form.get('strategyId').value,
+      this.form.get('strategyId').value,
       '',
       'T'
     );
 
-    this.tradeService.create(this.newTrade)
-      .subscribe(
-        newTrade => {
-          this.accountTrades.unshift(newTrade);
-          this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
-          this.y = this.y + +newTrade.resultBalance;
-          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y, id: +newTrade.id});
-          this.multi = [
-            {
-              name: 'Balance',
-              series: this.dataPoints
-            }
-          ];
-          this.newTrade = new Trade(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          );
-          this.form.get('profit').reset();
-          this.form.get('result').reset();
-          this.getPage(this.config.currentPage);
-          this.submitted = false;
-        },
-        () => {
-          this.flashMessages.show(
-            'An error ocurred. Please try again.',
-            {
-              cssClass: 'alert-danger',
-              timeout: 5000
-            });
-          this.submitted = false;
-        }
-      );
+    this.addTrade(this.newTrade);
+
+  }
+
+  // Create deposit
+  public createDeposit() {
+    this.submitted = true;
+    this.newTrade = new Trade(
+      null,
+      +this.formDeposit.get('value').value,
+      100,
+      true,
+      +this.accountSelected.id,
+      null,
+      '',
+      'D'
+    );
+
+    this.addTrade(this.newTrade);
+
+    this.closeBtn.nativeElement.click();
+
+  }
+
+  // Create withdraw
+  public createWithdraw() {
+    this.submitted = true;
+    this.newTrade = new Trade(
+      null,
+      +this.formWithdraw.get('value').value,
+      100,
+      false,
+      +this.accountSelected.id,
+      null,
+      '',
+      'W'
+    );
+
+    this.addTrade(this.newTrade);
+
+    this.closeBtn.nativeElement.click();
+
   }
 
   public openDepositForm() {
-    console.log(this.submitted);
     this.formDeposit = null;
     this.isDepositing = true;
-    this.formDeposit = this.setUpDepositForm();
+    this.formDeposit = this.setUpDepositWithdrawForm();
     this.formDepositUtils = new FormUtils(this.formDeposit);
+  }
+
+  public openWithdrawForm() {
+    this.formWithdraw = null;
+    this.isWithdrawing = true;
+    this.formWithdraw = this.setUpDepositWithdrawForm();
+    this.formWithdrawUtils = new FormUtils(this.formWithdraw);
   }
 
   public beginEdit(trade: Trade) {
@@ -359,10 +373,50 @@ export class TradesAccountComponent implements OnInit {
     });
   }
 
-  public setUpDepositForm(): FormGroup {
+  public setUpDepositWithdrawForm(): FormGroup {
     return this.formBuilder.group({
       value: [null, [Validators.required, Validators.min(1)]]
     });
+  }
+
+  private addTrade(trade) {
+    this.tradeService.create(trade)
+      .subscribe(
+        newTrade => {
+          this.accountTrades.unshift(newTrade);
+          this.currentBalance = +this.currentBalance + +newTrade.resultBalance;
+          this.y = this.y + +newTrade.resultBalance;
+          this.dataPoints.push({name: new Date(newTrade.createdDateFormatted), value: this.y, id: +newTrade.id});
+          this.multi = [
+            {
+              name: 'Balance',
+              series: this.dataPoints
+            }
+          ];
+          this.newTrade = new Trade(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          );
+          this.form.get('profit').reset();
+          this.form.get('result').reset();
+          this.getPage(this.config.currentPage);
+          this.submitted = false;
+        },
+        () => {
+          this.flashMessages.show(
+            'An error ocurred. Please try again.',
+            {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
+          this.submitted = false;
+        }
+      );
   }
 
 }
