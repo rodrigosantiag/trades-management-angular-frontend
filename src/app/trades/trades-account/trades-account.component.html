@@ -17,7 +17,7 @@
     </button>
 
     <button *ngIf="accountSelected.typeAccount == 'D'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openRefillForm()"
-            data-toggle="modal" data-target="#refillTradeModal" [disabled]="accountSelected.initialBalance > [currentBalance]">
+            data-toggle="modal" data-target="#refillTradeModal" [disabled]="canRefill()">
       <fa-icon [icon]="['fas', 'charging-station']"></fa-icon>
       Refill
     </button>

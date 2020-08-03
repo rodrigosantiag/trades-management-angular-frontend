@@ -112,6 +112,7 @@ export class TradesAccountComponent implements OnInit {
       }
     });
   }
+
   public accountSelected: Account;
   public accountTrades: Array<Trade>;
   public currencyCode: string;
@@ -232,6 +233,7 @@ export class TradesAccountComponent implements OnInit {
     this.closeBtn.nativeElement.click();
 
   }
+
   public createRefill() {
     this.submitted = true;
 
@@ -452,6 +454,10 @@ export class TradesAccountComponent implements OnInit {
           this.submitted = false;
         }
       );
+  }
+
+  public canRefill(): boolean {
+    return +this.accountSelected.initialBalance < +this.currentBalance;
   }
 
 }
