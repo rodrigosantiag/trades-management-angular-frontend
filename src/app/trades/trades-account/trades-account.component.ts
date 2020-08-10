@@ -402,7 +402,7 @@ export class TradesAccountComponent implements OnInit {
     return this.formBuilder.group({
       value: [
         this.accountSelected.currentBalance * this.accountSelected.risk / 100,
-        [Validators.required, Validators.min(1), Validators.max(this.accountSelected.currentBalance)]
+        [Validators.required, Validators.max(this.accountSelected.currentBalance)]
       ],
       profit: [null, [Validators.required]],
       result: [null, [Validators.required]],
