@@ -101,11 +101,11 @@ export class StrategiesComponent implements OnInit {
   public updateStrategy(strategy: Strategy) {
     const oldName = strategy.name;
     strategy.name = this.formEdit.get('name').value.trim();
+    this.submitted = true;
 
     return this.strategyService.update(strategy)
       .subscribe(
         response => {
-          this.submitted = true;
           const itemIndex = this.strategies.findIndex(item => item.id === response.id);
           this.strategies[itemIndex] = response;
           this.strategies.sort((a, b) => a.name.localeCompare(b.name));
@@ -115,6 +115,7 @@ export class StrategiesComponent implements OnInit {
             cssClass: 'alert-success',
             timeout: 5000
           });
+          this.submitted = false;
         },
         error => {
           strategy.name = oldName;
@@ -123,11 +124,11 @@ export class StrategiesComponent implements OnInit {
           } else {
             this.messages = ['An error ocurred. Try again later.'];
           }
-          this.submitted = false;
           this.flashMessageService.show(this.messages.join(' | '), {
             cssClass: 'alert-danger',
             timeout: 5000
           });
+          this.submitted = false;
         }
       );
   }
