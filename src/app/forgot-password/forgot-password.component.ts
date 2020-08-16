@@ -1,3 +1,5 @@
+// TODO: check from here jsonapi adaptation
+
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';

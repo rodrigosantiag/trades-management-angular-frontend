@@ -130,11 +130,11 @@ export class BrokersComponent implements OnInit {
   public updateBroker(broker: Broker) {
     const oldName = broker.name;
     broker.name = this.formEdit.get('name').value.trim();
+    this.submitted = true;
 
     return this.brokerService.update(broker)
       .subscribe(
         (response) => {
-          this.submitted = true;
           const itemIndex = this.brokers.findIndex(item => item.id === response.id);
           this.brokers[itemIndex] = response;
           this.brokers.sort((a, b) => a.name.localeCompare(b.name));
@@ -144,6 +144,7 @@ export class BrokersComponent implements OnInit {
             cssClass: 'alert-success',
             timeout: 5000
           });
+          this.submitted = false;
         },
         error => {
           broker.name = oldName;
@@ -152,11 +153,11 @@ export class BrokersComponent implements OnInit {
           } else {
             this.messages = ['An error ocurred. Try again later.'];
           }
-          this.submitted = false;
           this.flashMessageService.show(this.messages.join(' | '), {
             cssClass: 'alert-danger',
             timeout: 5000
           });
+          this.submitted = false;
         }
       );
   }

@@ -4,7 +4,6 @@ import {Observable} from 'rxjs';
 import {Broker} from './broker.model';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
-import {Account} from '../../accounts/shared/account.model';
 import {ErrorUtils} from '../../shared/error.utils';
 
 @Injectable({
@@ -53,41 +52,24 @@ export class BrokerService {
       );
   }
 
+  public responseToBroker(response: any): Broker {
+    return new Broker(
+      response.data.id,
+      response.data.attributes.name
+    );
+  }
+
   public responseToBrokers(response: any): Array<Broker> {
     const brokersArray = response.data;
     const brokers: Broker[] = [];
     brokersArray.forEach(item => {
       const broker = new Broker(
         item.id,
-        item.attributes.name,
-        item.relationships.accounts.data.map(account => {
-          return new Account(
-            account.id,
-            account['type-account'],
-            account.currency,
-            account['initial-balance'],
-            account['current-balance'],
-            account['broker-id']);
-        })
+        item.attributes.name
       );
       brokers.push(broker);
     });
-    return brokers;
-  }
 
-  public responseToBroker(response: any): Broker {
-    return new Broker(
-      response.data.id,
-      response.data.attributes.name,
-      response.data.relationships.accounts.data.map(account => {
-        return new Account(
-          account.id,
-          account['type-account'],
-          account.currency,
-          account['initial-balance'],
-          account['current-balance'],
-          account['broker-id']);
-      })
-    );
+    return brokers;
   }
 }

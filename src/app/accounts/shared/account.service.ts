@@ -66,15 +66,15 @@ export class AccountService {
   private responseToAccount(response: any): Account {
     return new Account(
       response.data.id,
-      response.data.attributes['type-account'],
+      response.data.attributes.type_account,
       response.data.attributes.currency,
-      response.data.attributes['initial-balance'],
-      response.data.attributes['current-balance'],
-      response.data.attributes['broker-id'],
-      response.data.attributes['created-date-formatted'],
+      response.data.attributes.initial_balance,
+      response.data.attributes.current_balance,
+      response.data.attributes.broker_id,
+      response.data.attributes.created_date_formatted,
       response.data.attributes.broker,
       response.data.attributes.trades,
-      response.data.attributes['account-risk']
+      response.data.attributes.account_risk
     );
   }
 
@@ -84,12 +84,12 @@ export class AccountService {
     response.data.forEach(item => {
       const account = new Account(
         item.id,
-        item.attributes['type-account'],
+        item.attributes.type_account,
         item.attributes.currency,
-        item.attributes['initial-balance'],
-        item.attributes['current-balance'],
-        item.attributes['broker-id'],
-        item.attributes['created-date-formatted'],
+        item.attributes.initial_balance,
+        item.attributes.current_balance,
+        item.attributes.broker_id,
+        item.attributes.created_date_formatted,
         item.attributes.broker
       );
       accounts.push(account);
