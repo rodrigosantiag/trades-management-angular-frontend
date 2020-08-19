@@ -127,7 +127,7 @@
       <td *ngIf="trade.typeTrade == 'R'"></td>
       <td *ngIf="trade.typeTrade == 'R'" colspan="2">Refillment</td>
       <td
-        [className]="winLoseClass(trade)">{{trade['result-balance'] ? (trade['result-balance'] | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
+        [className]="winLoseClass(trade)">{{trade.resultBalance ? (trade.resultBalance | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
       <td width="1%">
         <button *ngIf="trade.typeTrade == 'T'" (click)="beginEdit(trade)" type="button" class="btn btn-light" data-toggle="modal"
                 data-target="#editTradeModal">

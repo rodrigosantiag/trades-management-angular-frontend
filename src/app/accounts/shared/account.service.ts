@@ -5,6 +5,7 @@ import {Account} from './account.model';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
+import {Trade} from '../../trades/shared/trade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,20 @@ export class AccountService {
   }
 
   private responseToAccount(response: any): Account {
+    let tradesAccount: Array<Trade> = [];
+
+    if (response.included !== undefined) {
+      tradesAccount = response.included.map(trade => {
+        if (trade.type === 'trades') {
+          return new Trade(trade.id, trade.attributes.value, trade.attributes.profit, trade.attributes.result,
+            trade.attributes.account_id, trade.attributes.strategy_id, trade.attributes.created_date_formatted, trade.attributes.type_trade,
+            trade.attributes.result_balance, trade.attributes.account, trade.attributes.strategy);
+        }
+      });
+    }
+
+    tradesAccount = tradesAccount.filter(value => value !== undefined);
+
     return new Account(
       response.data.id,
       response.data.attributes.type_account,
@@ -73,7 +88,7 @@ export class AccountService {
       response.data.attributes.broker_id,
       response.data.attributes.created_date_formatted,
       response.data.attributes.broker,
-      response.data.attributes.trades,
+      tradesAccount,
       response.data.attributes.account_risk
     );
   }

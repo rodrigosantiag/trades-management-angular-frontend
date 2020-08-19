@@ -74,9 +74,11 @@ export class TradesAccountComponent implements OnInit {
               this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
               this.y = +this.accountSelected.initialBalance;
               this.dataPoints = [{name: new Date(this.accountSelected.createdDateFormatted), value: this.y, id: 0}];
+              // console.log(this.accountSelected.trades);
               this.accountSelected.trades.map(trade => {
-                this.y = this.y + +trade['result-balance'];
-                this.dataPoints.push({name: new Date(trade['created-date-formatted']), value: this.y, id: trade.id});
+                // console.log(trade);
+                this.y = this.y + +trade.resultBalance;
+                this.dataPoints.push({name: new Date(trade.createdDateFormatted), value: this.y, id: trade.id});
               });
 
               // options
@@ -287,6 +289,7 @@ export class TradesAccountComponent implements OnInit {
   }
 
   public updateTrade(trade: Trade) {
+    // console.log(trade);
     this.submitted = true;
     const beforeValue = +trade.resultBalance;
     trade.value = this.formEdit.value.value;
@@ -297,9 +300,12 @@ export class TradesAccountComponent implements OnInit {
     this.tradeService.update(trade)
       .subscribe(
         updatedTrade => {
+          // console.log(updatedTrade);
           // Find trade index in item and data points array
-          const itemIndex = this.accountTrades.findIndex(item => item.id === updatedTrade.id);
-          const chartIndex = this.dataPoints.findIndex(item => item.id === +updatedTrade.id);
+          const itemIndex = this.accountTrades.findIndex(item => +item.id === +updatedTrade.id);
+          const chartIndex = this.dataPoints.findIndex(item => +item.id === +updatedTrade.id);
+          // console.log(itemIndex);
+          // console.log(this.dataPoints);
           // Calculate new result balance
           let newResultBalance = this.dataPoints[chartIndex].value + (+updatedTrade.resultBalance - beforeValue);
           this.accountTrades[itemIndex] = updatedTrade;
@@ -348,15 +354,15 @@ export class TradesAccountComponent implements OnInit {
         .subscribe(
           () => {
             // Find trade index in item and data points array
-            const chartIndex = this.dataPoints.findIndex(item => item.id === +trade.id);
+            const chartIndex = this.dataPoints.findIndex(item => +item.id === +trade.id);
             // Calculate new result balance
-            let newResultBalance = this.dataPoints[chartIndex].value - +trade.resultBalance;
+            let newResultBalance = +this.dataPoints[chartIndex].value - +trade.resultBalance;
             // Update current balance
             this.currentBalance = +this.currentBalance - +trade.resultBalance;
             // Update right and next data points values
             this.dataPoints.map((item, index) => {
               if (index >= chartIndex) {
-                newResultBalance = item.value - +trade.resultBalance;
+                newResultBalance = +item.value - +trade.resultBalance;
                 this.dataPoints[index] = {
                   name: item.name,
                   value: newResultBalance,
