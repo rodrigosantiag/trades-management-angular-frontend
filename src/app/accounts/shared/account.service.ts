@@ -5,6 +5,7 @@ import {Account} from './account.model';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
+import {Trade} from '../../trades/shared/trade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -64,17 +65,31 @@ export class AccountService {
   }
 
   private responseToAccount(response: any): Account {
+    let tradesAccount: Array<Trade> = [];
+
+    if (response.included !== undefined) {
+      tradesAccount = response.included.map(trade => {
+        if (trade.type === 'trades') {
+          return new Trade(trade.id, trade.attributes.value, trade.attributes.profit, trade.attributes.result,
+            trade.attributes.account_id, trade.attributes.strategy_id, trade.attributes.created_date_formatted, trade.attributes.type_trade,
+            trade.attributes.result_balance, trade.attributes.account, trade.attributes.strategy);
+        }
+      });
+    }
+
+    tradesAccount = tradesAccount.filter(value => value !== undefined);
+
     return new Account(
       response.data.id,
-      response.data.attributes['type-account'],
+      response.data.attributes.type_account,
       response.data.attributes.currency,
-      response.data.attributes['initial-balance'],
-      response.data.attributes['current-balance'],
-      response.data.attributes['broker-id'],
-      response.data.attributes['created-date-formatted'],
+      response.data.attributes.initial_balance,
+      response.data.attributes.current_balance,
+      response.data.attributes.broker_id,
+      response.data.attributes.created_date_formatted,
       response.data.attributes.broker,
-      response.data.attributes.trades,
-      response.data.attributes['account-risk']
+      tradesAccount,
+      response.data.attributes.account_risk
     );
   }
 
@@ -84,12 +99,12 @@ export class AccountService {
     response.data.forEach(item => {
       const account = new Account(
         item.id,
-        item.attributes['type-account'],
+        item.attributes.type_account,
         item.attributes.currency,
-        item.attributes['initial-balance'],
-        item.attributes['current-balance'],
-        item.attributes['broker-id'],
-        item.attributes['created-date-formatted'],
+        item.attributes.initial_balance,
+        item.attributes.current_balance,
+        item.attributes.broker_id,
+        item.attributes.created_date_formatted,
         item.attributes.broker
       );
       accounts.push(account);
