@@ -67,11 +67,11 @@ export class TradeService {
         item.attributes.value,
         item.attributes.profit,
         item.attributes.result,
-        item.attributes['account-id'],
-        item.attributes['strategy-id'],
-        item.attributes['created-date-formatted'],
-        item.attributes['type-trade'],
-        item.attributes['result-balance'],
+        item.attributes.account_id,
+        item.attributes.strategy_id,
+        item.attributes.created_date_formatted,
+        item.attributes.type_trade,
+        item.attributes.result_balance,
         item.attributes.account,
         item.attributes.strategy
       );
@@ -88,11 +88,11 @@ export class TradeService {
       response.data.attributes.value,
       response.data.attributes.profit,
       response.data.attributes.result,
-      response.data.attributes['account-id'],
-      response.data.attributes['strategy-id'],
-      response.data.attributes['created-date-formatted'],
-      response.data.attributes['type-trade'],
-      response.data.attributes['result-balance'],
+      response.data.attributes.account_id,
+      response.data.attributes.strategy_id,
+      response.data.attributes.created_date_formatted,
+      response.data.attributes.type_trade,
+      response.data.attributes.result_balance,
       response.data.attributes.account,
       response.data.attributes.strategy
     );
