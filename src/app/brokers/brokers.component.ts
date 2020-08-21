@@ -44,6 +44,7 @@ export class BrokersComponent implements OnInit {
           this.brokers = brokers;
         },
         error => {
+          // TODO: standardize account component to jsonapi response
           this.flashMessageService.show(
             'Something went wrong. Please refresh page.',
             {

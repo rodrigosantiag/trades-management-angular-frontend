@@ -5,6 +5,7 @@ import {Broker} from './broker.model';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
+import {Account} from '../../accounts/shared/account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -62,10 +63,28 @@ export class BrokerService {
   public responseToBrokers(response: any): Array<Broker> {
     const brokersArray = response.data;
     const brokers: Broker[] = [];
+
     brokersArray.forEach(item => {
+      const accountsBroker: Array<Account> = [];
+      item.relationships.accounts.data.map(account => {
+        response.included.filter((k) => {
+          if (k.type === 'accounts' && k.id === account.id) {
+
+            return accountsBroker.push(new Account(
+              k.id,
+              k.attributes.type_account,
+              k.attributes.currency,
+              k.attributes.initial_balance,
+              k.attributes.current_balance,
+              k.attributes.broker_id));
+          }
+        });
+      });
+
       const broker = new Broker(
         item.id,
-        item.attributes.name
+        item.attributes.name,
+        accountsBroker
       );
       brokers.push(broker);
     });
