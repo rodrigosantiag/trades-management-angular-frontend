@@ -6,6 +6,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
 import {Account} from '../../accounts/shared/account.model';
+import {AccountService} from '../../accounts/shared/account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ import {Account} from '../../accounts/shared/account.model';
 export class BrokerService {
   public brokersUrl = this.tokenService.apiBase + '/brokers';
 
-  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
+  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils,
+              private accountService: AccountService) {
   }
 
   public getAll(): Observable<Broker[]> {
@@ -54,9 +56,14 @@ export class BrokerService {
   }
 
   public responseToBroker(response: any): Broker {
+    console.log(response);
+    let accountsBroker: Array<Account> = [];
+    accountsBroker = this.accountService.getBrokerAccounts(response.data.relationships.accounts.data, response.included);
+
     return new Broker(
       response.data.id,
-      response.data.attributes.name
+      response.data.attributes.name,
+      accountsBroker
     );
   }
 
@@ -65,21 +72,8 @@ export class BrokerService {
     const brokers: Broker[] = [];
 
     brokersArray.forEach(item => {
-      const accountsBroker: Array<Account> = [];
-      item.relationships.accounts.data.map(account => {
-        response.included.filter((k) => {
-          if (k.type === 'accounts' && k.id === account.id) {
-
-            return accountsBroker.push(new Account(
-              k.id,
-              k.attributes.type_account,
-              k.attributes.currency,
-              k.attributes.initial_balance,
-              k.attributes.current_balance,
-              k.attributes.broker_id));
-          }
-        });
-      });
+      let accountsBroker: Array<Account> = [];
+      accountsBroker = this.accountService.getBrokerAccounts(item.relationships.accounts.data, response.included);
 
       const broker = new Broker(
         item.id,

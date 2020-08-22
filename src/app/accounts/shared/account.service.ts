@@ -64,6 +64,26 @@ export class AccountService {
       );
   }
 
+  public getBrokerAccounts(accountsRelated: Array<any>, responseIncluded: Array<any>): Array<Account> {
+    const brokerAccounts: Array<Account> = [];
+    accountsRelated.map(account => {
+      responseIncluded.filter((k) => {
+        if (k.type === 'accounts' && k.id === account.id) {
+
+          brokerAccounts.push(new Account(
+            k.id,
+            k.attributes.type_account,
+            k.attributes.currency,
+            k.attributes.initial_balance,
+            k.attributes.current_balance,
+            k.attributes.broker_id));
+        }
+      });
+    });
+
+    return brokerAccounts;
+  }
+
   private responseToAccount(response: any): Account {
     let tradesAccount: Array<Trade> = [];
 
