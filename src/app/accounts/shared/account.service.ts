@@ -6,6 +6,8 @@ import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
 import {Trade} from '../../trades/shared/trade.model';
+import {BrokerService} from '../../brokers/shared/broker.service';
+import {Broker} from '../../brokers/shared/broker.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,8 @@ import {Trade} from '../../trades/shared/trade.model';
 export class AccountService {
   public accountsUrl = this.tokenService.apiBase + '/accounts';
 
-  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
+  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils,
+              private brokerService: BrokerService) {
   }
 
   public getAll(terms: string = ''): Observable<Account[]> {
@@ -64,26 +67,6 @@ export class AccountService {
       );
   }
 
-  public getBrokerAccounts(accountsRelated: Array<any>, responseIncluded: Array<any>): Array<Account> {
-    const brokerAccounts: Array<Account> = [];
-    accountsRelated.map(account => {
-      responseIncluded.filter((k) => {
-        if (k.type === 'accounts' && k.id === account.id) {
-
-          brokerAccounts.push(new Account(
-            k.id,
-            k.attributes.type_account,
-            k.attributes.currency,
-            k.attributes.initial_balance,
-            k.attributes.current_balance,
-            k.attributes.broker_id));
-        }
-      });
-    });
-
-    return brokerAccounts;
-  }
-
   private responseToAccount(response: any): Account {
     let tradesAccount: Array<Trade> = [];
 
@@ -105,9 +88,9 @@ export class AccountService {
       response.data.attributes.currency,
       response.data.attributes.initial_balance,
       response.data.attributes.current_balance,
-      response.data.attributes.broker_id,
+      response.data.relationships.broker.data.id,
       response.data.attributes.created_date_formatted,
-      response.data.attributes.broker,
+      this.getAccountBroker(response.data.id, response.included),
       tradesAccount,
       response.data.attributes.account_risk
     );
@@ -117,6 +100,7 @@ export class AccountService {
     const accounts: Array<Account> = [];
 
     response.data.forEach(item => {
+      const accountBroker = this.getAccountBroker(item.relationships.broker.data.id, response.included);
       const account = new Account(
         item.id,
         item.attributes.type_account,
@@ -125,11 +109,25 @@ export class AccountService {
         item.attributes.current_balance,
         item.attributes.broker_id,
         item.attributes.created_date_formatted,
-        item.attributes.broker
+        accountBroker
       );
       accounts.push(account);
     });
 
     return accounts;
+  }
+
+  public getAccountBroker(brokerId: string, responseIncluded: Array<any>): Broker {
+    let broker: Broker = new Broker(null, null);
+    responseIncluded.filter((k) => {
+      if (k.type === 'brokers' && k.id === brokerId) {
+        broker = new Broker(
+          k.id,
+          k.attributes.name
+        );
+      }
+    });
+
+    return broker;
   }
 }
