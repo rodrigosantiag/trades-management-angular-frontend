@@ -68,19 +68,6 @@ export class AccountService {
   }
 
   private responseToAccount(response: any): Account {
-    let tradesAccount: Array<Trade> = [];
-
-    if (response.included !== undefined) {
-      tradesAccount = response.included.map(trade => {
-        if (trade.type === 'trades') {
-          return new Trade(trade.id, trade.attributes.value, trade.attributes.profit, trade.attributes.result,
-            trade.attributes.account_id, trade.attributes.strategy_id, trade.attributes.created_date_formatted, trade.attributes.type_trade,
-            trade.attributes.result_balance, trade.attributes.account, trade.attributes.strategy);
-        }
-      });
-    }
-
-    tradesAccount = tradesAccount.filter(value => value !== undefined);
 
     return new Account(
       response.data.id,
@@ -90,8 +77,8 @@ export class AccountService {
       response.data.attributes.current_balance,
       response.data.relationships.broker.data.id,
       response.data.attributes.created_date_formatted,
-      this.getAccountBroker(response.data.id, response.included),
-      tradesAccount,
+      this.getAccountBroker(response.data.relationships.broker.data.id, response.included),
+      this.getAccountTrades(response.included),
       response.data.attributes.account_risk
     );
   }
@@ -129,5 +116,28 @@ export class AccountService {
     });
 
     return broker;
+  }
+
+  public getAccountTrades(responseIncluded: Array<any>): Array<Trade> {
+    const trades: Array<Trade> = [];
+    responseIncluded.filter(k => {
+      if (k.type === 'trades' && k.attributes.value !== undefined) {
+        const trade = new Trade(
+          k.id,
+          k.attributes.value,
+          k.attributes.profit,
+          k.attributes.result,
+          k.attributes.account_id,
+          k.attributes.strategy_id,
+          k.attributes.created_date_formatted,
+          k.attributes.type_trade,
+          k.attributes.result_balance
+        );
+        trade.setStrategyFromIncluded(responseIncluded);
+        trades.push(trade);
+      }
+    });
+
+    return trades;
   }
 }

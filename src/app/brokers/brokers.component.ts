@@ -79,7 +79,6 @@ export class BrokersComponent implements OnInit {
           });
         },
         error => {
-          console.log(error);
           if (error.status === 422) {
             this.messages = ['Broker name can\'t be blank'];
           } else {

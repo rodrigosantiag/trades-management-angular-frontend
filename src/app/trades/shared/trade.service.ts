@@ -71,10 +71,9 @@ export class TradeService {
         item.attributes.strategy_id,
         item.attributes.created_date_formatted,
         item.attributes.type_trade,
-        item.attributes.result_balance,
-        item.attributes.account,
-        item.attributes.strategy
+        item.attributes.result_balance
       );
+      trade.setStrategyFromIncluded(response.included);
       trades.push(trade);
     });
 
@@ -93,7 +92,6 @@ export class TradeService {
       response.data.attributes.created_date_formatted,
       response.data.attributes.type_trade,
       response.data.attributes.result_balance,
-      response.data.attributes.account,
       response.data.attributes.strategy
     );
   }

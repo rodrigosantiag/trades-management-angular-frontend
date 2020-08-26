@@ -1,10 +1,3 @@
-// tslint:disable-next-line:max-line-length
-// TODO: For real account => Deposit/Withdrawal: both will be added as a trade of types 'D' and 'W'. In trade's list their display should
-//  different (think about best way to do it)
-// TODO: For demo account will be a trade type 'R' and refunding value difference from balance should be added to account balance. Its
-// displaying have to be thought too
-// TODO: implement createDeposit() method
-
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Trade} from '../shared/trade.model';
 import {Account} from '../../accounts/shared/account.model';
@@ -74,9 +67,7 @@ export class TradesAccountComponent implements OnInit {
               this.currencyCode = getCurrencySymbol(this.accountSelected.currency, 'wide');
               this.y = +this.accountSelected.initialBalance;
               this.dataPoints = [{name: new Date(this.accountSelected.createdDateFormatted), value: this.y, id: 0}];
-              // console.log(this.accountSelected.trades);
               this.accountSelected.trades.map(trade => {
-                // console.log(trade);
                 this.y = this.y + +trade.resultBalance;
                 this.dataPoints.push({name: new Date(trade.createdDateFormatted), value: this.y, id: trade.id});
               });
@@ -289,7 +280,6 @@ export class TradesAccountComponent implements OnInit {
   }
 
   public updateTrade(trade: Trade) {
-    // console.log(trade);
     this.submitted = true;
     const beforeValue = +trade.resultBalance;
     trade.value = this.formEdit.value.value;
@@ -300,12 +290,9 @@ export class TradesAccountComponent implements OnInit {
     this.tradeService.update(trade)
       .subscribe(
         updatedTrade => {
-          // console.log(updatedTrade);
           // Find trade index in item and data points array
           const itemIndex = this.accountTrades.findIndex(item => +item.id === +updatedTrade.id);
           const chartIndex = this.dataPoints.findIndex(item => +item.id === +updatedTrade.id);
-          // console.log(itemIndex);
-          // console.log(this.dataPoints);
           // Calculate new result balance
           let newResultBalance = this.dataPoints[chartIndex].value + (+updatedTrade.resultBalance - beforeValue);
           this.accountTrades[itemIndex] = updatedTrade;

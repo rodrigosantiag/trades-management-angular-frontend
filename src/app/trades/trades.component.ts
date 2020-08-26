@@ -27,8 +27,6 @@ export class TradesComponent implements OnInit {
 
     this.isDisabled = false;
 
-    // TODO: implement chart when CRUD's done
-
     this.accountService.getAll('q[s]=broker_name')
       .subscribe(
         accounts => this.accounts = accounts,

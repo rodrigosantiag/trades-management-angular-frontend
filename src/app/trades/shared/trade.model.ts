@@ -1,4 +1,3 @@
-import {Account} from '../../accounts/shared/account.model';
 import {Strategy} from '../../strategies/shared/strategy.model';
 
 export class Trade {
@@ -12,8 +11,22 @@ export class Trade {
     public createdDateFormatted?: string,
     public typeTrade?: string,
     public resultBalance?: number,
-    public account?: Account,
     public strategy?: Strategy
   ) {
+  }
+
+  // public setStrategy() {
+  //
+  // }
+
+  public setStrategyFromIncluded(responseIncluded: Array<any>) {
+    responseIncluded.filter(k => {
+      if (k.type === 'strategies' && +k.id === +this.strategyId) {
+        this.strategy = new Strategy(
+          k.id,
+          k.attributes.name
+        );
+      }
+    });
   }
 }
