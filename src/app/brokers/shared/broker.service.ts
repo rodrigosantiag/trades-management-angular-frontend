@@ -5,6 +5,7 @@ import {Broker} from './broker.model';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
+import {Account} from '../../accounts/shared/account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,23 +54,56 @@ export class BrokerService {
   }
 
   public responseToBroker(response: any): Broker {
+
+    let accountsBroker: Array<Account> = [];
+
+    if (response.data.relationships.accounts.data !== undefined) {
+      accountsBroker = this.getBrokerAccounts(response.data.relationships.accounts.data, response.included);
+    }
+
     return new Broker(
       response.data.id,
-      response.data.attributes.name
+      response.data.attributes.name,
+      accountsBroker
     );
   }
 
   public responseToBrokers(response: any): Array<Broker> {
     const brokersArray = response.data;
     const brokers: Broker[] = [];
+
     brokersArray.forEach(item => {
+      let accountsBroker: Array<Account> = [];
+      accountsBroker = this.getBrokerAccounts(item.relationships.accounts.data, response.included);
+
       const broker = new Broker(
         item.id,
-        item.attributes.name
+        item.attributes.name,
+        accountsBroker
       );
       brokers.push(broker);
     });
 
     return brokers;
+  }
+
+  public getBrokerAccounts(accountsRelated: Array<any>, responseIncluded: Array<any>): Array<Account> {
+    const brokerAccounts: Array<Account> = [];
+    accountsRelated.map(account => {
+      responseIncluded.filter((k) => {
+        if (k.type === 'accounts' && k.id === account.id) {
+
+          brokerAccounts.push(new Account(
+            k.id,
+            k.attributes.type_account,
+            k.attributes.currency,
+            k.attributes.initial_balance,
+            k.attributes.current_balance,
+            k.attributes.broker_id));
+        }
+      });
+    });
+
+    return brokerAccounts;
   }
 }

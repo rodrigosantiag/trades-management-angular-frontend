@@ -6,6 +6,8 @@ import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
 import {Trade} from '../../trades/shared/trade.model';
+import {BrokerService} from '../../brokers/shared/broker.service';
+import {Broker} from '../../brokers/shared/broker.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,8 @@ import {Trade} from '../../trades/shared/trade.model';
 export class AccountService {
   public accountsUrl = this.tokenService.apiBase + '/accounts';
 
-  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
+  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils,
+              private brokerService: BrokerService) {
   }
 
   public getAll(terms: string = ''): Observable<Account[]> {
@@ -65,19 +68,6 @@ export class AccountService {
   }
 
   private responseToAccount(response: any): Account {
-    let tradesAccount: Array<Trade> = [];
-
-    if (response.included !== undefined) {
-      tradesAccount = response.included.map(trade => {
-        if (trade.type === 'trades') {
-          return new Trade(trade.id, trade.attributes.value, trade.attributes.profit, trade.attributes.result,
-            trade.attributes.account_id, trade.attributes.strategy_id, trade.attributes.created_date_formatted, trade.attributes.type_trade,
-            trade.attributes.result_balance, trade.attributes.account, trade.attributes.strategy);
-        }
-      });
-    }
-
-    tradesAccount = tradesAccount.filter(value => value !== undefined);
 
     return new Account(
       response.data.id,
@@ -85,10 +75,10 @@ export class AccountService {
       response.data.attributes.currency,
       response.data.attributes.initial_balance,
       response.data.attributes.current_balance,
-      response.data.attributes.broker_id,
+      response.data.relationships.broker.data.id,
       response.data.attributes.created_date_formatted,
-      response.data.attributes.broker,
-      tradesAccount,
+      this.getAccountBroker(response.data.relationships.broker.data.id, response.included),
+      this.getAccountTrades(response.included),
       response.data.attributes.account_risk
     );
   }
@@ -97,6 +87,7 @@ export class AccountService {
     const accounts: Array<Account> = [];
 
     response.data.forEach(item => {
+      const accountBroker = this.getAccountBroker(item.relationships.broker.data.id, response.included);
       const account = new Account(
         item.id,
         item.attributes.type_account,
@@ -105,11 +96,48 @@ export class AccountService {
         item.attributes.current_balance,
         item.attributes.broker_id,
         item.attributes.created_date_formatted,
-        item.attributes.broker
+        accountBroker
       );
       accounts.push(account);
     });
 
     return accounts;
+  }
+
+  public getAccountBroker(brokerId: string, responseIncluded: Array<any>): Broker {
+    let broker: Broker = new Broker(null, null);
+    responseIncluded.filter((k) => {
+      if (k.type === 'brokers' && k.id === brokerId) {
+        broker = new Broker(
+          k.id,
+          k.attributes.name
+        );
+      }
+    });
+
+    return broker;
+  }
+
+  public getAccountTrades(responseIncluded: Array<any>): Array<Trade> {
+    const trades: Array<Trade> = [];
+    responseIncluded.filter(k => {
+      if (k.type === 'trades' && k.attributes.value !== undefined) {
+        const trade = new Trade(
+          k.id,
+          k.attributes.value,
+          k.attributes.profit,
+          k.attributes.result,
+          k.attributes.account_id,
+          k.attributes.strategy_id,
+          k.attributes.created_date_formatted,
+          k.attributes.type_trade,
+          k.attributes.result_balance
+        );
+        trade.setStrategyFromIncluded(responseIncluded);
+        trades.push(trade);
+      }
+    });
+
+    return trades;
   }
 }

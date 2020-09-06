@@ -71,10 +71,9 @@ export class TradeService {
         item.attributes.strategy_id,
         item.attributes.created_date_formatted,
         item.attributes.type_trade,
-        item.attributes.result_balance,
-        item.attributes.account,
-        item.attributes.strategy
+        item.attributes.result_balance
       );
+      trade.setStrategyFromIncluded(response.included);
       trades.push(trade);
     });
 
@@ -83,7 +82,7 @@ export class TradeService {
 
 
   private responseToTrade(response: any): Trade {
-    return new Trade(
+    const trade = new Trade(
       response.data.id,
       response.data.attributes.value,
       response.data.attributes.profit,
@@ -92,9 +91,10 @@ export class TradeService {
       response.data.attributes.strategy_id,
       response.data.attributes.created_date_formatted,
       response.data.attributes.type_trade,
-      response.data.attributes.result_balance,
-      response.data.attributes.account,
-      response.data.attributes.strategy
+      response.data.attributes.result_balance
     );
+    trade.setStrategyFromIncluded(response.included);
+
+    return trade;
   }
 }

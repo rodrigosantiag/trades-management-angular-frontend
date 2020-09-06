@@ -5,6 +5,7 @@ import {ErrorUtils} from '../../shared/error.utils';
 import {Observable} from 'rxjs';
 import {Strategy} from './strategy.model';
 import {catchError, map} from 'rxjs/operators';
+import {Account} from '../../accounts/shared/account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,16 @@ export class StrategyService {
       .pipe(
         catchError(this.errorUtils.handleErrors),
         map((response: HttpResponse<any>) => this.responseToStrategies(response))
+      );
+  }
+
+  public getById(id: number): Observable<Strategy> {
+    const url = `${this.strategiesUrl}/${id}`;
+
+    return this.httpClient.get(url)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map(strategy => this.responseToStrategy(strategy))
       );
   }
 
