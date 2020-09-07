@@ -1,0 +1,19 @@
+<h1>Reports</h1>
+
+<hr>
+
+<div class="form-inline form-reports">
+  <div class="col-auto form-group">
+    <label for="date_from" class="mr-2">From</label>
+    <input type="text" id="date_from" class="form-control" [owlDateTimeTrigger]="from" [owlDateTime]="from">
+    <owl-date-time #from></owl-date-time>
+    <!-- TODO: position calendar -->
+  </div>
+
+  <div class="col-auto form-group">
+    <label for="date_to" class="mr-2">To</label>
+    <input type="text" id="date_to" class="form-control">
+  </div>
+</div>
+
+<hr>

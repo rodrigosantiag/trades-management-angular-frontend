@@ -44,6 +44,8 @@ import {StrategiesComponent} from './strategies/strategies.component';
 import {FlashMessagesModule} from 'angular2-flash-messages';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {environment} from '../environments/environment';
+import { ReportsComponent } from './reports/reports.component';
+import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 
 
 @NgModule({
@@ -61,7 +63,8 @@ import {environment} from '../environments/environment';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     UserComponent,
-    StrategiesComponent
+    StrategiesComponent,
+    ReportsComponent
   ],
   imports: [
     AngularTokenModule.forRoot({
@@ -81,6 +84,8 @@ import {environment} from '../environments/environment';
     NgxChartsModule,
     NgxMaskModule.forRoot(),
     NgxPaginationModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     ReactiveFormsModule
   ],
   providers: [
