@@ -14,16 +14,10 @@
   </div>
 
   <div class="col-auto form-group">
-    <label for="date_from" class="mr-2">From</label>
-    <input type="text" [readOnly]="true" [max]="maxDate" id="date_from" class="form-control" [owlDateTimeTrigger]="dateFrom" [owlDateTime]="dateFrom">
-    <owl-date-time pickerType="calendar" #dateFrom></owl-date-time>
+    <label for="date_from" class="mr-2">Date Range</label>
+    <input type="text" [readOnly]="true" [max]="maxDate" id="date_from" class="form-control date-range" [owlDateTimeTrigger]="dateRange" [owlDateTime]="dateRange" selectMode="range">
+    <owl-date-time pickerType="calendar" #dateRange></owl-date-time>
     <!-- TODO: position calendar -->
-  </div>
-
-  <div class="col-auto form-group">
-    <label for="date_to" class="mr-2">To</label>
-    <input type="text" [readOnly]="true" [max]="maxDate" id="date_to" class="form-control" [owlDateTimeTrigger]="dateTo" [owlDateTime]="dateTo">
-    <owl-date-time pickerType="calendar" #dateTo></owl-date-time>
   </div>
 
   <div class="col-auto form-group">
@@ -32,6 +26,10 @@
       <option value="">Choose a strategy</option>
       <option *ngFor="let strategy of strategies" value="{{strategy.id}}">{{strategy.name}}</option>
     </select>
+  </div>
+
+  <div class="col-auto form-group">
+  <button class="btn btn-success" type="button">Submit</button>
   </div>
 </div>
 
