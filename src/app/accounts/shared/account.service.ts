@@ -6,7 +6,6 @@ import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../../shared/error.utils';
 import {Trade} from '../../trades/shared/trade.model';
-import {BrokerService} from '../../brokers/shared/broker.service';
 import {Broker} from '../../brokers/shared/broker.model';
 
 @Injectable({
@@ -15,8 +14,7 @@ import {Broker} from '../../brokers/shared/broker.model';
 export class AccountService {
   public accountsUrl = this.tokenService.apiBase + '/accounts';
 
-  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils,
-              private brokerService: BrokerService) {
+  constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
   }
 
   public getAll(terms: string = ''): Observable<Account[]> {

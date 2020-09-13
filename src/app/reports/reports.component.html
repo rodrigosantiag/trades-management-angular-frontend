@@ -2,11 +2,11 @@
 
 <hr>
 
-<div class="form-inline form-reports">
+<form [formGroup]="formFilter" class="form-inline form-reports" (ngSubmit)="getReport()">
 
   <div class="col-auto form-group">
     <label for="account" class="mr-2">Account*</label>
-    <select id="account" class="custom-select my-1 mr-4">
+    <select formControlName="account_id_eq" id="account" class="custom-select my-1 mr-4">
       <option value="" [disabled]="true">Choose an acocunt</option>
       <option *ngFor="let account of accounts" value="{{account.id}}">{{account.broker.name}}
         - {{account.getAccountType()}}</option>
@@ -15,22 +15,23 @@
 
   <div class="col-auto form-group">
     <label for="date_from" class="mr-2">Date Range</label>
-    <input type="text" [readOnly]="true" [max]="maxDate" id="date_from" class="form-control date-range" [owlDateTimeTrigger]="dateRange" [owlDateTime]="dateRange" selectMode="range">
+    <input formControlName="date_range" type="text" [readOnly]="true" [max]="maxDate" id="date_from" class="form-control date-range" [owlDateTimeTrigger]="dateRange" [owlDateTime]="dateRange" selectMode="range">
     <owl-date-time pickerType="calendar" #dateRange></owl-date-time>
-    <!-- TODO: position calendar -->
   </div>
 
   <div class="col-auto form-group">
     <label for="strategy" class="mr-2">Strategy</label>
-    <select id="strategy" class="custom-select my-1 mr-4">
+    <select formControlName="strategy_id_eq" id="strategy" class="custom-select my-1 mr-4">
       <option value="">Choose a strategy</option>
       <option *ngFor="let strategy of strategies" value="{{strategy.id}}">{{strategy.name}}</option>
     </select>
   </div>
 
   <div class="col-auto form-group">
-  <button class="btn btn-success" type="button">Submit</button>
+  <button class="btn btn-success" type="submit">Submit</button>
   </div>
-</div>
+</form>
 
 <hr>
+
+<h2 *ngIf="reportMeta !== undefined">{{ reportMeta['itm_otm_general']['itm'] }}</h2>
