@@ -5,18 +5,21 @@
                                                      [options]="{prefix: this.currencyCode, decimalPlaces: 2}">0</span>
     </div>
 
-    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success" (click)="openDepositForm()" data-toggle="modal"
+    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success"
+            (click)="openDepositForm()" data-toggle="modal"
             data-target="#depositTradeModal">
       <fa-icon [icon]="['fas', 'piggy-bank']"></fa-icon>
       Deposit
     </button>
-    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openWithdrawForm()"
+    <button *ngIf="accountSelected.typeAccount == 'R'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw"
+            (click)="openWithdrawForm()"
             data-toggle="modal" data-target="#withdrawTradeModal">
       <fa-icon [icon]="['fas', 'hand-holding-usd']"></fa-icon>
       Withdraw
     </button>
 
-    <button *ngIf="accountSelected.typeAccount == 'D'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw" (click)="openRefillForm()"
+    <button *ngIf="accountSelected.typeAccount == 'D'" type="button" class="ml-3 col- mt-3 btn btn-success btn-withdraw"
+            (click)="openRefillForm()"
             data-toggle="modal" data-target="#refillTradeModal" [disabled]="canRefill()">
       <fa-icon [icon]="['fas', 'charging-station']"></fa-icon>
       Refill
@@ -104,6 +107,7 @@
     <thead>
     <th>#</th>
     <th>Broker/Account</th>
+    <th>Date</th>
     <th>Value</th>
     <th>Profit</th>
     <th>Strategy</th>
@@ -116,6 +120,7 @@
     <tr *ngFor="let trade of accountTrades | paginate: config" class="trade-line">
       <td>{{trade.id}}</td>
       <td>{{accountSelected.broker.name}}/{{accountSelected.getAccountType()}}</td>
+      <td>{{ trade.createdDateFormatted }}</td>
       <td>{{trade.value | currency:accountSelected.currency}}</td>
       <td *ngIf="trade.typeTrade == 'T'">{{trade.profit}}%</td>
       <td *ngIf="trade.typeTrade == 'T'">{{trade.strategy === null ? 'Strategy deleted' : trade.strategy.name}}</td>
@@ -129,7 +134,8 @@
       <td
         [className]="winLoseClass(trade)">{{trade.resultBalance ? (trade.resultBalance | currency:accountSelected.currency) : (trade.resultBalance | currency:accountSelected.currency)}}</td>
       <td width="1%">
-        <button *ngIf="trade.typeTrade == 'T'" (click)="beginEdit(trade)" type="button" class="btn btn-light" data-toggle="modal"
+        <button *ngIf="trade.typeTrade == 'T'" (click)="beginEdit(trade)" type="button" class="btn btn-light"
+                data-toggle="modal"
                 data-target="#editTradeModal">
           <fa-icon [icon]="['far', 'edit']"></fa-icon>
         </button>
