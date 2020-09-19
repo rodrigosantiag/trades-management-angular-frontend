@@ -19,12 +19,11 @@ export class ReportsComponent implements OnInit {
   public accounts: Array<Account>;
   public strategies: Array<Strategy>;
   public formFilter: FormGroup;
-  public reportMeta: object;
   public reportTrades: Array<Trade>;
   public noTrades: boolean;
   public submitted: boolean;
 
-  /* Chart's variables */
+  /* Line chart's variables */
   public dataPoints: Array<any>;
   public y: number;
   public showXAxis: boolean;
@@ -37,6 +36,33 @@ export class ReportsComponent implements OnInit {
   public colorScheme: object;
   public multi: Array<any>;
   public autoScale: boolean;
+
+  /* Horizontal chart's variables */
+  public itmOtmGeneralView: any[] = [700, 150];
+  public itmOtmGeneralShowXAxis = true;
+  public itmOtmGeneralShowYAxis = true;
+  public itmOtmGeneralGradient = false;
+  public itmOtmGeneralShowLegend = true;
+  public itmOtmGeneralShowXAxisLabel = true;
+  public itmOtmGeneralYAxisLabel = 'ITM/OTM';
+  public itmOtmGeneralShowYAxisLabel = false;
+  public itmOtmGeneralXAxisLabel = 'Assertiveness rate';
+  public itmOtmGeneralData: Array<any>;
+
+  /* Horizontal chart's variables (monthly) */
+  public itmOtmMonthlyShowXAxis = true;
+  public itmOtmMonthlyShowYAxis = true;
+  public itmOtmMonthlyGradient = false;
+  public itmOtmMonthlyShowLegend = true;
+  public itmOtmMonthlyShowXAxisLabel = true;
+  public itmOtmMonthlyYAxisLabel = 'Month';
+  public itmOtmMonthlyShowYAxisLabel = true;
+  public itmOtmMonthlyXAxisLabel = 'Assertiveness rate';
+  public itmOtmMonthlyData: Array<any>;
+
+  public itmOtmGeneralColorScheme = {
+    domain: ['#5AA454', '#A10A28']
+  };
 
 
   constructor(private accountService: AccountService, private flashMessagesService: FlashMessagesService,
@@ -85,7 +111,6 @@ export class ReportsComponent implements OnInit {
     this.tradeService.analytics(this.formFilter.getRawValue()).subscribe(
       trades => {
         if (trades.length > 0) {
-          console.log(trades.length);
           this.noTrades = false;
           this.y = +trades[0].resultBalance;
           this.dataPoints = [{name: new Date(trades[0].createdDateFormatted), value: this.y, id: trades[0].id}];
@@ -124,8 +149,12 @@ export class ReportsComponent implements OnInit {
         this.submitted = false;
       },
       error => {
-        console.log(error);
-        this.submitted = false;
+        this.flashMessagesService.show(
+          'An error ocurred. Please try again',
+          {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
       },
       () => this.getMeta());
     //  TODO: implement itm/otm graphics
@@ -134,11 +163,47 @@ export class ReportsComponent implements OnInit {
   private getMeta(): any {
     return this.tradeService.analyticsMeta(this.formFilter.getRawValue()).subscribe(
       responseMeta => {
-        this.reportMeta = responseMeta;
-        console.log(this.reportMeta);
+        console.log(responseMeta);
+        this.itmOtmGeneralData = [{
+          name: 'ITM/OTM',
+          series: [
+            {
+              name: 'ITM',
+              value: responseMeta.itm_otm_general.itm
+            },
+            {
+              name: 'OTM',
+              value: responseMeta.itm_otm_general.otm
+            }
+          ]
+        }];
+        // TODO: check reason why not loading September results
+        this.itmOtmMonthlyData = [];
+        for (const [key, value] of Object.entries(responseMeta.itm_otm_monthly)) {
+          const month: any = key;
+          const result: any = value;
+          this.itmOtmMonthlyData.push({
+            name: month,
+            series: [
+              {
+                name: 'ITM',
+                value: result.itm
+              },
+              {
+                name: 'OTM',
+                value: result.otm
+              }
+            ]
+          });
+        }
       },
       error => {
-        console.log(error);
+        this.flashMessagesService.show(
+          'An error ocurred. Please try again',
+          {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
       });
   }
 

@@ -66,7 +66,7 @@ export class TradeService {
       );
   }
 
-  public analyticsMeta(formValues: object): Observable<object> {
+  public analyticsMeta(formValues: object): Observable<any> {
     return this.callAnalytics(formValues)
       .pipe(
         catchError(this.errorUtils.handleErrors),
