@@ -89,17 +89,19 @@
   </div>
 </div>
 
-<div style="width: 100%; height: 400px" class="mb-4">
-  <ngx-charts-line-chart *ngIf="dataPoints"
-                         [scheme]="colorScheme"
-                         [results]="multi"
-                         [gradient]="gradient"
-                         [xAxis]="showXAxis"
-                         [yAxis]="showYAxis"
-                         [showYAxisLabel]="showYAxisLabel"
-                         [yAxisLabel]="yAxisLabel"
-                         [autoScale]="autoScale">
-  </ngx-charts-line-chart>
+<div class="row row-cols-1">
+  <div style="height: 400px" class="mb-4">
+    <ngx-charts-line-chart *ngIf="dataPoints"
+                           [scheme]="colorScheme"
+                           [results]="multi"
+                           [gradient]="gradient"
+                           [xAxis]="showXAxis"
+                           [yAxis]="showYAxis"
+                           [showYAxisLabel]="showYAxisLabel"
+                           [yAxisLabel]="yAxisLabel"
+                           [autoScale]="autoScale">
+    </ngx-charts-line-chart>
+  </div>
 </div>
 
 <div *ngIf="accountTrades.length" class="table-responsive">
