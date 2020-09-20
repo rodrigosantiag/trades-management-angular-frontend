@@ -20,10 +20,10 @@ export class TradeService {
 
     return this.httpClient.get(url, {observe: 'response'})
       .pipe(
-        map((response) => {
+        map((tradesResponse) => {
           return {
-            headers: response.headers.get('total'),
-            trades: this.responseToTrades(response.body)
+            headers: tradesResponse.headers.get('total'),
+            trades: this.responseToTrades(tradesResponse.body)
           };
         }),
         catchError(this.errorUtils.handleErrors)
@@ -33,7 +33,7 @@ export class TradeService {
   public create(trade: Trade): Observable<Trade> {
     return this.httpClient.post(this.tradesUrl, trade)
       .pipe(
-        map((response: HttpResponse<any>) => this.responseToTrade(response)),
+        map((createdTrade: HttpResponse<any>) => this.responseToTrade(createdTrade)),
         catchError(this.errorUtils.handleErrors)
       );
   }
@@ -58,10 +58,28 @@ export class TradeService {
       );
   }
 
-  private responseToTrades(response: any): Array<Trade> {
+  public analytics(formValues: object): Observable<any> {
+    return this.callAnalytics(formValues)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map((reportResponse) => this.responseToTrades(reportResponse))
+      );
+  }
+
+  public analyticsMeta(formValues: object): Observable<any> {
+    return this.callAnalytics(formValues)
+      .pipe(
+        catchError(this.errorUtils.handleErrors),
+        map((reportResponse) => reportResponse.meta)
+      );
+  }
+
+  private responseToTrades(tradesResponse: any): Array<Trade> {
     const trades: Array<Trade> = [];
 
-    response.data.forEach(item => {
+    // console.log(tradesResponse);
+
+    tradesResponse.data.forEach(item => {
       const trade = new Trade(
         item.id,
         item.attributes.value,
@@ -73,7 +91,7 @@ export class TradeService {
         item.attributes.type_trade,
         item.attributes.result_balance
       );
-      trade.setStrategyFromIncluded(response.included);
+      trade.setStrategyFromIncluded(tradesResponse.included);
       trades.push(trade);
     });
 
@@ -81,20 +99,54 @@ export class TradeService {
   }
 
 
-  private responseToTrade(response: any): Trade {
+  private responseToTrade(tradeResponse: any): Trade {
     const trade = new Trade(
-      response.data.id,
-      response.data.attributes.value,
-      response.data.attributes.profit,
-      response.data.attributes.result,
-      response.data.attributes.account_id,
-      response.data.attributes.strategy_id,
-      response.data.attributes.created_date_formatted,
-      response.data.attributes.type_trade,
-      response.data.attributes.result_balance
+      tradeResponse.data.id,
+      tradeResponse.data.attributes.value,
+      tradeResponse.data.attributes.profit,
+      tradeResponse.data.attributes.result,
+      tradeResponse.data.attributes.account_id,
+      tradeResponse.data.attributes.strategy_id,
+      tradeResponse.data.attributes.created_date_formatted,
+      tradeResponse.data.attributes.type_trade,
+      tradeResponse.data.attributes.result_balance
     );
-    trade.setStrategyFromIncluded(response.included);
+    trade.setStrategyFromIncluded(tradeResponse.included);
 
     return trade;
+  }
+
+  // private responseToMeta(meta: any): object {
+  //   const metaObj = {};
+  //   meta.forEach((value, key) => {
+  //     metaObj[key] = value;
+  //   });
+  //
+  //   return metaObj;
+  // }
+
+  private createParams(formValues: any): object {
+
+    let dateFrom = null;
+    let dateTo = null;
+
+    formValues.date_range.forEach((value, key) => {
+      key === 0 ? dateFrom = value : dateTo = value;
+    });
+
+    return {
+      q: {
+        account_id_eq: formValues.account_id_eq,
+        created_at_gteq: dateFrom,
+        created_at_lteq: dateTo,
+        strategy_id_eq: formValues.strategy_id_eq
+      }
+    };
+  }
+
+  private callAnalytics(formValues: object): Observable<any> {
+    const url = `${this.tradesUrl}/analytics`;
+
+    return this.httpClient.post(url, this.createParams(formValues));
   }
 }

@@ -13,6 +13,7 @@ import {ForgotPasswordComponent} from './forgot-password/forgot-password.compone
 import {ResetPasswordComponent} from './reset-password/reset-password.component';
 import {UserComponent} from './user/user.component';
 import {StrategiesComponent} from './strategies/strategies.component';
+import {ReportsComponent} from './reports/reports.component';
 
 const routes: Routes = [
   {path: 'sign-up', component: SignUpFormComponent, canActivate: [NotAuthenticatedGuard]},
@@ -29,7 +30,8 @@ const routes: Routes = [
     ], canActivate: [AuthGuard]},
   {path: 'users/:id', component: UserComponent, canActivate: [AuthGuard]},
   {path: 'strategies', component: StrategiesComponent, canActivate: [AuthGuard]},
-  {path: '', redirectTo: '/brokers', pathMatch: 'full'}
+  {path: 'reports', component: ReportsComponent, canActivate: [AuthGuard]},
+  {path: '', redirectTo: '/brokers', pathMatch: 'full', canActivate: [AuthGuard]}
 ];
 
 @NgModule({
