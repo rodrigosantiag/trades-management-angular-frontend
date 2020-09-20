@@ -157,7 +157,6 @@ export class ReportsComponent implements OnInit {
           });
       },
       () => this.getMeta());
-    //  TODO: implement itm/otm graphics
   }
 
   private getMeta(): any {
@@ -177,7 +176,6 @@ export class ReportsComponent implements OnInit {
             }
           ]
         }];
-        // TODO: check reason why not loading September results
         this.itmOtmMonthlyData = [];
         for (const [key, value] of Object.entries(responseMeta.itm_otm_monthly)) {
           const month: any = key;
