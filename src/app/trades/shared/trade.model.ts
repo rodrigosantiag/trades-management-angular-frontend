@@ -15,10 +15,6 @@ export class Trade {
   ) {
   }
 
-  // public setStrategy() {
-  //
-  // }
-
   public setStrategyFromIncluded(responseIncluded: Array<any>) {
     if (responseIncluded !== undefined) {
       responseIncluded.filter(k => {
