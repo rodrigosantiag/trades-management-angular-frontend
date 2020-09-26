@@ -20,13 +20,15 @@ export class Trade {
   // }
 
   public setStrategyFromIncluded(responseIncluded: Array<any>) {
-    responseIncluded.filter(k => {
-      if (k.type === 'strategies' && +k.id === +this.strategyId) {
-        this.strategy = new Strategy(
-          k.id,
-          k.attributes.name
-        );
-      }
-    });
+    if (responseIncluded !== undefined) {
+      responseIncluded.filter(k => {
+        if (k.type === 'strategies' && +k.id === +this.strategyId) {
+          this.strategy = new Strategy(
+            k.id,
+            k.attributes.name
+          );
+        }
+      });
+    }
   }
 }
