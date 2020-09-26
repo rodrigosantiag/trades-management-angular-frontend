@@ -73,8 +73,7 @@ export class ReportsComponent implements OnInit {
     this.formFilter = this.formBuilder.group({
       account_id_eq: [null, [Validators.required]],
       date_range: '',
-      strategy_id_eq: '',
-      type_eq: 'T'
+      strategy_id_eq: ''
     });
 
     this.reportTrades = [];
