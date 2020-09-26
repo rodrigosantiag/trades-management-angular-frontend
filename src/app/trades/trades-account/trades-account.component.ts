@@ -22,7 +22,6 @@ import {delay} from 'rxjs/operators';
 export class TradesAccountComponent implements OnInit {
 
 
-
   public accountSelected: Account;
   public accountTrades: Array<Trade>;
   public currencyCode: string;
@@ -45,7 +44,10 @@ export class TradesAccountComponent implements OnInit {
   public formWithdrawUtils: FormUtils;
   public formRefill: FormGroup;
   public formRefillUtils: FormUtils;
-  @ViewChild('closeBtn') public closeBtn: ElementRef;
+  @ViewChild('closeBtnUpdateTrade') public closeBtnUpdateTrade: ElementRef;
+  @ViewChild('closeBtnDeposit') public closeBtnDeposit: ElementRef;
+  @ViewChild('closeBtnWithdraw') public closeBtnWithdraw: ElementRef;
+  @ViewChild('closeBtnRefill') public closeBtnRefill: ElementRef;
 
   /* Chart's variables */
   public dataPoints: Array<any>;
@@ -204,7 +206,7 @@ export class TradesAccountComponent implements OnInit {
 
     this.addTrade(this.newTrade);
 
-    this.closeBtn.nativeElement.click();
+    this.closeBtnDeposit.nativeElement.click();
 
   }
 
@@ -224,7 +226,7 @@ export class TradesAccountComponent implements OnInit {
 
     this.addTrade(this.newTrade);
 
-    this.closeBtn.nativeElement.click();
+    this.closeBtnWithdraw.nativeElement.click();
 
   }
 
@@ -246,7 +248,7 @@ export class TradesAccountComponent implements OnInit {
 
     this.addTrade(this.newTrade);
 
-    this.closeBtn.nativeElement.click();
+    this.closeBtnRefill.nativeElement.click();
 
   }
 
@@ -333,7 +335,7 @@ export class TradesAccountComponent implements OnInit {
         }
       );
     this.submitted = false;
-    this.closeBtn.nativeElement.click();
+    this.closeBtnUpdateTrade.nativeElement.click();
   }
 
   public deleteTrade(trade: Trade) {
