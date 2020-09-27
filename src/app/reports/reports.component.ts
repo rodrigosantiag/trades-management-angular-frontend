@@ -216,4 +216,8 @@ export class ReportsComponent implements OnInit {
     this.formFilter.get('date_range').setValue('');
   }
 
+  public dateRangeEmpty(): boolean {
+    return this.formFilter.get('date_range').value == '';
+  }
+
 }

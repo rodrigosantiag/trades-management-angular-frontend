@@ -23,7 +23,8 @@
            selectMode="range">
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" triggers="hover" placement="top"
-              ngbPopover="Clear date range" (click)="eraseDateRange()">
+              ngbPopover="Clear date range" (click)="eraseDateRange()"
+              [disabled]="dateRangeEmpty()">
         <fa-icon [icon]="['fas', 'calendar-times']"></fa-icon>
       </button>
     </div>
