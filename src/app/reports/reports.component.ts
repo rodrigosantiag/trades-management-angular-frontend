@@ -7,6 +7,7 @@ import {StrategyService} from '../strategies/shared/strategy.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TradeService} from '../trades/shared/trade.service';
 import {Trade} from '../trades/shared/trade.model';
+import {FormUtils} from '../shared/form.utils';
 
 @Component({
   selector: 'app-reports',
@@ -22,6 +23,7 @@ export class ReportsComponent implements OnInit {
   public reportTrades: Array<Trade>;
   public noTrades: boolean;
   public submitted: boolean;
+  public formUtils: FormUtils;
 
   /* Line chart's variables */
   public dataPoints: Array<any>;
@@ -68,6 +70,8 @@ export class ReportsComponent implements OnInit {
   constructor(private accountService: AccountService, private flashMessagesService: FlashMessagesService,
               private strategyService: StrategyService, private formBuilder: FormBuilder, private tradeService: TradeService) {
 
+    this.submitted = false;
+
     this.maxDate = new Date();
 
     this.formFilter = this.formBuilder.group({
@@ -75,6 +79,8 @@ export class ReportsComponent implements OnInit {
       date_range: '',
       strategy_id_eq: ''
     });
+
+    this.formUtils = new FormUtils(this.formFilter);
 
     this.reportTrades = [];
 
@@ -145,7 +151,6 @@ export class ReportsComponent implements OnInit {
         } else {
           this.noTrades = true;
         }
-        this.submitted = false;
       },
       error => {
         this.flashMessagesService.show(
@@ -154,6 +159,7 @@ export class ReportsComponent implements OnInit {
             cssClass: 'alert-danger',
             timeout: 5000
           });
+        this.submitted = false;
       },
       () => this.getMeta());
   }
@@ -193,6 +199,7 @@ export class ReportsComponent implements OnInit {
             ]
           });
         }
+        this.submitted = false;
       },
       error => {
         this.flashMessagesService.show(
@@ -201,7 +208,12 @@ export class ReportsComponent implements OnInit {
             cssClass: 'alert-danger',
             timeout: 5000
           });
+        this.submitted = false;
       });
+  }
+
+  public eraseDateRange(): void {
+    this.formFilter.get('date_range').setValue('');
   }
 
 }

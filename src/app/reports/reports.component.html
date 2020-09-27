@@ -11,6 +11,9 @@
       <option *ngFor="let account of accounts" value="{{account.id}}">{{account.broker.name}}
         - {{account.getAccountType()}}</option>
     </select>
+    <div *ngIf="formUtils.showFieldError('account_id_eq')" class="invalid-feedback">
+      <span *ngIf="formFilter.get('account_id_eq').errors.required">Password required!</span>
+    </div>
   </div>
 
   <div class="col-auto form-group">
@@ -18,6 +21,12 @@
     <input formControlName="date_range" type="text" [readOnly]="true" [max]="maxDate" id="date_from"
            class="form-control date-range" [owlDateTimeTrigger]="dateRange" [owlDateTime]="dateRange"
            selectMode="range">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button" triggers="hover" placement="top"
+              ngbPopover="Clear date range" (click)="eraseDateRange()">
+        <fa-icon [icon]="['fas', 'calendar-times']"></fa-icon>
+      </button>
+    </div>
     <owl-date-time pickerType="calendar" #dateRange></owl-date-time>
   </div>
 
@@ -30,7 +39,7 @@
   </div>
 
   <div class="col-auto form-group">
-    <button class="btn btn-success" type="submit">
+    <button class="btn btn-success" type="submit" [disabled]="submitted || !formFilter.valid">
       Submit
       <span *ngIf="submitted" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
     </button>

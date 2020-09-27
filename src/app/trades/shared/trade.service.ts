@@ -127,12 +127,14 @@ export class TradeService {
 
   private createParams(formValues: any): object {
 
-    let dateFrom = null;
-    let dateTo = null;
+    let dateFrom = '';
+    let dateTo = '';
 
-    formValues.date_range.forEach((value, key) => {
-      key === 0 ? dateFrom = value : dateTo = value;
-    });
+    if (Array.isArray(formValues.date_range)) {
+      formValues.date_range.forEach((value, key) => {
+        key === 0 ? dateFrom = value : dateTo = value;
+      });
+    }
 
     return {
       q: {
