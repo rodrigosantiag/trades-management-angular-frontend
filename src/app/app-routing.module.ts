@@ -14,6 +14,9 @@ import {ResetPasswordComponent} from './reset-password/reset-password.component'
 import {UserComponent} from './user/user.component';
 import {StrategiesComponent} from './strategies/strategies.component';
 import {ReportsComponent} from './reports/reports.component';
+import {NotAuthorizedComponent} from "./not-authorized/not-authorized.component";
+import {AdminGuard} from "./guard/admin.guard";
+import {UserManagementComponent} from "./user-management/user-management.component";
 
 const routes: Routes = [
   {path: 'sign-up', component: SignUpFormComponent, canActivate: [NotAuthenticatedGuard]},
@@ -28,9 +31,11 @@ const routes: Routes = [
   {path: 'trades', component: TradesComponent, children: [
       {path: 'trades-account/:id', component: TradesAccountComponent}
     ], canActivate: [AuthGuard]},
+  {path: 'users', component: UserManagementComponent, canActivate: [AdminGuard]},
   {path: 'users/:id', component: UserComponent, canActivate: [AuthGuard]},
   {path: 'strategies', component: StrategiesComponent, canActivate: [AuthGuard]},
   {path: 'reports', component: ReportsComponent, canActivate: [AuthGuard]},
+  {path: 'not-authorized', component: NotAuthorizedComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: '/brokers', pathMatch: 'full', canActivate: [AuthGuard]}
 ];
 

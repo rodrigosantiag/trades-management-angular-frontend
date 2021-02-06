@@ -35,6 +35,7 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
+    // TODO: implement "Not Authorized" template and implement CRUD for User Management
     this.userService.getUser(this.activatedRoute.snapshot.paramMap.get('id')).subscribe(
       (user: User) => {
         this.email = user.email;

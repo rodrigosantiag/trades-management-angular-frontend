@@ -12,11 +12,10 @@ export class NotAuthenticatedGuard implements CanActivate {
 
   public canActivate(): boolean {
     if (this.authService.userSignedIn()) {
-      this.router.navigate(['/brokers']);
+      this.router.navigate(['/']);
       return false;
     } else {
       return true;
     }
   }
-
 }

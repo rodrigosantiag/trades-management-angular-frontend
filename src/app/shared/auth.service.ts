@@ -57,4 +57,8 @@ export class AuthService {
   public getUserId(): string {
     return localStorage.getItem('userId');
   }
+
+  public getIsAdmin(): boolean {
+    return localStorage.getItem('roleAdmin') === 'true';
+  }
 }

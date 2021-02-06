@@ -46,6 +46,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {environment} from '../environments/environment';
 import { ReportsComponent } from './reports/reports.component';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { UserManagementComponent } from './user-management/user-management.component';
 
 
 @NgModule({
@@ -64,7 +66,9 @@ import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
     ResetPasswordComponent,
     UserComponent,
     StrategiesComponent,
-    ReportsComponent
+    ReportsComponent,
+    NotAuthorizedComponent,
+    UserManagementComponent
   ],
   imports: [
     AngularTokenModule.forRoot({

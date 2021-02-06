@@ -167,7 +167,6 @@ export class ReportsComponent implements OnInit {
   private getMeta(): any {
     return this.tradeService.analyticsMeta(this.formFilter.getRawValue()).subscribe(
       responseMeta => {
-        console.log(responseMeta);
         this.itmOtmGeneralData = [{
           name: 'ITM/OTM',
           series: [

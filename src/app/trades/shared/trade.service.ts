@@ -77,8 +77,6 @@ export class TradeService {
   private responseToTrades(tradesResponse: any): Array<Trade> {
     const trades: Array<Trade> = [];
 
-    // console.log(tradesResponse);
-
     tradesResponse.data.forEach(item => {
       const trade = new Trade(
         item.id,

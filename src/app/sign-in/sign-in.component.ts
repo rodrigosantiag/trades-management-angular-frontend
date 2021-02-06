@@ -43,6 +43,7 @@ export class SignInComponent implements OnInit {
         (response) => {
           localStorage.setItem('userId', response.body.data.id);
           localStorage.setItem('userName', response.body.data.name);
+          localStorage.setItem('roleAdmin', response.body.data.admin);
           this.router.navigate(['/brokers']);
           this.messages = null;
         },
