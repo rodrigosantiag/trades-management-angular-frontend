@@ -16,6 +16,16 @@ export class UserService {
   constructor(private httpClient: HttpClient, private tokenService: AngularTokenService, private errorUtils: ErrorUtils) {
   }
 
+  getAll(): Observable<User[]> {
+    const url = `${this.userUrl}`;
+
+    return this.httpClient.get(url)
+      .pipe(
+        map(response => this.responseToUsers(response)),
+        catchError(this.errorUtils.handleErrors)
+      );
+  }
+
   getUser(id: string): Observable<User> {
     const url = `${this.userUrl}/${id}`;
 
@@ -36,7 +46,7 @@ export class UserService {
       );
   }
 
-  private responseToUser(response: any) {
+  private responseToUser(response: any): User {
     return new User(
       response.data.attributes.email,
       response.data.attributes.name,
@@ -45,6 +55,25 @@ export class UserService {
       response.data.attributes.risk,
       response.data.id
     );
+  }
+
+  private responseToUsers(response: any): Array<User> {
+    const usersArray = response.data;
+    const users: User[] = [];
+
+    usersArray.forEach(item => {
+      const user = new User(
+        item.attributes.email,
+        item.attributes.name,
+        null,
+        null,
+        item.attributes.risk,
+        item.id
+      );
+
+      users.push(user)
+    });
+    return users;
   }
 
 

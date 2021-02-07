@@ -1,1 +1,23 @@
-<p>user-management works!</p>
+<h1>Users</h1>
+<hr>
+
+<flash-messages></flash-messages>
+
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <th colspan="3">Name</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td width="98%">{{user.name}}</td>
+        <td width="1%" class="text-right">
+          <button type="button" class="btn btn-light"><fa-icon [icon]="['far', 'edit']" [routerLink]="['/users', user.id]"></fa-icon></button>
+        </td>
+        <td width="1%">
+          <button type="button" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

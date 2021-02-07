@@ -35,7 +35,6 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    // TODO: implement "Not Authorized" template and implement CRUD for User Management
     this.userService.getUser(this.activatedRoute.snapshot.paramMap.get('id')).subscribe(
       (user: User) => {
         this.email = user.email;
@@ -43,7 +42,11 @@ export class UserComponent implements OnInit {
         this.form.patchValue(this.user);
       },
       error => {
-        alert('An error ocurred. Please try again later.');
+        if (error.status === 404) {
+          alert('You are not allowed to take this action');
+        } else {
+          alert('An error ocurred. Please try again later.');
+        }
         this.router.navigate(['/']);
       }
     );
@@ -59,18 +62,18 @@ export class UserComponent implements OnInit {
         (response) => {
           this.messages = [`User ${response.name}'s profile updated!`];
           this.flashMessages.show(this.messages.join(' | '), {
-              cssClass: 'alert-success',
-              timeout: 5000
-            });
+            cssClass: 'alert-success',
+            timeout: 5000
+          });
           this.authService.setUserName(response.name);
           this.submitted = false;
         },
         (response) => {
           this.messages = response.errors.full_messages;
           this.flashMessages.show(this.messages.join(' | '), {
-              cssClass: 'alert-danger',
-              timeout: 5000
-            });
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
           this.submitted = false;
         }
       );
