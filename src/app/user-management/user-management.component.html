@@ -12,10 +12,7 @@
       <tr *ngFor="let user of users">
         <td width="98%">{{user.name}}</td>
         <td width="1%" class="text-right">
-          <button type="button" class="btn btn-light"><fa-icon [icon]="['far', 'edit']" [routerLink]="['/users', user.id]"></fa-icon></button>
-        </td>
-        <td width="1%">
-          <button type="button" class="btn btn-danger"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon></button>
+          <button type="button" class="btn btn-light" [routerLink]="['/manage-user', user.id]"><fa-icon [icon]="['far', 'edit']"></fa-icon></button>
         </td>
       </tr>
     </tbody>

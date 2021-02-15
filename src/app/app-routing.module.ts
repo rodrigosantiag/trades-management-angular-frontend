@@ -14,24 +14,32 @@ import {ResetPasswordComponent} from './reset-password/reset-password.component'
 import {UserComponent} from './user/user.component';
 import {StrategiesComponent} from './strategies/strategies.component';
 import {ReportsComponent} from './reports/reports.component';
-import {NotAuthorizedComponent} from "./not-authorized/not-authorized.component";
-import {AdminGuard} from "./guard/admin.guard";
-import {UserManagementComponent} from "./user-management/user-management.component";
+import {NotAuthorizedComponent} from './not-authorized/not-authorized.component';
+import {AdminGuard} from './guard/admin.guard';
+import {UserManagementComponent} from './user-management/user-management.component';
+import {UserDetailComponent} from './user-management/user-detail/user-detail.component';
 
 const routes: Routes = [
   {path: 'sign-up', component: SignUpFormComponent, canActivate: [NotAuthenticatedGuard]},
   {path: 'sign-in', component: SignInComponent, canActivate: [NotAuthenticatedGuard]},
   {path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [NotAuthenticatedGuard]},
-  {path: 'reset-password/:reset_password_token', component: ResetPasswordComponent, canActivate: [NotAuthenticatedGuard]},
+  {
+    path: 'reset-password/:reset_password_token',
+    component: ResetPasswordComponent,
+    canActivate: [NotAuthenticatedGuard]
+  },
   {path: 'brokers', component: BrokersComponent, canActivate: [AuthGuard]},
   {path: 'brokers/:id', component: BrokersComponent, canActivate: [AuthGuard]},
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard]},
   {path: 'new-account', component: AccountDetailComponent, canActivate: [AuthGuard]},
   {path: 'edit-account/:id', component: AccountDetailComponent, canActivate: [AuthGuard]},
-  {path: 'trades', component: TradesComponent, children: [
+  {
+    path: 'trades', component: TradesComponent, children: [
       {path: 'trades-account/:id', component: TradesAccountComponent}
-    ], canActivate: [AuthGuard]},
+    ], canActivate: [AuthGuard]
+  },
   {path: 'users', component: UserManagementComponent, canActivate: [AdminGuard]},
+  {path: 'manage-user/:id', component: UserDetailComponent},
   {path: 'users/:id', component: UserComponent, canActivate: [AuthGuard]},
   {path: 'strategies', component: StrategiesComponent, canActivate: [AuthGuard]},
   {path: 'reports', component: ReportsComponent, canActivate: [AuthGuard]},

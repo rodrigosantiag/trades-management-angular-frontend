@@ -48,6 +48,8 @@ import { ReportsComponent } from './reports/reports.component';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { UserManagementComponent } from './user-management/user-management.component';
+import {UserDetailComponent} from './user-management/user-detail/user-detail.component';
+
 
 
 @NgModule({
@@ -68,7 +70,8 @@ import { UserManagementComponent } from './user-management/user-management.compo
     StrategiesComponent,
     ReportsComponent,
     NotAuthorizedComponent,
-    UserManagementComponent
+    UserManagementComponent,
+    UserDetailComponent
   ],
   imports: [
     AngularTokenModule.forRoot({

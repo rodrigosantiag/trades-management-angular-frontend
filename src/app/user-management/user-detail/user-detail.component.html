@@ -1,0 +1,49 @@
+<h1>Edit User name's profile</h1>
+
+<div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="name">Name</label>
+      <input type="text" formControlName="name" id="name" class="form-control">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="email">Email</label>
+      <input type="email" formControlName="email" id="email" class="form-control">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="admin">Administrator</label>
+      <select name="admin" id="admin" class="form-control">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="admin">Status</label>
+      <select name="status" id="status" class="form-control">
+        <option value="true">Enabled</option>
+        <option value="false">Disabled</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <button class="btn-success btn mr-2">
+        <span>Save</span>
+<!--        <div *ngIf="submitted">-->
+<!--          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>-->
+<!--        </div>-->
+      </button>
+      <button class="btn btn-outline-secondary" type="button">Cancel</button>
+    </div>
+  </div>
+</div>

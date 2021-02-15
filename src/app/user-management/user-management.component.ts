@@ -30,7 +30,5 @@ export class UserManagementComponent implements OnInit {
           );
         }
       );
-  //  TODO: develop disable user and test edit user
   }
-
 }

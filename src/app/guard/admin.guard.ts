@@ -13,8 +13,10 @@ export class AdminGuard implements CanActivate {
     if (this.authService.userSignedIn() && this.authService.getIsAdmin()) {
       return true;
     } else {
-      this.router.navigate(['/not-authorized']);
-      return false;
+      this.router.navigate(['/not-authorized'])
+        .then(r => {
+          return false;
+        });
     }
   }
 }
