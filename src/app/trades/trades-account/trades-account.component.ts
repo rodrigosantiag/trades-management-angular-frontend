@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Trade} from '../shared/trade.model';
 import {Account} from '../../accounts/shared/account.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../../shared/form.utils';
 import {getCurrencySymbol} from '@angular/common';
 import {AccountService} from '../../accounts/shared/account.service';
@@ -25,24 +25,24 @@ export class TradesAccountComponent implements OnInit {
   public accountSelected: Account;
   public accountTrades: Array<Trade>;
   public currencyCode: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public formUtils: FormUtils;
   public newTrade: Trade;
   public submitted: boolean;
   public strategies: Array<Strategy>;
   public currentBalance: number;
   public editingTrade: Trade;
-  public formEdit: FormGroup;
+  public formEdit: UntypedFormGroup;
   public formEditUtils: FormUtils;
   public isEditing: boolean;
   public isDepositing: boolean;
   public isWithdrawing: boolean;
   public isRefilling: boolean;
-  public formDeposit: FormGroup;
+  public formDeposit: UntypedFormGroup;
   public formDepositUtils: FormUtils;
-  public formWithdraw: FormGroup;
+  public formWithdraw: UntypedFormGroup;
   public formWithdrawUtils: FormUtils;
-  public formRefill: FormGroup;
+  public formRefill: UntypedFormGroup;
   public formRefillUtils: FormUtils;
   @ViewChild('closeBtnUpdateTrade') public closeBtnUpdateTrade: ElementRef;
   @ViewChild('closeBtnDeposit') public closeBtnDeposit: ElementRef;
@@ -75,7 +75,7 @@ export class TradesAccountComponent implements OnInit {
     private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
     private flashMessages: FlashMessagesService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private tradeService: TradeService,
     private strategyService: StrategyService
@@ -394,7 +394,7 @@ export class TradesAccountComponent implements OnInit {
     return trade.result ? 'win' : 'lose';
   }
 
-  public setUpForm(): FormGroup {
+  public setUpForm(): UntypedFormGroup {
     return this.formBuilder.group({
       value: [
         this.accountSelected.currentBalance * this.accountSelected.risk / 100,
@@ -406,7 +406,7 @@ export class TradesAccountComponent implements OnInit {
     });
   }
 
-  public setUpDepositWithdrawForm(): FormGroup {
+  public setUpDepositWithdrawForm(): UntypedFormGroup {
     return this.formBuilder.group({
       value: [null, [Validators.required, Validators.min(1)]]
     });

@@ -4,7 +4,7 @@ import {Account} from '../accounts/shared/account.model';
 import {FlashMessagesService} from 'angular2-flash-messages';
 import {Strategy} from '../strategies/shared/strategy.model';
 import {StrategyService} from '../strategies/shared/strategy.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {TradeService} from '../trades/shared/trade.service';
 import {Trade} from '../trades/shared/trade.model';
 import {FormUtils} from '../shared/form.utils';
@@ -19,7 +19,7 @@ export class ReportsComponent implements OnInit {
   public maxDate: Date;
   public accounts: Array<Account>;
   public strategies: Array<Strategy>;
-  public formFilter: FormGroup;
+  public formFilter: UntypedFormGroup;
   public reportTrades: Array<Trade>;
   public noTrades: boolean;
   public submitted: boolean;
@@ -68,7 +68,7 @@ export class ReportsComponent implements OnInit {
 
 
   constructor(private accountService: AccountService, private flashMessagesService: FlashMessagesService,
-              private strategyService: StrategyService, private formBuilder: FormBuilder, private tradeService: TradeService) {
+              private strategyService: StrategyService, private formBuilder: UntypedFormBuilder, private tradeService: TradeService) {
 
     this.submitted = false;
 

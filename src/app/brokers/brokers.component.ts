@@ -1,7 +1,7 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {Broker} from './shared/broker.model';
 import {BrokerService} from './shared/broker.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {FlashMessagesService} from 'angular2-flash-messages';
 
@@ -13,17 +13,17 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 })
 export class BrokersComponent implements OnInit {
   public brokers: Array<Broker>;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public formUtils: FormUtils;
   public newBroker: Broker;
   public messages: Array<string>;
   public submitted: boolean;
   public editingBroker: Broker;
-  public formEdit: FormGroup;
+  public formEdit: UntypedFormGroup;
 
   public constructor(
     private brokerService: BrokerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private flashMessageService: FlashMessagesService,
     private renderer: Renderer2) {
     this.setUpForm();
