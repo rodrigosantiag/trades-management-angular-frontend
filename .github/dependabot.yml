@@ -8,7 +8,6 @@ updates:
       - "rodrigosantiag"
     open-pull-requests-limit: 10
     target-branch: "develop"
-    vendor: true
 
   - package-ecosystem: "github-actions"
     directory: "/"
