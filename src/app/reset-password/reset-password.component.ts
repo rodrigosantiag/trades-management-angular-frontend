@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {AuthService} from '../shared/auth.service';
 import {ResetPasswordService} from './shared/reset-password.service';
@@ -15,14 +15,14 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 export class ResetPasswordComponent implements OnInit {
 
   public resetPasswordToken: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public formUtils: FormUtils;
   public messages: Array<string>;
 
   constructor(
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private flashMessage: FlashMessagesService,
     private authService: AuthService,
     private resetPasswordService: ResetPasswordService) {
@@ -33,7 +33,7 @@ export class ResetPasswordComponent implements OnInit {
     this.messages = null;
   }
 
-  public passwordConfimationValidation(form: FormGroup) {
+  public passwordConfimationValidation(form: UntypedFormGroup) {
     if (form.get('password').valid && form.get('password').value === form.get('passwordConfirmation').value) {
       form.get('passwordConfirmation').setErrors(null);
     } else {

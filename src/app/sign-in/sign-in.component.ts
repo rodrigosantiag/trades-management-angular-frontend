@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
@@ -13,13 +13,13 @@ import {FlashMessagesService} from 'angular2-flash-messages';
   styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public formUtils: FormUtils;
   public messages: Array<string>;
 
   public constructor(private auth: AuthService,
-                     private formBuilder: FormBuilder,
+                     private formBuilder: UntypedFormBuilder,
                      private router: Router,
                      private flashMessage: FlashMessagesService) {
     this.setUpForm();

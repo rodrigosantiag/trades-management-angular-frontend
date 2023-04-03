@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 
 import {AuthService} from '../shared/auth.service';
@@ -11,12 +11,12 @@ import {FlashMessagesService} from 'angular2-flash-messages';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public formUtils: FormUtils;
   public messages: Array<string>;
 
-  constructor(private formBuilder: FormBuilder, private flashMessage: FlashMessagesService, private authService: AuthService) {
+  constructor(private formBuilder: UntypedFormBuilder, private flashMessage: FlashMessagesService, private authService: AuthService) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.submitted = false;
