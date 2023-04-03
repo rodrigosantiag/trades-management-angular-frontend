@@ -7,7 +7,7 @@
   <div class="col-auto form-group">
     <label for="account" class="mr-2">Account*</label>
     <select formControlName="account_id_eq" id="account" class="custom-select my-1 mr-4">
-      <option value="" [disabled]="true">Choose an acocunt</option>
+      <option value="" [disabled]="true">Choose an account</option>
       <option *ngFor="let account of accounts" value="{{account.id}}">{{account.broker.name}}
         - {{account.getAccountType()}}</option>
     </select>
