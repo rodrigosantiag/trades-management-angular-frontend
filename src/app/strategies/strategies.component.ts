@@ -1,6 +1,6 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {Strategy} from './shared/strategy.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {StrategyService} from './shared/strategy.service';
 import {FlashMessagesService} from 'angular2-flash-messages';
@@ -13,17 +13,17 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 })
 export class StrategiesComponent implements OnInit {
   public strategies: Array<Strategy>;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public formUtils: FormUtils;
   public newStrategy: Strategy;
   public messages: Array<string>;
   public submitted: boolean;
   public editingStrategy: Strategy;
-  public formEdit: FormGroup;
+  public formEdit: UntypedFormGroup;
 
   constructor(
     private strategyService: StrategyService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private flashMessageService: FlashMessagesService,
     private renderer: Renderer2
   ) {

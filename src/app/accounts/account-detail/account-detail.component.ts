@@ -3,7 +3,7 @@ import * as currencies from 'currency-codes';
 import {Broker} from '../../brokers/shared/broker.model';
 import {BrokerService} from '../../brokers/shared/broker.service';
 import {Account} from '../shared/account.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../../shared/form.utils';
 
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
@@ -23,7 +23,7 @@ export class AccountDetailComponent implements OnInit {
   public currencies: any;
   public brokers: Array<Broker>;
   public newAccount: Account;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public formUtils: FormUtils;
   public messages: Array<string>;
   public submitted: boolean;
@@ -33,7 +33,7 @@ export class AccountDetailComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private brokerService: BrokerService,
     private flashMessages: FlashMessagesService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private location: Location,
     private router: Router,
     public helpers: HelpersFunctionsService) {
