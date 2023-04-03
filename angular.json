@@ -147,5 +147,8 @@
       }
     }
   },
-  "defaultProject": "binary-financial-system-frontend"
+  "defaultProject": "binary-financial-system-frontend",
+  "cli": {
+    "analytics": "42192817-81ae-47dd-836d-41f05702e23a"
+  }
 }
