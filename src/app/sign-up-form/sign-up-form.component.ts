@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 
 import {AuthService} from '../shared/auth.service';
 import {FormUtils} from '../shared/form.utils';
@@ -13,19 +13,19 @@ import {FlashMessagesService} from 'angular2-flash-messages';
   styleUrls: ['./sign-up-form.component.css']
 })
 export class SignUpFormComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public formUtils: FormUtils;
   public submitted: boolean;
   public messages: Array<string>;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private flashMessage: FlashMessagesService) {
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private flashMessage: FlashMessagesService) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
     this.submitted = false;
     this.messages = null;
   }
 
-  public passwordConfimationValidation(form: FormGroup) {
+  public passwordConfimationValidation(form: UntypedFormGroup) {
     if (form.get('password').valid && form.get('password').value === form.get('passwordConfirmation').value) {
       form.get('passwordConfirmation').setErrors(null);
     } else {

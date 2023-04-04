@@ -3,7 +3,7 @@ import {Account} from './shared/account.model';
 import {AccountService} from './shared/account.service';
 import {BrokerService} from '../brokers/shared/broker.service';
 import {Broker} from '../brokers/shared/broker.model';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {FormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {FlashMessagesService} from 'angular2-flash-messages';
 
 @Component({
@@ -14,13 +14,13 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 export class AccountsComponent implements OnInit {
   public brokers: Array<Broker>;
   public accounts: Array<Account>;
-  public formFilter: FormGroup;
+  public formFilter: UntypedFormGroup;
 
   public constructor(
     private accountService: AccountService,
     private brokerService: BrokerService,
     private flashMessages: FlashMessagesService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: UntypedFormBuilder) {
 
     this.formFilter = this.formBuilder.group({
       broker_id: '',

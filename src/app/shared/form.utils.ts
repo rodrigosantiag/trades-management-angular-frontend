@@ -1,8 +1,8 @@
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 
 export class FormUtils {
 
-  public constructor(private form: FormGroup) {
+  public constructor(private form: UntypedFormGroup) {
   }
 
   public getField(fieldName: string): AbstractControl {

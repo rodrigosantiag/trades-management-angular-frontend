@@ -31,11 +31,11 @@ const routes: Routes = [
   {path: 'users/:id', component: UserComponent, canActivate: [AuthGuard]},
   {path: 'strategies', component: StrategiesComponent, canActivate: [AuthGuard]},
   {path: 'reports', component: ReportsComponent, canActivate: [AuthGuard]},
-  {path: '', redirectTo: '/brokers', pathMatch: 'full', canActivate: [AuthGuard]}
+  { path: '', redirectTo: '/brokers', pathMatch: 'full' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

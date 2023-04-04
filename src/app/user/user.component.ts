@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../shared/user.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../shared/form.utils';
 import {UserService} from './shared/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -16,14 +16,14 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 export class UserComponent implements OnInit {
   public email: string;
   public user: User;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public formUtils: FormUtils;
   public messages: Array<string>;
   public submitted: boolean;
 
   constructor(
     private flashMessages: FlashMessagesService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
