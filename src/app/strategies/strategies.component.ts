@@ -29,12 +29,13 @@ export class StrategiesComponent implements OnInit {
   ) {
     this.setUpForm();
     this.formUtils = new FormUtils(this.form);
-    this.newStrategy = new Strategy(null, null);
+    this.newStrategy = new Strategy(null, null, null);
     this.messages = null;
     this.submitted = false;
-    this.editingStrategy = new Strategy(null, null);
+    this.editingStrategy = new Strategy(null, null, null);
     this.formEdit = this.formBuilder.group({
-      name: [null, [Validators.required]]
+      name: [null, [Validators.required]],
+      duration: '',
     });
   }
 
@@ -57,6 +58,7 @@ export class StrategiesComponent implements OnInit {
 
   public createStrategy() {
     this.newStrategy.name = this.form.get('name').value.trim();
+    this.newStrategy.duration = this.form.get('duration')?.value;
     this.submitted = true;
 
     this.strategyService.create(this.newStrategy)
@@ -100,7 +102,9 @@ export class StrategiesComponent implements OnInit {
 
   public updateStrategy(strategy: Strategy) {
     const oldName = strategy.name;
+    const oldDuration = strategy.duration;
     strategy.name = this.formEdit.get('name').value.trim();
+    strategy.duration = this.formEdit.get('duration').value;
     this.submitted = true;
 
     return this.strategyService.update(strategy)
@@ -109,7 +113,7 @@ export class StrategiesComponent implements OnInit {
           const itemIndex = this.strategies.findIndex(item => item.id === response.id);
           this.strategies[itemIndex] = response;
           this.strategies.sort((a, b) => a.name.localeCompare(b.name));
-          this.editingStrategy = new Strategy(null, null);
+          this.editingStrategy = new Strategy(null, null, null);
           this.messages = [`Strategy '${strategy.name}' updated!`];
           this.flashMessageService.show(this.messages.join(' | '), {
             cssClass: 'alert-success',
@@ -164,7 +168,8 @@ export class StrategiesComponent implements OnInit {
 
   private setUpForm() {
     this.form = this.formBuilder.group({
-      name: [null, [Validators.required]]
+      name: [null, [Validators.required]],
+      duration: '',
     });
   }
 

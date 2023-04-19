@@ -69,7 +69,8 @@ export class StrategyService {
     strategiesArray.forEach(item => {
       const strategy = new Strategy(
         item.id,
-        item.attributes.name
+        item.attributes.name,
+        item.attributes.duration,
       );
       strategies.push(strategy);
     });
@@ -79,7 +80,8 @@ export class StrategyService {
   public responseToStrategy(response: any): Strategy {
     return new Strategy(
       response.data.id,
-      response.data.attributes.name
+      response.data.attributes.name,
+      response.data.attributes.duration,
     );
   }
 }
