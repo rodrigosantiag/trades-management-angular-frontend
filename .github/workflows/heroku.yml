@@ -16,6 +16,7 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
+        ruby-version: head
 
       - name: Install DPL gem
         run: gem install dpl
