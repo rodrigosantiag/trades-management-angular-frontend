@@ -17,7 +17,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 
 // FontAwesome
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {library} from '@fortawesome/fontawesome-svg-core';
+import {library, IconPack} from '@fortawesome/fontawesome-svg-core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far} from '@fortawesome/free-regular-svg-icons';
 import {fab} from '@fortawesome/free-brands-svg-icons';
@@ -29,7 +29,7 @@ import {AccountsComponent} from './accounts/accounts.component';
 import {ErrorUtils} from './shared/error.utils';
 import {AccountDetailComponent} from './accounts/account-detail/account-detail.component';
 
-library.add(fas, far, fab);
+library.add(fas as IconPack, far as IconPack, fab as IconPack);
 
 import {NgxMaskModule} from 'ngx-mask';
 import {TradesComponent} from './trades/trades.component';
