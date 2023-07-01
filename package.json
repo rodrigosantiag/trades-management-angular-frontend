@@ -41,7 +41,7 @@
     "express": "^4.18.2",
     "jquery": "^3.6.4",
     "ng-pick-datetime": "^7.0.0",
-    "ngx-mask": "^7.9.9",
+    "ngx-mask": "^16.2.1",
     "ngx-pagination": "^4.0.0",
     "popper.js": "^1.15.0",
     "rxjs": "~6.6.7",
